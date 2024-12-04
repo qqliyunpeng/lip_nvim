@@ -124,7 +124,14 @@ require'heirline'.setup{}
 require 'bufferline'.setup{}
 require 'interestingwords'.setup{}
 require 'colorizer'.setup{}
+require 'notify'.setup{}
 
 -- nvimtree
 map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
+
+map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
+
+local notify = require('notify')
+notify("hello lip!")
+vim.notify = require("notify")
 

@@ -1,6 +1,17 @@
 return {
     {
-        "karb94/neoscroll.nvim",
+        "https://gitee.com/yunduozhai/nvim-notify.git",
+        config = function()
+            require('notify').setup({
+                background_colour = "#000000",
+                stages = "slide",
+                timeout = 3000,
+                top_down = true
+            })
+        end,
+    },
+    {
+        "https://gitee.com/yunduozhai/neoscroll.nvim.git",
         config = function ()
             require('neoscroll').setup({
                 mappings = {                 -- Keys to be mapped to their corresponding default scrolling animation
@@ -24,7 +35,7 @@ return {
         end
     },
     {
-        "folke/flash.nvim",
+        "https://gitee.com/huangshaoqi/flash.nvim.git",
         event = "VeryLazy",
         -- type Flash.Config
         opts = {},
@@ -38,7 +49,7 @@ return {
         },
     },
     {
-        "ahmedkhalf/project.nvim",
+        "https://gitee.com/yunduozhai/project.nvim.git",
         config = function()
             require("project_nvim").setup {
                 -- your configuration comes here
@@ -55,36 +66,36 @@ return {
         end
     },
     {
-        "ethanholz/nvim-lastplace",
+        "https://gitee.com/zhengqijun/nvim-lastplace.git",
         config = function()
             require('nvim-lastplace').setup()
         end
     },
     {
-        "rhysd/accelerated-jk",
+        "https://gitee.com/hello-luiswu/accelerated-jk.git",
         keys = {
             {"j", "<Plug>(accelerated_jk_gj)" },
             {"k", "<Plug>(accelerated_jk_gk)" },
         },
     },
     {
-        "RRethy/vim-illuminate",
+        "https://gitee.com/yunduozhai/vim-illuminate.git",
         event = "VeryLazy",
         config = function()
             require('illuminate').configure()
         end
     },
     {
-        "ojroques/vim-oscyank",
+        "https://gitee.com/rulei_mirror/vim-oscyank.git",
         config = true,
     },
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.8',
+        'https://gitee.com/oyaay/telescope.nvim.git', tag = '0.1.8',
         dependencies = { "nvim-treesitter/nvim-treesitter" },
         cmd = "Telescope",
     },
     {
-        "nvim-treesitter/nvim-treesitter",
+        "https://gitee.com/zgpio/nvim-treesitter.git",
         event = { "BufReadPost", "BufNewFile" },
         cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
         build = ":TSUpdate",
@@ -93,13 +104,13 @@ return {
         end,
     },
     {
-        "lewis6991/gitsigns.nvim",
+        "https://gitee.com/yunduozhai/gitsigns.nvim.git",
         event = "User FilePost",
         config = true,
     },
     {
         -- file managing , picker etc
-        "nvim-tree/nvim-tree.lua",
+        "https://gitee.com/oyaay/nvim-tree.lua.git",
         cmd = { "NvimTreeToggle", "NvimTreeFocus" },
         opts = function()
             return require "configs.nvimtree"
@@ -122,7 +133,7 @@ return {
         end
     },
     {
-        'norcalli/nvim-colorizer.lua',
+        'https://gitee.com/dragon-teng140806/nvim-colorizer.lua.git',
         config = function()
             -- Exclude some filetypes from highlighting by using `!`
             require ('colorizer').setup {

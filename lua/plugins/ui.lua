@@ -1,6 +1,6 @@
 return {
     {
-        "https://gitee.com/zhengqijun/nvim-web-devicons.git",
+        "https://gitee.com/yunduozhai/nvim-web-devicons.git",
         config = true,
     },
     {
@@ -278,9 +278,9 @@ return {
         end
     },
     {
-        'akinsho/bufferline.nvim',
+        'https://gitee.com/yunduozhai/bufferline.nvim.git',
         version = "*",
-        dependencies = 'nvim-tree/nvim-web-devicons'
+        dependencies = 'nvim-web-devicons'
     }
 }
 
