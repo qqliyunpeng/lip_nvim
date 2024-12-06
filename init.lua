@@ -4,6 +4,7 @@ local map = vim.keymap.set
 vim.g.mapleader = ","
 map("n", " ", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
+map("n", "<leader>q", "<cmd>q<CR>", { desc = "CMD quit" })
 
 -- 大小的L和H映射
 map({ "n", "t" }, "L", "End", { noremap = true, silent = true,  desc = "to end of line" })
@@ -64,7 +65,7 @@ require'nvim-lastplace'.setup{}
 
 -- telescope
 map("n", "<leader>r", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
--- map("n", "<leader>p", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
+map("n", "<leader>p", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
 map("n", "<leader>fp", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
 map("n", "<leader><tab>", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
@@ -125,6 +126,8 @@ require 'bufferline'.setup{}
 require 'interestingwords'.setup{}
 require 'colorizer'.setup{}
 require 'notify'.setup{}
+require 'nvim-autopairs'.setup{}
+
 
 -- nvimtree
 map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })

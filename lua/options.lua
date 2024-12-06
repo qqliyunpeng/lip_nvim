@@ -3,21 +3,29 @@ local o = vim.o
 local g = vim.g
 
 -------------------------------------- options ------------------------------------------
+--
 -- base config
+--
 o.shiftwidth = 4
 o.ruler = true
--- 用空格代替Tab
-o.expandtab = true
  -- 滚动屏幕时上下至少5行
 o.scrolloff = 5
--- o.background = dark
-o.rnu = true
+-- 显示相对行号和当前行的设置
+o.relativenumber = true
+o.number = true
 o.wrap = false
 -- code indent and typesetting config
 o.autoindent = true
 o.smartindent = true
+
+--
+-- code indent and typesetting config
+--
 o.tabstop = 4
+o.shiftwidth  = 4
 o.softtabstop = 4
+-- 用空格代替Tab
+o.expandtab = true
 o.sidescroll = 0
 o.sidescrolloff = 4
 
@@ -30,7 +38,7 @@ vim.cmd[[highlight Normal guibg=NONE ctermbg=NONE]]
 -- vim.cmd[[highlight LineNr guibg=NONE ctermbg=NONE]]
 -- vim.cmd[[highlight SignColumn guibg=NONE ctermbg=NONE]]
 
--- TODO: 还没有实现光标所在行背景带颜色
+-- 当前行高亮
 opt.cursorline = true
 vim.cmd[[highlight CursorLine guibg=#3e4451 ctermbg=235]]
 
