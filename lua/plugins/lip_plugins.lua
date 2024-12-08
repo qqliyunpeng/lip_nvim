@@ -98,7 +98,7 @@ return {
                 defaults = {
                     -- layout_strategy = "bottom_pane",
                     path_display = {
-                        "absolute",
+                        "smart",
                         truncate = 3,
                     },
                     prompt_prefix = "   ",
@@ -301,6 +301,41 @@ return {
         --         -- },
         -- })
         end,
+    },
+    -- below from https://gitee.com/suyelu/nvim/blob/master/init.lua
+    {
+        -- LSP Configuration & Plugins
+        'https://gitee.com/suyelu/nvim-lspconfig',
+        dependencies = {
+            -- Automatically install LSPs to stdpath for neovim
+            { 'https://gitee.com/suyelu/mason.nvim',  config = true },
+            'https://gitee.com/suyelu/mason-lspconfig.nvim',
+
+            -- Useful status updates for LSP
+            -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+            { 'https://gitee.com/suyelu/fidget.nvim', tag = 'legacy', opts = {} },
+            -- Additional lua configuration, makes nvim stuff amazing!
+            'https://gitee.com/suyelu/neodev.nvim',
+        },
+    },
+    {
+        -- Autocompletion
+        'https://gitee.com/suyelu/nvim-cmp',
+        dependencies = {
+            string.format('%s/cmp-nvim-lsp', 'https://gitee.com/suyelu'),
+            {
+                string.format('%s/LuaSnip', 'https://gitee.com/suyelu'),
+                build = 'make install_jsregexp',
+            },
+            string.format('%s/cmp_luasnip', 'https://gitee.com/suyelu'),
+            string.format('%s/cmp-buffer' , 'https://gitee.com/suyelu'),
+            string.format('%s/cmp-path'   , 'https://gitee.com/suyelu'),
+            string.format('%s/cmp-cmdline', 'https://gitee.com/suyelu'),
+        },
+    },
+    {
+        string.format('%s/null-ls.nvim.git', 'https://gitee.com/suyelu'),
+        dependencies = { string.format('%s/plenary.nvim', 'https://gitee.com/suyelu') },
     },
 }
 
