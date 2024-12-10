@@ -280,7 +280,34 @@ return {
     {
         'https://gitee.com/yunduozhai/bufferline.nvim.git',
         version = "*",
-        dependencies = 'nvim-web-devicons'
-    }
+        dependencies = 'nvim-web-devicons',
+        options = {
+            themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
+            numbers = "both",
+            close_command = "bdelete! %d",       -- can be a string | function, | false see "Mouse actions"
+            right_mouse_command = "bdelete! %d", -- can be a string | function | false, see "Mouse actions"
+            left_mouse_command = "buffer %d",    -- can be a string | function, | false see "Mouse actions"
+            middle_mouse_command = nil,          -- can be a string | function, | false see "Mouse actions"
+            indicator = {
+                style = 'underline',
+            },
+            offsets = {
+                {
+                    filetype = "NvimTree",
+                    text = "File Explorer",
+                    text_align = "center",
+                    separator = true,
+                }
+            },
+            color_icons = true, -- whether or not to add the filetype icon highlights
+            highlights = {
+                buffer_selected = {
+                    fg = {attribute = "fg", highlight = "Normal" },
+                    bg = "#ffcc00", -- 选中的缓冲区的背景颜色, not work!!!
+                    -- gui = "bold",
+                },
+            },
+        },
+    },
 }
 

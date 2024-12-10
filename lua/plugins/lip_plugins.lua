@@ -98,8 +98,9 @@ return {
                 defaults = {
                     -- layout_strategy = "bottom_pane",
                     path_display = {
-                        "smart",
-                        truncate = 3,
+                        "filename_first",
+                        -- "truncate",
+                        -- truncate = 3,
                     },
                     prompt_prefix = "   ",
                     selection_caret = " ",
@@ -115,6 +116,9 @@ return {
                     },
                     mappings = {
                         n = { ["q"] = require("telescope.actions").close },
+                        i = { ["<C-j>"] = require("telescope.actions").move_selection_next,
+                              ["<C-k>"] = require("telescope.actions").move_selection_previous,
+                            },
                     },
                 },
                 layout_config = {
@@ -332,6 +336,10 @@ return {
             string.format('%s/cmp-path'   , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-cmdline', 'https://gitee.com/suyelu'),
         },
+
+        opts = function()
+            return require "configs.cmp"
+        end,
     },
     {
         string.format('%s/null-ls.nvim.git', 'https://gitee.com/suyelu'),
