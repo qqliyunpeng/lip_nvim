@@ -127,7 +127,7 @@ return {
                     },
                 },
             }
-        end
+        end,
     },
     {
         "https://gitee.com/zgpio/nvim-treesitter.git",
@@ -165,7 +165,7 @@ return {
                 --cancel_color_key = "<leader>K",
                 select_mode = "loop",  -- random or loop
             }
-        end
+        end,
     },
     {
         'https://gitee.com/dragon-teng140806/nvim-colorizer.lua.git',
@@ -312,7 +312,12 @@ return {
         'https://gitee.com/suyelu/nvim-lspconfig',
         dependencies = {
             -- Automatically install LSPs to stdpath for neovim
-            { 'https://gitee.com/suyelu/mason.nvim',  config = true },
+            { 
+                'https://gitee.com/suyelu/mason.nvim',
+                opts = function()
+                    return require "configs.mason"
+                end,
+            },
             'https://gitee.com/suyelu/mason-lspconfig.nvim',
 
             -- Useful status updates for LSP
@@ -321,6 +326,10 @@ return {
             -- Additional lua configuration, makes nvim stuff amazing!
             'https://gitee.com/suyelu/neodev.nvim',
         },
+        event = "User FilePost",
+        config = function()
+            require("configs.lspconfig").defaults()
+        end,
     },
     {
         -- Autocompletion

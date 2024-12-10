@@ -127,6 +127,9 @@ require 'interestingwords'.setup{}
 require 'colorizer'.setup{}
 require 'notify'.setup{}
 require 'nvim-autopairs'.setup{}
+require 'noice'.setup{}
+require 'dressing'.setup{}
+require 'mason-lspconfig'.setup{}
 
 
 -- nvimtree
