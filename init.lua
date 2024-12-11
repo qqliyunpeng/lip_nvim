@@ -129,68 +129,70 @@ require 'notify'.setup{}
 require 'nvim-autopairs'.setup{}
 require 'noice'.setup{}
 require 'dressing'.setup{}
+require 'mason'.setup{}
 require 'mason-lspconfig'.setup{}
 
+local mason_lspconfig = require 'mason-lspconfig'
+
+local servers = {
+    clangd = {},
+    pyright = {},
+    lua_ls = {
+        Lua = {
+            workspace = { checkThirdParty = false },
+            telemetry = { enable = false },
+        },
+    },
+}
+
+mason_lspconfig.setup {
+    ensure_installed = vim.tbl_keys(servers),
+}
+
+-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+mason_lspconfig.setup_handlers {
+    function(server_name)
+        local server_config = {
+            capabilities = capabilities,
+            on_attach = on_attach,
+            settings = servers[server_name],
+        }
+        -- 如果server_name为clangd,设置--offset-encoding=utf-16
+        if server_name == 'clangd' then
+            server_config.cmd = {
+                'clangd',
+                '--offset-encoding=utf-16',
+            }
+            server_config.init_options = {
+                filetypes = { 'c', 'cpp' },
+                clangdFileStatus = true,
+                usePlaceholders = true,
+                completeUnimported = true,
+                semanticHighlighting = true,
+                --root_dir = mason_lspconfig.util.root_pattern('compile_commands.json', 'compile_flags.txt', '.git'),
+            }
+        end
+        require('lspconfig')[server_name].setup(server_config)
+    end,
+}
 
 -- nvimtree
 map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 
 map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 
-local notify = require('notify')
-notify("hello lip!")
-vim.notify = require("notify")
+-- local notify = require('notify')
+-- notify("hello lip!")
+-- vim.notify = require("notify")
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 
 luasnip.config.setup {}
-
--- cmp.setup {
---     snippet = {
---         expand = function(args)
---             luasnip.lsp_expand(args.body)
---         end,
---     },
---     mapping = cmp.mapping.preset.insert {
---         ['<CR>'] = cmp.config.disable,
---         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
---         ['<C-f>'] = cmp.mapping.scroll_docs(4),
---         ['<C-Space>'] = cmp.mapping.complete {},
---         -- ['<CR>'] = cmp.mapping.confirm {
---             -- behavior = cmp.ConfirmBehavior.Replace,
---             -- select = true,
---         -- },
---         ['<Tab>'] = cmp.mapping(function(fallback)
---             if cmp.visible() then
---                 cmp.select_next_item()
---             elseif luasnip.expand_or_jumpable() then
---                 luasnip.expand_or_jump()
---             else
---                 fallback()
---             end
---         end, { 'i', 's' }),
---         ['<S-Tab>'] = cmp.mapping(function(fallback)
---             if cmp.visible() then
---                 cmp.select_prev_item()
---             elseif luasnip.jumpable(-1) then
---                 luasnip.jump(-1)
---             else
---                 fallback()
---             end
---         end, { 'i', 's' }),
---     },
---     completeopt = "menu.menuone,noinsert",
---     sources = {
---         { name = 'nvim_lsp', priority = 1000 },
---         { name = 'luasnip' , priority = 900 },
---         --{ name = 'buffer' },
---         --{ name = 'path' },
---         --{ name = 'cmdline' },
---     },
--- }
-
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ '/', '?' }, {
@@ -226,16 +228,5 @@ null_ls.setup {
     -- formatting.fixjson,
     -- formatting.black.with({ extra_args = { "--fast" } }),
   },
-  -- 保存自动格式化
-  --[[
-  on_attach = function(client)
-    --client.offset_encoding = 'utf-16' -- 可能没有用
-    if client.server_capabilities.documentFormattingProvider then
-      local pos = vim.fn.getpos '.'
-      --vim.cmd 'autocmd BufWritePre <buffer> lua vim.lsp.buf.format(format_opts)'
-      vim.fn.setpos('.', pos)
-    end
-  end,
-  ]]
 }
 
