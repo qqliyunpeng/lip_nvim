@@ -46,6 +46,9 @@ vim.cmd[[highlight CursorLine guibg=#3e4451 ctermbg=235]]
 -- disable nvim intro
 opt.shortmess:append "sI"
 
+-- 弹出的条目最多20个
+opt.pumheight = 20
+
 o.signcolumn = "yes"
 o.splitbelow = true
 o.splitright = true

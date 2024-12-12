@@ -1,5 +1,6 @@
 return {
-  PATH = "skip",
+  -- PATH = "skip",
+  PATH = "append",
 
   ui = {
     icons = {

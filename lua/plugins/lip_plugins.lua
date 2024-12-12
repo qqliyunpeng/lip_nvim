@@ -226,6 +226,7 @@ return {
     {
         -- Autocompletion
         'https://gitee.com/suyelu/nvim-cmp',
+        event = "InsertEnter",
         dependencies = {
             string.format('%s/cmp-nvim-lsp', 'https://gitee.com/suyelu'),
             {
@@ -236,6 +237,12 @@ return {
             string.format('%s/cmp-buffer' , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-path'   , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-cmdline', 'https://gitee.com/suyelu'),
+            "rafamadriz/friendly-snippets",
+            opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+            config = function(_, opts)
+                require("luasnip").config.set_config(opts)
+                require "nvchad.configs.luasnip"
+            end,
         },
 
         opts = function()
