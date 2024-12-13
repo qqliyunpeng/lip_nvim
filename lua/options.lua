@@ -31,17 +31,6 @@ o.sidescrolloff = 4
 
 o.termguicolors = true
 
--- 背景设置成透明
--- vim.opt.background = 'dark' -- 或使用 'light'
-vim.cmd[[highlight Normal guibg=NONE ctermbg=NONE]]
--- vim.cmd[[highlight NonText guibg=NONE ctermbg=NONE]]
--- vim.cmd[[highlight LineNr guibg=NONE ctermbg=NONE]]
--- vim.cmd[[highlight SignColumn guibg=NONE ctermbg=NONE]]
-
--- 当前行高亮
-opt.cursorline = true
-vim.cmd[[highlight CursorLine guibg=#3e4451 ctermbg=235]]
-
 
 -- disable nvim intro
 opt.shortmess:append "sI"

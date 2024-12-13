@@ -1,5 +1,9 @@
 return {
     {
+        "olimorris/onedarkpro.nvim",
+        priority = 1000, -- Ensure it loads first
+    },
+    {
         "https://gitee.com/yunduozhai/nvim-notify.git",
         config = function()
             require('notify').setup({
@@ -90,6 +94,11 @@ return {
         config = true,
     },
     {
+        -- 优化弹出结果中的排序
+        "natecraddock/telescope-zf-native.nvim",
+        -- config = true,
+    },
+    {
         'https://gitee.com/oyaay/telescope.nvim.git', tag = '0.1.8',
         dependencies = { "nvim-treesitter/nvim-treesitter" },
         cmd = "Telescope",
@@ -124,6 +133,21 @@ return {
                 layout_config = {
                     bottom = {
                         height = 0.1,
+                    },
+                },
+                extensions = {
+                    file = {
+                        enable = true,
+                        highlight_results = true,
+                        match_filename = true,
+                        initial_sort = nil,
+                        smart_case = true,
+                    },
+                    generic = {
+                        enable = true,
+                        match_filename = false,
+                        initial_sort = nil,
+                        smart_case = true,
                     },
                 },
             }
@@ -228,6 +252,7 @@ return {
         'https://gitee.com/suyelu/nvim-cmp',
         event = "InsertEnter",
         dependencies = {
+            "hrsh7th/cmp-emoji",
             string.format('%s/cmp-nvim-lsp', 'https://gitee.com/suyelu'),
             {
                 string.format('%s/LuaSnip', 'https://gitee.com/suyelu'),
@@ -238,7 +263,14 @@ return {
             string.format('%s/cmp-path'   , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-cmdline', 'https://gitee.com/suyelu'),
             "rafamadriz/friendly-snippets",
-            opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+            -- opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+            ---@param opts cmp.ConfigSchema
+            opts = function(_, opts)
+                -- history = true,
+                -- updateevents = "TextChanged,TextChangedI",
+                -- opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+                table.insert(opts.sources, {name = "emoji"})
+            end,
             config = function(_, opts)
                 require("luasnip").config.set_config(opts)
                 require "nvchad.configs.luasnip"

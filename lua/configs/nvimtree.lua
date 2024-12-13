@@ -10,6 +10,13 @@ return {
   view = {
     width = 30,
     preserve_window_proportions = true,
+    mappings = {
+            custom_only = false,
+            list = {
+                { key = "l", action = "edit" },
+                { key = "h", action = "close_node" },
+            },
+        },
   },
   renderer = {
     root_folder_label = false,

@@ -33,6 +33,8 @@ map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 require 'options'
 
 
+
+
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -60,6 +62,20 @@ require("lazy").setup({
     { import = "plugins" },
 }, lazy_config)
 
+
+-- ui
+vim.cmd("colorscheme onedark")
+-- 背景设置成透明
+-- vim.opt.background = 'dark' -- 或使用 'light'
+vim.cmd[[highlight Normal guibg=NONE ctermbg=NONE]]
+-- vim.cmd[[highlight NonText guibg=NONE ctermbg=NONE]]
+-- vim.cmd[[highlight LineNr guibg=NONE ctermbg=NONE]]
+-- vim.cmd[[highlight SignColumn guibg=NONE ctermbg=NONE]]
+-- 当前行高亮
+vim.opt.cursorline = true
+vim.cmd[[highlight CursorLine guibg=#3e4451 ctermbg=235]]
+
+
 -- 打开文件后光标回到关闭的时候的位置
 require'nvim-lastplace'.setup{}
 
@@ -82,6 +98,7 @@ map(
   "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
   { desc = "telescope find all files" }
 )
+require("telescope").load_extension("zf-native")
 
 
 -- neoscroll 滚动顺滑
