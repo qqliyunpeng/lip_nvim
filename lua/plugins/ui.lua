@@ -4,17 +4,118 @@ return {
         config = true,
     },
     {
+        "Zeioth/heirline-components.nvim",
+        opts = {
+            icons = {
+                ActiveLSP = "",
+                ActiveTS = "",
+                ArrowLeft = "",
+                ArrowRight = "",
+                Bookmarks = "",
+                BufferClose = "󰅖",
+                DapBreakpoint = "",
+                DapBreakpointCondition = "",
+                DapBreakpointRejected = "",
+                DapLogPoint = ".>",
+                DapStopped = "󰁕",
+                Debugger = "",
+                DefaultFile = "󰈙",
+                Diagnostic = "󰒡",
+                DiagnosticError = "",
+                DiagnosticHint = "󰌵",
+                DiagnosticInfo = "󰋼",
+                DiagnosticWarn = "",
+                Ellipsis = "…",
+                Environment = "",
+                FileNew = "",
+                FileModified = "",
+                FileReadOnly = "",
+                FoldClosed = "",
+                FoldOpened = "",
+                FoldSeparator = " ",
+                FolderClosed = "",
+                FolderEmpty = "",
+                FolderOpen = "",
+                Git = "󰊢",
+                GitAdd = "",
+                GitBranch = "",
+                GitChange = "",
+                GitConflict = "",
+                GitDelete = "",
+                GitIgnored = "◌",
+                GitRenamed = "➜",
+                GitSign = "▎",
+                GitStaged = "✓",
+                GitUnstaged = "✗",
+                GitUntracked = "★",
+                LSPLoaded = "",
+                LSPLoading1 = "",
+                LSPLoading2 = "󰀚",
+                LSPLoading3 = "",
+                MacroRecording = "",
+                Package = "󰏖",
+                Paste = "󰅌",
+                Refresh = "",
+                Run = "󰑮",
+                Search = "",
+                Selected = "❯",
+                Session = "󱂬",
+                Sort = "󰒺",
+                Spellcheck = "󰓆",
+                Tab = "󰓩",
+                TabClose = "󰅙",
+                Terminal = "",
+                Window = "",
+                WordFile = "󰈭",
+                Test = "󰙨",
+                Docs = "",
+            }
+        }
+    },
+    {
         "https://gitee.com/yunduozhai/heirline.nvim.git",
-        requires = {
+        dependencies = {
             "Zeioth/heirline-components.nvim"
         },
-        config = function()
+        event = "User BaseDefered",
+        opts = function ()
+            local lib = require "heirline-components.all"
+            return {
+                opts = {
+                    statusline = { -- UI statusbar
+                        hl = { fg = "fg", bg = "bg" },
+                        lib.component.mode(),
+                        lib.component.git_branch(),
+                        lib.component.file_info(),
+                        lib.component.git_diff(),
+                        lib.component.diagnostics(),
+                        lib.component.fill(),
+                        lib.component.cmd_info(),
+                        lib.component.fill(),
+                        lib.component.lsp(),
+                        lib.component.compiler_state(),
+                        lib.component.virtual_env(),
+                        lib.component.nav(),
+                        lib.component.mode { surround = { separator = "right" } },
+                    },
+                },
+            }
+        end,
+        config = function(_, opts)
             local heirline = require("heirline")
             local conditions = require("heirline.conditions")
             local utils = require("heirline.utils")
             local Align = { provider = "%="  }
             local Space = { provider = " "  }
-            --local heirline_components = require("heirline-components.all")
+            local heirline_components = require("heirline-components.all")
+            local lib = require "heirline-components.all"
+
+            -- Setup heirline-components.nvim
+            heirline_components.init.subscribe_to_events()
+            heirline.load_colors(heirline_components.hl.get_colors())
+            heirline.setup(opts)
+
+
 
             --heirline_components.init()
             --heirline.subscribe_to_events()
@@ -249,11 +350,20 @@ return {
 
 
             local StatusLine = {
-                hl = { fg = 'white', bg = '#282828' },
+                hl = { fg = "fg", bg = "bg" },
                 { ViMode }, Space,
+                lib.component.git_branch(),
+                lib.component.git_diff(),
+                lib.component.diagnostics(),
+                lib.component.cmd_info(),
                 { FileNameBlock }, Space,
+                lib.component.file_info(),
                 Align,
-                { FileType }, Space, Space,
+                lib.component.lsp(),
+                lib.component.compiler_state(),
+                lib.component.virtual_env(),
+                Space, Space,
+                -- { FileType }, Space, Space,
                 { FileEncoding }, Space, Space,
                 { FileFormat }, Space, Space,
                 { ScrollBar },
@@ -268,8 +378,23 @@ return {
                     end
                 end,
                 fallthrough = false,
+            }
 
-
+            local statusline = { -- UI statusbar
+                hl = { fg = "fg", bg = "bg" },
+                lib.component.mode(),
+                lib.component.git_branch(),
+                lib.component.file_info(),
+                lib.component.git_diff(),
+                lib.component.diagnostics(),
+                lib.component.fill(),
+                lib.component.cmd_info(),
+                lib.component.fill(),
+                lib.component.lsp(),
+                lib.component.compiler_state(),
+                lib.component.virtual_env(),
+                lib.component.nav(),
+                lib.component.mode { surround = { separator = "right" } },
             }
 
             heirline.setup({

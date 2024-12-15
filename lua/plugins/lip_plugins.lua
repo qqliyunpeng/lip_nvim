@@ -9,6 +9,7 @@ return {
             require('notify').setup({
                 background_colour = "#000000",
                 stages = "slide",
+                render = "wrapped-compact",
                 timeout = 3000,
                 top_down = true
             })
@@ -238,6 +239,7 @@ return {
 
             -- Useful status updates for LSP
             -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+            -- notify and right-bottom info
             { 'https://gitee.com/suyelu/fidget.nvim', tag = 'legacy', opts = {} },
             -- Additional lua configuration, makes nvim stuff amazing!
             'https://gitee.com/suyelu/neodev.nvim',

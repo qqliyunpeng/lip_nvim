@@ -48,11 +48,11 @@ local options = {
   },
 
   sources = {
-    { name = "nvim_lsp", priority = 1000 },
-    { name = "luasnip" , priority = 900 },
-    { name = "buffer" },
-    { name = "nvim_lua" },
-    { name = "path" },
+    { name = "nvim_lsp", priority = 1000, group_index = 1 },
+    { name = "luasnip" , priority = 900, group_index = 1 },
+    { name = "buffer" , group_index = 2 },
+    { name = "nvim_lua", group_index = 2 },
+    { name = "path", group_index = 2 },
   },
 
   window = {
