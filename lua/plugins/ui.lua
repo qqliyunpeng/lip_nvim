@@ -116,11 +116,6 @@ return {
             heirline.setup(opts)
 
 
-
-            --heirline_components.init()
-            --heirline.subscribe_to_events()
-            --heirline.load_colors(heirline_components.hl.get_colors())
-
             ----lip 1----
             local ViMode = {
                 -- get vim current mode, this information will be required by the provider
@@ -304,7 +299,7 @@ return {
                      --return enc ~= 'utf-8' and enc:upper()
                      return enc:lower()
                  end,
-                 hl = { fg = "blue", bg = "black" },
+                 hl = { fg = heirline_components.hl.get_colors().green, bg = heirline_components.hl.get_colors().blue },
              }
 
              local FileFormat = {
@@ -334,7 +329,7 @@ return {
                      local i = math.floor((curr_line - 1) / lines * #self.sbar) + 1
                      return string.rep(self.sbar[i], 2)
                  end,
-                 hl = { fg = "blue", bg = "black" },
+                 hl = { fg = "#c678dd", bg = "#1e222a" },
              }
 
             --local StatusLine = {
@@ -354,19 +349,21 @@ return {
                 { ViMode }, Space,
                 lib.component.git_branch(),
                 lib.component.git_diff(),
-                lib.component.diagnostics(),
-                lib.component.cmd_info(),
+                -- lib.component.diagnostics(),
                 { FileNameBlock }, Space,
                 lib.component.file_info(),
                 Align,
+                lib.component.cmd_info(),
+                Align,
                 lib.component.lsp(),
                 lib.component.compiler_state(),
-                lib.component.virtual_env(),
+                -- lib.component.virtual_env(),
                 Space, Space,
                 -- { FileType }, Space, Space,
                 { FileEncoding }, Space, Space,
-                { FileFormat }, Space, Space,
-                { ScrollBar },
+                { FileFormat },
+                -- { ScrollBar },
+                lib.component.nav(),
             }
 
             local StatusLines = {

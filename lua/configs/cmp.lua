@@ -2,6 +2,7 @@
 
 local cmp = require "cmp"
 local luasnip = require 'luasnip'
+local lspkind = require 'lspkind'
 
 local options = {
   completionopt = { completeopt = "menu,menuone,noinsert" },
@@ -70,14 +71,47 @@ local options = {
     vim.api.nvim_set_hl(0, 'FloatBorder', { fg = '#ffffff', bg = '#282828' }), -- 设置边框颜色
 
     formatting = {
-        format = function(entry, vim_item)
-            -- 自定义格式化
-            if vim_item.king == "Function" or vim_item.kind then
-                vim_item.menu = " " .. vim_item.kind -- 在前面添加类型
+        -- format = function(entry, vim_item)
+        --     -- 自定义格式化
+        --     if vim_item.king == "Function" or vim_item.kind then
+        --         vim_item.menu = " " .. vim_item.kind -- 在前面添加类型
+        --     end
+        --     return vim_item
+        -- end,
+
+        -- format = require('lspkind').cmp_format({
+        --     with_text = true,
+        --     menu = {
+        --         buffer = "[Buffer]",
+        --         nvim_lsp = "[LSP]",
+        --         nvim_lua = "[Lua]",
+        --     },
+        -- }),
+
+        format = require('lspkind').cmp_format({
+            mode = 'symbol',
+            maxwidth = {
+                menu = 50,
+                abbr = 50,
+            },
+            ellipsis_char = '...',
+            show_labelDetails = true,
+            before = function (entry, vim_item)
+                -- vim_item.kind = require('lspkind').symbolic(vim_item.kind, { with_text = true })
+                -- 获取图标并将其放在文本前面
+                -- local icon = lspkind.presets.default[vim_item.kind] .. ' '
+                -- vim_item.kind = icon .. vim_item.kind -- 将图标添加到文本前面
+
+                -- vim_item.menu = ({
+                --     buffer = "[Buffer]",
+                --     nvim_lsp = "[LSP]",
+                --     nvim_lua = "[Lua]",
+                -- })[entry.source.name] or ""
+
+                return vim_item
             end
-            return vim_item
-        end,
-    }
+        })
+    },
 }
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).

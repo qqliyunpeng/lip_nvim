@@ -84,13 +84,13 @@ end
 vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射到 :ProjectRoot
 
 -- gitsigns
--- require('gitsigns').setup()
+require('gitsigns').setup()
 
 require'heirline'.setup{}
 require 'bufferline'.setup{}
 require 'interestingwords'.setup{}
 require 'colorizer'.setup{}
-require 'notify'.setup{}
+--require 'notify'.setup{}
 require 'nvim-autopairs'.setup{}
 require 'noice'.setup{}
 require 'dressing'.setup{}

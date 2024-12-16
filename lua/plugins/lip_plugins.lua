@@ -240,7 +240,7 @@ return {
             -- Useful status updates for LSP
             -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
             -- notify and right-bottom info
-            { 'https://gitee.com/suyelu/fidget.nvim', tag = 'legacy', opts = {} },
+            -- { 'https://gitee.com/suyelu/fidget.nvim', tag = 'legacy', opts = {} },
             -- Additional lua configuration, makes nvim stuff amazing!
             'https://gitee.com/suyelu/neodev.nvim',
         },
@@ -248,6 +248,42 @@ return {
         config = function()
             require("configs.lspconfig").defaults()
         end,
+    },
+    {
+        "onsails/lspkind.nvim",
+        lazy = true,
+        -- enabled = vim.g.icons_enabled ~= false,
+        enabled = true,
+        mode = 'symbol_text',
+        preset = 'codicons',
+        opts = {
+            mode = "symbol",
+            symbol_map = {
+                Array = "󰅪",
+                Boolean = "⊨",
+                Class = "󰌗",
+                Constructor = "",
+                Key = "󰌆",
+                Namespace = "󰅪",
+                Null = "NULL",
+                Number = "#",
+                Object = "󰀚",
+                Package = "󰏗",
+                Property = "",
+                Reference = "",
+                Snippet = "",
+                String = "󰀬",
+                TypeParameter = "󰊄",
+                Unit = "",
+            },
+            menu = {},
+        },
+        -- config = function()
+        --     require('lspkind').init({
+        --         with_text = true,
+        --         preset = 'default',
+        --     })
+        -- end,
     },
     {
         -- Autocompletion
@@ -275,7 +311,7 @@ return {
             end,
             config = function(_, opts)
                 require("luasnip").config.set_config(opts)
-                require "nvchad.configs.luasnip"
+                require "configs.luasnip"
             end,
         },
 
@@ -287,6 +323,18 @@ return {
         string.format('%s/null-ls.nvim.git', 'https://gitee.com/suyelu'),
         dependencies = { string.format('%s/plenary.nvim', 'https://gitee.com/suyelu') },
     },
+    --[[
+    {
+        "chaoren/vim-wordmotion",
+        keys = {
+            { 'w', '<Plug>WordMotionForward', { noremap = true, silent = true } },
+            { 'b', '<Plug>WordMotionBackward', { noremap = true, silent = true } },
+        },
+        config = function()
+            vim.g.wordmotion_use_mappings = 1 -- 启用默认快捷键
+        end,
+    },
+    --]]
 }
 
 
