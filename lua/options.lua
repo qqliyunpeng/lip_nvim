@@ -38,6 +38,12 @@ opt.shortmess:append "sI"
 -- 弹出的条目最多20个
 opt.pumheight = 20
 
+opt.ignorecase = true -- case insensitive searching
+opt.infercase = true -- infer cases in keyword completion
+opt.smartcase = true -- case sensitive searching
+opt.writebackup = false -- disable making a backup before overwriting a file
+opt.expandtab = true -- enable the use of space in tab
+
 o.signcolumn = "yes"
 o.splitbelow = true
 o.splitright = true

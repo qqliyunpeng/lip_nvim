@@ -4,6 +4,10 @@ local cmp = require "cmp"
 local luasnip = require 'luasnip'
 local lspkind = require 'lspkind'
 
+require('luasnip.loaders.from_vscode').load()
+require('luasnip.loaders.from_snipmate').load()
+require('luasnip.loaders.from_lua').load()
+
 local options = {
   completionopt = { completeopt = "menu,menuone,noinsert" },
 
@@ -50,10 +54,11 @@ local options = {
 
   sources = {
     { name = "nvim_lsp", priority = 1000, group_index = 1 },
-    { name = "luasnip" , priority = 900, group_index = 1 },
-    { name = "buffer" , group_index = 2 },
-    { name = "nvim_lua", group_index = 2 },
-    { name = "path", group_index = 2 },
+    -- { name = "cmp_tabnine", priority = 900, group_index = 1 },
+    { name = "nvim_lua", priority = 800, group_index = 1 },
+    { name = "luasnip" , priority = 900 },
+    { name = "buffer" , priority = 500, group_index = 2 },
+    { name = "path", priority = 250, group_index = 2 },
   },
 
   window = {
@@ -79,16 +84,8 @@ local options = {
         --     return vim_item
         -- end,
 
-        -- format = require('lspkind').cmp_format({
-        --     with_text = true,
-        --     menu = {
-        --         buffer = "[Buffer]",
-        --         nvim_lsp = "[LSP]",
-        --         nvim_lua = "[Lua]",
-        --     },
-        -- }),
-
-        format = require('lspkind').cmp_format({
+        format = lspkind.cmp_format({
+            -- mode = 'symbol_text',
             mode = 'symbol',
             maxwidth = {
                 menu = 50,
@@ -96,21 +93,26 @@ local options = {
             },
             ellipsis_char = '...',
             show_labelDetails = true,
+
+            fields = {
+                "abbr", "kind", "menu"
+            },
+
             before = function (entry, vim_item)
-                -- vim_item.kind = require('lspkind').symbolic(vim_item.kind, { with_text = true })
                 -- 获取图标并将其放在文本前面
-                -- local icon = lspkind.presets.default[vim_item.kind] .. ' '
-                -- vim_item.kind = icon .. vim_item.kind -- 将图标添加到文本前面
+                -- local icon = lspkind.symbol_map[vim_item.kind] .. ' '
+                -- vim_item.abbr = icon .. vim_item.abbr -- 将图标添加到文本前面
+                -- vim_item.abbr = icon .. vim_item.kind .. ' ' .. vim_item.abbr
 
                 -- vim_item.menu = ({
-                --     buffer = "[Buffer]",
-                --     nvim_lsp = "[LSP]",
+                --     buffer = "[B]",
+                --     nvim_lsp = "[L]",
                 --     nvim_lua = "[Lua]",
                 -- })[entry.source.name] or ""
 
                 return vim_item
             end
-        })
+        }),
     },
 }
 

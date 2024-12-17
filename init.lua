@@ -99,6 +99,8 @@ require 'mason'.setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })
 require 'mason-lspconfig'.setup{}
+-- indent-blankline
+require 'ibl'.setup{}
 
 local mason_lspconfig = require 'mason-lspconfig'
 
