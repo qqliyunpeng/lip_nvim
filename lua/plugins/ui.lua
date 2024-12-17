@@ -434,7 +434,7 @@ return {
     {
         --  [better ui elements]
         -- https://github.com/stevearc/dressing.nvim
-        "stevearc/dressing.nvim",
+        "https://gitee.com/yunduozhai/dressing.nvim.git",
         event = "User BaseDefered",
         opts = {
             input = { default_prompt = "➤ " },
@@ -442,7 +442,7 @@ return {
         }
     },
     {
-        "folke/noice.nvim",
+        "https://gitee.com/yunduozhai/noice.nvim.git",
         event = "User BaseDefered",
         opts = function()
             local enable_conceal = false          -- Hide command text if true

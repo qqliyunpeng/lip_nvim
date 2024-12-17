@@ -6,12 +6,16 @@ return {
     {
         "https://gitee.com/yunduozhai/nvim-notify.git",
         config = function()
+            local function calculate_half_width()
+                return math.floor(vim.o.columns * 0.4)
+            end
             require('notify').setup({
                 background_colour = "#000000",
                 stages = "slide",
                 render = "wrapped-compact",
                 timeout = 3000,
-                top_down = true
+                top_down = true,
+                max_width = calculate_half_width(),
             })
         end,
     },
@@ -250,7 +254,7 @@ return {
         end,
     },
     {
-        "onsails/lspkind.nvim",
+        "https://gitee.com/oyaay/lspkind.nvim.git",
         lazy = true,
         -- enabled = vim.g.icons_enabled ~= false,
         enabled = true,
@@ -302,7 +306,7 @@ return {
             string.format('%s/cmp-buffer' , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-path'   , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-cmdline', 'https://gitee.com/suyelu'),
-            "rafamadriz/friendly-snippets",
+            "https://gitee.com/yunduozhai/friendly-snippets.git",
             -- opts = { history = true, updateevents = "TextChanged,TextChangedI" },
             ---@param opts cmp.ConfigSchema
             opts = function(_, opts)
@@ -339,7 +343,7 @@ return {
     --]]
     {
         -- 函数缩进前的条
-        "lukas-reineke/indent-blankline.nvim",
+        "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
         event = "User FilePost",
         main = "ibl",
         -- opts = {
