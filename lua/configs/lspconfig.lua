@@ -3,6 +3,7 @@ local map = vim.keymap.set
 
 -- export on_attach & capabilities
 M.on_attach = function(_, bufnr)
+    print("lip4:on_attach in lspconfig.lua")
   local function opts(desc)
     return { buffer = bufnr, desc = "LSP " .. desc }
   end
@@ -27,6 +28,7 @@ end
 
 -- disable semanticTokens
 M.on_init = function(client, _)
+    print("lip3:on_init")
   if client.supports_method "textDocument/semanticTokens" then
     client.server_capabilities.semanticTokensProvider = nil
   end
@@ -58,9 +60,9 @@ M.defaults = function()
 
   require("lspconfig").lua_ls.setup {
         print("lip do this"),
+    on_init = M.on_init,
     on_attach = M.on_attach,
     capabilities = M.capabilities,
-    on_init = M.on_init,
 
     settings = {
       Lua = {

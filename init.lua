@@ -98,9 +98,66 @@ require 'dressing'.setup{}
 require 'mason'.setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })
-require 'mason-lspconfig'.setup{}
+-- require 'mason-lspconfig'.setup{}
 -- indent-blankline
 require 'ibl'.setup()
+
+local status, null_ls = pcall(require, 'null-ls')
+if not status then
+  vim.notify '没有找到 null-ls'
+  return
+end
+
+local formatting = null_ls.builtins.formatting
+
+null_ls.setup {
+  debug = true,
+  sources = {
+    null_ls.builtins.code_actions.gitsigns,
+    -- Formatting ---------------------
+    --  brew install shfmt
+    formatting.shfmt,
+    -- StyLua
+    formatting.stylua,
+    -- frontend
+    formatting.prettier.with {
+      -- 只比默认配置少了 markdown
+      filetypes = {
+        'javascript',
+        'javascriptreact',
+        'typescript',
+        'typescriptreact',
+        'vue',
+        'css',
+        'scss',
+        'less',
+        'html',
+        'json',
+        'yaml',
+        'graphql',
+        'c',
+        'cpp',
+      },
+      prefer_local = 'node_modules/.bin',
+      args = { '--tab-width', '4' },
+    },
+
+    null_ls.builtins.diagnostics.eslint,
+    null_ls.builtins.completion.spell,
+    -- formatting.fixjson,
+    -- formatting.black.with({ extra_args = { "--fast" } }),
+  },
+  -- 保存自动格式化
+  on_attach = function(client)
+        print("lip4: on_attach")
+    --client.offset_encoding = 'utf-16' -- 可能没有用
+    if client.server_capabilities.documentFormattingProvider then
+      local pos = vim.fn.getpos '.'
+      --vim.cmd 'autocmd BufWritePre <buffer> lua vim.lsp.buf.format(format_opts)'
+      vim.fn.setpos('.', pos)
+    end
+  end,
+}
 
 local mason_lspconfig = require 'mason-lspconfig'
 
@@ -123,11 +180,12 @@ mason_lspconfig.setup {
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+
 mason_lspconfig.setup_handlers {
     function(server_name)
         local server_config = {
-            capabilities = capabilities,
             on_attach = on_attach,
+            capabilities = capabilities,
             settings = servers[server_name],
         }
         -- 如果server_name为clangd,设置--offset-encoding=utf-16
