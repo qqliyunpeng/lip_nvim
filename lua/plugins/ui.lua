@@ -4,7 +4,7 @@ return {
         config = true,
     },
     {
-        "Zeioth/heirline-components.nvim",
+        "https://gitee.com/nvim_lip/heirline-components.nvim.git",
         opts = {
             icons = {
                 ActiveLSP = "",

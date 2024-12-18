@@ -100,14 +100,15 @@ return {
     },
     {
         -- 优化弹出结果中的排序
-        "natecraddock/telescope-zf-native.nvim",
+        "https://gitee.com/nvim_lip/telescope-zf-native.nvim.git",
         -- config = true,
     },
     {
-        'https://gitee.com/oyaay/telescope.nvim.git', tag = '0.1.8',
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
+        'https://gitee.com/nvim_lip/telescope.nvim.git', --tag = '0.1.8',
+        -- dependencies = { "nvim-treesitter/nvim-treesitter" },
         cmd = "Telescope",
         config = function()
+            local zf = require('telescope._extensions.zf-native')
             require('telescope').setup {
                 defaults = {
                     -- layout_strategy = "bottom_pane",
@@ -172,7 +173,7 @@ return {
         end,
     },
     {
-        "https://gitee.com/yunduozhai/gitsigns.nvim.git",
+        "https://gitee.com/nvim_lip/gitsigns.nvim.git", tag = 'v0.9.0',
         event = "User FilePost",
         config = true,
     },
@@ -248,13 +249,14 @@ return {
             -- Additional lua configuration, makes nvim stuff amazing!
             'https://gitee.com/suyelu/neodev.nvim',
         },
-        event = "User FilePost",
+        -- event = "User FilePost",
         config = function()
+            print("lip 1")
             require("configs.lspconfig").defaults()
-        end,
+         end,
     },
     {
-        "https://gitee.com/oyaay/lspkind.nvim.git",
+        "https://gitee.com/nvim_lip/lspkind.nvim.git",
         lazy = true,
         -- enabled = vim.g.icons_enabled ~= false,
         enabled = true,
@@ -344,7 +346,7 @@ return {
     {
         -- 函数缩进前的条
         "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
-        event = "User FilePost",
+        -- event = "User FilePost",
         main = "ibl",
         -- opts = {
         --     exclude = {
@@ -397,11 +399,38 @@ return {
             -- require("ibl").setup { scope = { highlight = highlight } }
             -- require("ibl").setup(opts)
 
-        opts = function()
-            return require "configs.blankline"
-        end,
+        -- opts = function()
+        --     return require "configs.blankline"
+        -- end,
             -- hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
         -- end,
+
+        config = function()
+            local highlight = {
+                "RainbowRed",
+                "RainbowYellow",
+                "RainbowBlue",
+                "RainbowOrange",
+                "RainbowGreen",
+                "RainbowViolet",
+                "RainbowCyan",
+            }
+
+            local hooks = require "ibl.hooks"
+            -- create the highlight groups in the highlight setup hook, so they are reset
+            -- every time the colorscheme changes
+            hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+                vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+                vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+                vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+                vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+                vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+                vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+                vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+            end)
+
+            require("ibl").setup { indent = { highlight = highlight } }
+        end
     },
 }
 

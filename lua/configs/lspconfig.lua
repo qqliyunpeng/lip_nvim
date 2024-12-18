@@ -57,6 +57,7 @@ M.defaults = function()
   -- require("nvchad.lsp").diagnostic_config()
 
   require("lspconfig").lua_ls.setup {
+        print("lip do this"),
     on_attach = M.on_attach,
     capabilities = M.capabilities,
     on_init = M.on_init,
@@ -71,6 +72,7 @@ M.defaults = function()
             vim.fn.expand "$VIMRUNTIME/lua",
             vim.fn.expand "$VIMRUNTIME/lua/vim/lsp",
             -- vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
+            -- data == ~/.local/share/nvim/lazy/
             vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
             "${3rd}/luv/library",
           },

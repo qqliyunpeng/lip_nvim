@@ -100,7 +100,7 @@ require 'mason'.setup({
 })
 require 'mason-lspconfig'.setup{}
 -- indent-blankline
-require 'ibl'.setup{}
+require 'ibl'.setup()
 
 local mason_lspconfig = require 'mason-lspconfig'
 
