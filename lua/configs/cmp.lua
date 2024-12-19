@@ -24,6 +24,7 @@ local options = {
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-e>"] = cmp.mapping.close(),
+    ["<A-e>"] = cmp.mapping.close(),
 
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
     -- ["<CR>"] = cmp.mapping.confirm {
@@ -114,26 +115,24 @@ local options = {
             end
         }),
     },
+
+    -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+    cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+            { name = 'buffer' },
+        },
+    }),
+
+    cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+            { name = 'path' },
+        }, {
+                { name = 'cmdline' },
+            }),
+    }),
 }
-
--- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
--- cmp.setup.cmdline({ '/', '?' }, {
---     mapping = cmp.mapping.preset.cmdline(),
---     sources = {
---         { name = 'buffer' },
---     },
--- })
-
--- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
--- cmp.setup.cmdline(':', {
---     mapping = cmp.mapping.preset.cmdline(),
---     sources = cmp.config.sources({
---         { name = 'path' },
---     }, {
---         { name = 'cmdline' },
---     }),
--- })
---
 
 return options
 

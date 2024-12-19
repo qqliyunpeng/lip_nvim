@@ -1,5 +1,3 @@
-local map = vim.keymap.set
-
 
 vim.g.mapleader = ","
 
@@ -172,41 +170,60 @@ local servers = {
     },
 }
 
-mason_lspconfig.setup {
-    ensure_installed = vim.tbl_keys(servers),
-}
+-- mason_lspconfig.setup {
+--     ensure_installed = vim.tbl_keys(servers),
+--     print("lip: ", vim.tbl_keys(servers))
+-- }
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 
-mason_lspconfig.setup_handlers {
+-- mason_lspconfig.setup_handlers {
+local handlers = {
     function(server_name)
-        local server_config = {
-            on_attach = on_attach,
-            capabilities = capabilities,
-            settings = servers[server_name],
-        }
+        -- local server_config = {
+        --     on_attach = on_attach,
+        --     capabilities = capabilities,
+        --     settings = servers[server_name],
+        -- }
         -- 如果server_name为clangd,设置--offset-encoding=utf-16
-        if server_name == 'clangd' then
-            server_config.cmd = {
-                'clangd',
-                '--offset-encoding=utf-16',
+        -- if server_name == 'clangd' then
+        --     server_config.cmd = {
+        --         'clangd',
+        --         '--offset-encoding=utf-16',
+        --     }
+        --     server_config.init_options = {
+        --         filetypes = { 'c', 'cpp' },
+        --         clangdFileStatus = true,
+        --         usePlaceholders = true,
+        --         completeUnimported = true,
+        --         semanticHighlighting = true,
+        --         --root_dir = mason_lspconfig.util.root_pattern('compile_commands.json', 'compile_flags.txt', '.git'),
+        --     }
+        -- end
+        require('lspconfig')[server_name].setup{}
+    end,
+    ["lua_ls"] = function ()
+        local lspconfig = require("lspconfig")
+        lspconfig.lua_ls.setup {
+            settings = {
+                Lua = {
+                    diagnostics = {
+                        globals = { "vim" }
+                    }
+                }
             }
-            server_config.init_options = {
-                filetypes = { 'c', 'cpp' },
-                clangdFileStatus = true,
-                usePlaceholders = true,
-                completeUnimported = true,
-                semanticHighlighting = true,
-                --root_dir = mason_lspconfig.util.root_pattern('compile_commands.json', 'compile_flags.txt', '.git'),
-            }
-        end
-        require('lspconfig')[server_name].setup(server_config)
+        }
     end,
 }
 
+mason_lspconfig.setup({
+    ensure_installed = vim.tbl_keys(servers),
+    handlers = handlers,
+})
+mason_lspconfig.setup_handlers(handlers)
 
 -- local notify = require('notify')
 -- notify("hello lip!")
@@ -218,23 +235,6 @@ local luasnip = require 'luasnip'
 
 luasnip.config.setup {}
 
--- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline({ '/', '?' }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-        { name = 'buffer' },
-    },
-})
-
--- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = 'path' },
-    }, {
-        { name = 'cmdline' },
-    }),
-})
 
 local status, null_ls = pcall(require, 'null-ls')
 if not status then

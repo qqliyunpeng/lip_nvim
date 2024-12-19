@@ -1,5 +1,8 @@
 return {
-  filters = { dotfiles = false },
+  -- filters = { dotfiles = false },
+  filters = {
+        custom = { ".git", ".vscode", "build", ".gitignore", "*.out", "tags" },
+  },
   disable_netrw = true,
   hijack_cursor = true,
   sync_root_with_cwd = true,
@@ -36,4 +39,8 @@ return {
       },
     },
   },
+    git = {
+        enable = true,
+        ignore = false,
+    },
 }

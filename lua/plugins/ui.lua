@@ -297,7 +297,7 @@ return {
                  provider = function()
                      local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc -- :h 'enc'
                      --return enc ~= 'utf-8' and enc:upper()
-                     return enc:lower()
+                     return enc:upper()
                  end,
                  hl = { fg = heirline_components.hl.get_colors().green, bg = heirline_components.hl.get_colors().blue },
              }
@@ -349,14 +349,14 @@ return {
                 { ViMode }, Space,
                 lib.component.git_branch(),
                 lib.component.git_diff(),
-                -- lib.component.diagnostics(),
                 { FileNameBlock }, Space,
-                lib.component.file_info(),
+                -- lib.component.file_info(),
                 Align,
                 lib.component.cmd_info(),
                 Align,
-                lib.component.lsp(),
+                -- lib.component.lsp(),
                 lib.component.compiler_state(),
+                lib.component.diagnostics(),
                 -- lib.component.virtual_env(),
                 Space, Space,
                 -- { FileType }, Space, Space,

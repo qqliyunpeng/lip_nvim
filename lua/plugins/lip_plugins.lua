@@ -104,62 +104,6 @@ return {
         -- config = true,
     },
     {
-        'https://gitee.com/nvim_lip/telescope.nvim.git', --tag = '0.1.8',
-        -- dependencies = { "nvim-treesitter/nvim-treesitter" },
-        cmd = "Telescope",
-        config = function()
-            local zf = require('telescope._extensions.zf-native')
-            require('telescope').setup {
-                defaults = {
-                    -- layout_strategy = "bottom_pane",
-                    path_display = {
-                        "filename_first",
-                        -- "truncate",
-                        -- truncate = 3,
-                    },
-                    prompt_prefix = "   ",
-                    selection_caret = " ",
-                    entry_prefix = " ",
-                    sorting_strategy = "ascending",
-                    layout_config = {
-                        horizontal = {
-                            prompt_position = "top",
-                            preview_width = 0.55,
-                        },
-                        width = 0.90,
-                        height = 0.40,
-                    },
-                    mappings = {
-                        n = { ["q"] = require("telescope.actions").close },
-                        i = { ["<C-j>"] = require("telescope.actions").move_selection_next,
-                              ["<C-k>"] = require("telescope.actions").move_selection_previous,
-                            },
-                    },
-                },
-                layout_config = {
-                    bottom = {
-                        height = 0.1,
-                    },
-                },
-                extensions = {
-                    file = {
-                        enable = true,
-                        highlight_results = true,
-                        match_filename = true,
-                        initial_sort = nil,
-                        smart_case = true,
-                    },
-                    generic = {
-                        enable = true,
-                        match_filename = false,
-                        initial_sort = nil,
-                        smart_case = true,
-                    },
-                },
-            }
-        end,
-    },
-    {
         -- 语法高亮
         "https://gitee.com/zgpio/nvim-treesitter.git",
         event = { "BufReadPost", "BufNewFile" },
@@ -173,9 +117,19 @@ return {
         end,
     },
     {
+        'https://gitee.com/nvim_lip/telescope.nvim.git', --tag = '0.1.8',
+        -- dependencies = { "nvim-treesitter/nvim-treesitter" },
+        cmd = "Telescope",
+        opts = function()
+            return require('configs/telescope')
+        end,
+    },
+    {
         "https://gitee.com/nvim_lip/gitsigns.nvim.git", tag = 'v0.9.0',
         event = "User FilePost",
-        config = true,
+        opts = function()
+            return require("configs.gitsigns")
+        end,
     },
     {
         -- file managing , picker etc
@@ -234,6 +188,12 @@ return {
         opts = function()
             return require "configs.mason"
         end,
+    },
+    {
+        'https://gitee.com/suyelu/mason-lspconfig.nvim',
+        config = function()
+            return require("mason-lspconfig").setup()
+        end
     },
     -- below from https://gitee.com/suyelu/nvim/blob/master/init.lua
     {
@@ -294,33 +254,51 @@ return {
         end,
     },
     {
+            "https://gitee.com/yunduozhai/friendly-snippets.git",
+            branch = 'main',
+    },
+    {
+        "https://gitee.com/zhengqijun/cmp-emoji.git",
+        config = function()
+            require'cmp'.setup {
+                sources = {
+                    { name = 'emoji' }
+                }
+            }
+        end
+    },
+    {
+        string.format('%s/LuaSnip', 'https://gitee.com/suyelu'),
+        build = 'make install_jsregexp',
+        dependencies = {
+            "https://gitee.com/yunduozhai/friendly-snippets.git",
+        },
+
+        -- opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+        ---@param opts cmp.ConfigSchema
+        opts = function(_, opts)
+            -- history = true,
+            -- updateevents = "TextChanged,TextChangedI",
+            -- opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+            --table.insert(opts.sources, {name = "emoji"})
+        end,
+        config = function(_, opts)
+            require("luasnip").config.set_config(opts)
+            require "configs.luasnip"
+        end,
+    },
+    {
         -- Autocompletion
         'https://gitee.com/suyelu/nvim-cmp',
         event = "InsertEnter",
         dependencies = {
             "hrsh7th/cmp-emoji",
             string.format('%s/cmp-nvim-lsp', 'https://gitee.com/suyelu'),
-            {
-                string.format('%s/LuaSnip', 'https://gitee.com/suyelu'),
-                build = 'make install_jsregexp',
-            },
             string.format('%s/cmp_luasnip', 'https://gitee.com/suyelu'),
             string.format('%s/cmp-buffer' , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-path'   , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-cmdline', 'https://gitee.com/suyelu'),
-            "https://gitee.com/yunduozhai/friendly-snippets.git",
-            -- opts = { history = true, updateevents = "TextChanged,TextChangedI" },
-            ---@param opts cmp.ConfigSchema
-            opts = function(_, opts)
-                -- history = true,
-                -- updateevents = "TextChanged,TextChangedI",
-                -- opts = { history = true, updateevents = "TextChanged,TextChangedI" },
-                table.insert(opts.sources, {name = "emoji"})
-            end,
-            config = function(_, opts)
-                require("luasnip").config.set_config(opts)
-                require "configs.luasnip"
-            end,
+
         },
 
         opts = function()
