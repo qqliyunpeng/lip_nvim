@@ -3,7 +3,7 @@ local map = vim.keymap.set
 
 -- export on_attach & capabilities
 M.on_attach = function(_, bufnr)
-    print("lip4:on_attach in lspconfig.lua")
+    print("lip5:on_attach in lspconfig.lua")
   local function opts(desc)
     return { buffer = bufnr, desc = "LSP " .. desc }
   end

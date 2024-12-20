@@ -191,8 +191,9 @@ return {
     },
     {
         'https://gitee.com/suyelu/mason-lspconfig.nvim',
+        -- config = true,
         config = function()
-            return require("mason-lspconfig").setup()
+            return require("configs.mason-lspconfig").defaults()
         end
     },
     -- below from https://gitee.com/suyelu/nvim/blob/master/init.lua
@@ -212,7 +213,7 @@ return {
         -- event = "User FilePost",
         config = function()
             print("lip 1")
-            require("configs.lspconfig").defaults()
+            -- require("configs.lspconfig").defaults()
          end,
     },
     {
@@ -410,6 +411,11 @@ return {
             require("ibl").setup { indent = { highlight = highlight } }
         end
     },
+    {
+        "https://gitee.com/yunduozhai/neogen",
+        branch = 'main',
+        config = true,
+    }
 }
 
 
