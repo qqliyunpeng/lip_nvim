@@ -1,6 +1,7 @@
 -- dofile(vim.g.base46_cache .. "cmp")
 
 local cmp = require "cmp"
+local neogen = require 'neogen'
 local luasnip = require 'luasnip'
 local lspkind = require 'lspkind'
 
@@ -20,6 +21,8 @@ local options = {
   mapping = cmp.mapping.preset.insert {
     ["<C-p>"] = cmp.mapping.select_prev_item(),
     ["<C-n>"] = cmp.mapping.select_next_item(),
+    ["<C-k>"] = cmp.mapping.select_prev_item(),
+    ["<C-j>"] = cmp.mapping.select_next_item(),
     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete(),
@@ -35,8 +38,10 @@ local options = {
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif require("luasnip").expand_or_jumpable() then
-        require("luasnip").expand_or_jump()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif neogen.jumpable() then
+        neogen.jump_next()
       else
         fallback()
       end
@@ -46,7 +51,9 @@ local options = {
       if cmp.visible() then
         cmp.select_prev_item()
       elseif luasnip.jumpable(-1) then
-        require("luasnip").jump(-1)
+        luasnip.jump(-1)
+      elseif neogen.jumpable(-1) then
+        neogen.jump_prev()
       else
         fallback()
       end

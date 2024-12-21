@@ -6,10 +6,12 @@ local servers = {
     clangd = {},
     pyright = {},
     lua_ls = {
-        Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
-        },
+        settings = {
+            Lua = {
+                workspace = { checkThirdParty = false },
+                telemetry = { enable = false },
+            },
+        }
     },
 }
 
@@ -40,40 +42,10 @@ local handlers = {
         -- end
 
         print("lip: " .. server_name)
-        require('lspconfig')[server_name].setup{}
-    end,
-    ["clangd"] = function()
-        local lspconfig = require("lspconfig")
-        lspconfig.clangd.setup {
+        require('lspconfig')[server_name].setup({
             on_attach = M.on_attach,
-            capabilities = M.capabilities,
-        }
-    end,
-    ["lua_ls"] = function ()
-        local lspconfig = require("lspconfig")
-        lspconfig.lua_ls.setup {
-            on_attach = M.on_attach,
-            capabilities = M.capabilities,
-            settings = {
-                Lua = {
-                    diagnostics = {
-                        globals = { "vim" },
-                    },
-                    workspace = {
-                        library = {
-                            vim.fn.expand "$VIMRUNTIME/lua",
-                            vim.fn.expand "$VIMRUNTIME/lua/vim/lsp",
-                            -- vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
-                            -- data == ~/.local/share/nvim/lazy/
-                            vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
-                            "${3rd}/luv/library",
-                        },
-                        maxPreload = 100000,
-                        preloadFileSize = 10000,
-                    },
-                },
-            },
-        }
+            capabilities = capabilities
+        })
     end,
 }
 

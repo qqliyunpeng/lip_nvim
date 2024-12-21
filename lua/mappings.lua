@@ -4,10 +4,6 @@ local opt = vim.opt
 opt.clipboard = "unnamedplus"
 opt.cursorline = true
 
--- system
-map("n", " ", ":", { desc = "CMD enter command mode" })
-map("i", "jk", "<ESC>")
-map("n", "<leader>q", "<cmd>q<CR>", { desc = "CMD quit" })
 
 -- 大小的L和H映射
 map({ "n", "t" }, "L", "End", { noremap = true, silent = true,  desc = "to end of line" })

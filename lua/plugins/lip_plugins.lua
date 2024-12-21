@@ -208,6 +208,7 @@ return {
             -- notify and right-bottom info
             -- { 'https://gitee.com/suyelu/fidget.nvim', tag = 'legacy', opts = {} },
             -- Additional lua configuration, makes nvim stuff amazing!
+            -- used to dismiss vim warning
             'https://gitee.com/suyelu/neodev.nvim',
         },
         -- event = "User FilePost",
@@ -308,7 +309,25 @@ return {
     },
     {
         string.format('%s/null-ls.nvim.git', 'https://gitee.com/suyelu'),
-        dependencies = { string.format('%s/plenary.nvim', 'https://gitee.com/suyelu') },
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            string.format('%s/plenary.nvim', 'https://gitee.com/suyelu'),
+            { "https://gitee.com/yunduozhai/mason-null-ls.nvim.git", branch = 'main' },
+        },
+        config = function()
+            local tools = {
+                -- "black",
+            }
+
+            require("mason-null-ls").setup({
+                ensure_installed = tools,
+                handlers = {},
+            })
+
+            require("null-ls").setup({
+                sources = {},
+            })
+        end
     },
     --[[
     {

@@ -28,6 +28,10 @@ o.softtabstop = 4
 o.expandtab = true
 o.sidescroll = 0
 o.sidescrolloff = 4
+vim.api.nvim_create_autocmd({"FileType"}, {
+    pattern = "make",
+    command = "setlocal noexpandtab",
+})
 
 o.termguicolors = true
 

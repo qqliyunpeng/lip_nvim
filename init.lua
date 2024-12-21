@@ -1,5 +1,11 @@
 
+local map = vim.keymap.set
 vim.g.mapleader = ","
+
+-- system
+map("n", " ", ":", { desc = "CMD enter command mode" })
+map("i", "jk", "<ESC>")
+map("n", "<leader>q", "<cmd>q<CR>", { desc = "CMD quit" })
 
 
 vim.env.TREE_SITTER_BOOTSTRAP_URL = "https://gitcode.net/CAPYIN/nvim-treesitter"
@@ -92,84 +98,65 @@ require 'colorizer'.setup{}
 require 'nvim-autopairs'.setup{}
 require 'noice'.setup{}
 require 'dressing'.setup{}
--- require 'mason'.setup{}
+require 'neodev'.setup()
 require 'mason'.setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })
-require 'mason-lspconfig'.setup{}
+require 'mason-lspconfig'.setup()
 -- indent-blankline
 require 'ibl'.setup()
-require('neogen').setup()
+require 'neogen'.setup({ snippet_engine = "luasnip" })
 
-local status, null_ls = pcall(require, 'null-ls')
-if not status then
-  vim.notify '没有找到 null-ls'
-  return
-end
-
-local formatting = null_ls.builtins.formatting
-
-null_ls.setup {
-  debug = true,
-  sources = {
-    null_ls.builtins.code_actions.gitsigns,
-    -- Formatting ---------------------
-    --  brew install shfmt
-    formatting.shfmt,
-    -- StyLua
-    formatting.stylua,
-    -- frontend
-    formatting.prettier.with {
-      -- 只比默认配置少了 markdown
-      filetypes = {
-        'javascript',
-        'javascriptreact',
-        'typescript',
-        'typescriptreact',
-        'vue',
-        'css',
-        'scss',
-        'less',
-        'html',
-        'json',
-        'yaml',
-        'graphql',
-        'c',
-        'cpp',
-      },
-      prefer_local = 'node_modules/.bin',
-      args = { '--tab-width', '4' },
-    },
-
-    null_ls.builtins.diagnostics.eslint,
-    null_ls.builtins.completion.spell,
-    -- formatting.fixjson,
-    -- formatting.black.with({ extra_args = { "--fast" } }),
-  },
-}
+-- local status, null_ls = pcall(require, 'null-ls')
+-- if not status then
+--   vim.notify '没有找到 null-ls'
+--   return
+-- end
+--
+-- local formatting = null_ls.builtins.formatting
+--
+-- null_ls.setup {
+--   debug = true,
+--   sources = {
+--     null_ls.builtins.code_actions.gitsigns,
+--     -- Formatting ---------------------
+--     --  brew install shfmt
+--     formatting.shfmt,
+--     -- StyLua
+--     formatting.stylua,
+--     -- frontend
+--     formatting.prettier.with {
+--       -- 只比默认配置少了 markdown
+--       filetypes = {
+--         'javascript',
+--         'javascriptreact',
+--         'typescript',
+--         'typescriptreact',
+--         'vue',
+--         'css',
+--         'scss',
+--         'less',
+--         'html',
+--         'json',
+--         'yaml',
+--         'graphql',
+--         'c',
+--         'cpp',
+--       },
+--       prefer_local = 'node_modules/.bin',
+--       args = { '--tab-width', '4' },
+--     },
+--
+--     null_ls.builtins.diagnostics.eslint,
+--     null_ls.builtins.completion.spell,
+--     -- formatting.fixjson,
+--     -- formatting.black.with({ extra_args = { "--fast" } }),
+--   },
+-- }
 
 -- local notify = require('notify')
 -- notify("hello lip!")
 -- vim.notify = require("notify")
-
-
-local status, null_ls = pcall(require, 'null-ls')
-if not status then
-    vim.notify '没有找到 null-ls'
-    return
-end
-
-null_ls.setup {
-  debug = true,
-  sources = {
-    null_ls.builtins.code_actions.gitsigns,
-
-    null_ls.builtins.diagnostics.eslint,
-    null_ls.builtins.completion.spell,
-    -- formatting.fixjson,
-    -- formatting.black.with({ extra_args = { "--fast" } }),
-  },
-}
 
 
 require 'options'
