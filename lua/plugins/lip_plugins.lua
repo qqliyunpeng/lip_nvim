@@ -91,7 +91,22 @@ return {
         "https://gitee.com/yunduozhai/vim-illuminate.git",
         event = "VeryLazy",
         config = function()
-            require('illuminate').configure()
+            require('illuminate').configure({
+                providers = {
+                    -- 'lsp',
+                    'treesitter',
+                    -- 'regex',
+                },
+                delay = 800,
+                -- disable in below
+                filetypes_denylist = {
+                    'dirbuf',
+                    'dirvish',
+                    'fugitive',
+                    'NvimTree',
+                },
+                filetypes_allowlist = {'python', 'lua', 'c', 'cpp'},
+            })
         end
     },
     {

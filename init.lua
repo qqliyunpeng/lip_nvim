@@ -50,6 +50,13 @@ vim.cmd[[highlight Normal guibg=NONE ctermbg=NONE]]
 vim.opt.cursorline = true
 vim.cmd[[highlight CursorLine guibg=#3e4451 ctermbg=235]]
 
+-- IlluminatedWordText have problem
+vim.cmd([[
+highlight! link IlluminatedWordText Search
+highlight! link IlluminatedWordRead HlSearchLens
+highlight! link IlluminatedWordWrite  HlSearchLens
+]])
+
 
 -- 打开文件后光标回到关闭的时候的位置
 require'nvim-lastplace'.setup{}

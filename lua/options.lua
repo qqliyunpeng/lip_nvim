@@ -44,6 +44,7 @@ o.undofile = true
 -- interval for writing swap file to disk, also used by gitsigns
 o.updatetime = 250
 
+-- o.exrc = true -- open .nvim.lua, .nvimrc and .exrc support
 
 -- disable nvim intro
 opt.shortmess:append "sI"
