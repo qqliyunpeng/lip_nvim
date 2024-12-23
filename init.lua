@@ -35,6 +35,10 @@ require("lazy").setup({
     { import = "plugins" },
 }, lazy_config)
 
+local function is_available(plugin)
+  local lazy_config_avail, lazy_config_l = pcall(require, "lazy.core.config")
+  return lazy_config_avail and lazy_config_l.spec.plugins[plugin] ~= nil
+end
 
 -- ui
 vim.cmd("colorscheme onedark")
@@ -57,7 +61,33 @@ highlight! link IlluminatedWordWrite  HlSearchLens
 -- 打开文件后光标回到关闭的时候的位置
 require'nvim-lastplace'.setup{}
 
-require("telescope").load_extension("zf-native")
+
+
+local telescope = require("telescope")
+if is_available("zf-native") then
+    require("telescope").load_extension("zf-native")
+end
+if is_available("nvim-neoclip.lua") then
+    telescope.load_extension("neoclip")
+    telescope.load_extension("macroscope")
+end
+
+
+local ssh_connection = vim.fn.getenv("SSH_CONNECTION")
+
+-- if ssh_connection ~= vim.NIL then
+--     vim.g.clipboard = {
+--         name = 'OSC 52',
+--         copy = {
+--             ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+--             ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+--         },
+--         paste = {
+--             ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+--             ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+--         },
+--     }
+-- end
 
 
 -- neoscroll 滚动顺滑

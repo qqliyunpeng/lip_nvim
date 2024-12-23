@@ -61,3 +61,23 @@ map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 vim.keymap.set('n', '<a-j>', require('illuminate').goto_next_reference, { desc = "Move to next reference" })
 vim.keymap.set('n', '<a-k>', require('illuminate').goto_prev_reference, { desc = "Move to previous reference" })
 
+-- clipboard
+-- from normalnvim
+map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
+map("n", "<C-y>", '"+y<esc>', { desc = "Copy to cliboard" })
+map("n", "<C-y>", '"+y<esc>', { desc = "Copy to cliboard" })
+map("n", "<C-d>", '"+y<esc>dd', { desc = "Copy to clipboard and delete line" })
+map("n", "<C-d>", '"+y<esc>dd', { desc = "Copy to clipboard and delete line" })
+map("n", "<C-p>", '"+p<esc>', { desc = "Paste from clipboard" })
+
+
+-- Make 'c' key not copy to clipboard when changing a character.
+map("n", "c", '"_c', { desc = "Change without yanking" })
+map("n", "C", '"_C', { desc = "Change without yanking" })
+map("n", "c", '"_c', { desc = "Change without yanking" })
+map("n", "C", '"_C', { desc = "Change without yanking" })
+
+map("x", "x", '"_x', { desc = "Delete all characters in line" })
+map("x", "X", '"_X', { desc = "Delete all characters in line" })
+
+

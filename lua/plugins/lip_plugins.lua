@@ -227,10 +227,6 @@ return {
             -- 'https://gitee.com/suyelu/neodev.nvim',
         },
         -- event = "User FilePost",
-        config = function()
-            print("lip 1")
-            -- require("configs.lspconfig").defaults()
-         end,
     },
     {
         "https://gitee.com/nvim_lip/lspkind.nvim.git",
@@ -449,7 +445,18 @@ return {
         "https://gitee.com/yunduozhai/neogen",
         branch = 'main',
         config = true,
-    }
+    },
+
+    --  nvim-neoclip [nvim clipboard]
+    --  https://github.com/AckslD/nvim-neoclip.lua
+    --  Read their docs to enable cross-session history.
+    {
+        "AckslD/nvim-neoclip.lua",
+        requires = 'nvim-telescope/telescope.nvim',
+        event = "User BaseFile",
+        opts = {}
+    },
+
 }
 
 
