@@ -12,10 +12,9 @@ vim.env.TREE_SITTER_BOOTSTRAP_URL = "https://gitcode.net/CAPYIN/nvim-treesitter"
 
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-
 if not vim.loop.fs_stat(lazypath) then
     local repo = "https://gitee.com/dinary/lazy.nvim.git"
-    vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
+    local out = vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
     if vim.v.shell_error ~= 0 then
         vim.api.nvim_echo({
             { "Failed to clone lazy.nvim:\n", "ErrorMsg"  },
@@ -27,7 +26,6 @@ if not vim.loop.fs_stat(lazypath) then
         os.exit(1)
     end
 end
-
 vim.opt.rtp:prepend(lazypath)
 
 local lazy_config = require "configs.lazy"
@@ -43,12 +41,10 @@ vim.cmd("colorscheme onedark")
 -- 背景设置成透明
 -- vim.opt.background = 'dark' -- 或使用 'light'
 vim.cmd[[highlight Normal guibg=NONE ctermbg=NONE]]
--- vim.cmd[[highlight NonText guibg=NONE ctermbg=NONE]]
--- vim.cmd[[highlight LineNr guibg=NONE ctermbg=NONE]]
--- vim.cmd[[highlight SignColumn guibg=NONE ctermbg=NONE]]
 -- 当前行高亮
 vim.opt.cursorline = true
 vim.cmd[[highlight CursorLine guibg=#3e4451 ctermbg=235]]
+vim.cmd[[highlight PmenuThumb guibg=#c678dd ctermbg=127]]
 
 -- IlluminatedWordText have problem
 vim.cmd([[
@@ -105,7 +101,7 @@ require 'colorizer'.setup{}
 require 'nvim-autopairs'.setup{}
 require 'noice'.setup{}
 require 'dressing'.setup{}
-require 'neodev'.setup()
+-- require 'neodev'.setup()
 require 'mason'.setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })

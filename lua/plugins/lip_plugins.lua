@@ -224,7 +224,7 @@ return {
             -- { 'https://gitee.com/suyelu/fidget.nvim', tag = 'legacy', opts = {} },
             -- Additional lua configuration, makes nvim stuff amazing!
             -- used to dismiss vim warning
-            'https://gitee.com/suyelu/neodev.nvim',
+            -- 'https://gitee.com/suyelu/neodev.nvim',
         },
         -- event = "User FilePost",
         config = function()

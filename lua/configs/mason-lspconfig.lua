@@ -8,7 +8,21 @@ local servers = {
     lua_ls = {
         settings = {
             Lua = {
-                workspace = { checkThirdParty = false },
+                diagnostics = {
+                    globals = { "vim" },
+                },
+                -- workspace = { checkThirdParty = false },
+                workspace = {
+                    library = {
+                        vim.fn.expand "$VIMRUNTIME/lua",
+                        vim.fn.expand "$VIMRUNTIME/lua/vim/lsp",
+                        -- vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
+                        vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
+                        "${3rd}/luv/library",
+                    },
+                    maxPreload = 100000,
+                    preloadFileSize = 10000,
+                },
                 telemetry = { enable = false },
             },
         }
@@ -41,10 +55,17 @@ local handlers = {
         --     }
         -- end
 
-        print("lip: " .. server_name)
+        local server_setting = {}
+
+        if servers[server_name] and servers[server_name].settings ~= nil then
+            server_setting = servers[server_name].settings
+        end
+
         require('lspconfig')[server_name].setup({
             on_attach = M.on_attach,
-            capabilities = capabilities
+            capabilities = capabilities,
+
+            settings = server_setting,
         })
     end,
 }
