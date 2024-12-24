@@ -35,10 +35,6 @@ require("lazy").setup({
     { import = "plugins" },
 }, lazy_config)
 
-local function is_available(plugin)
-  local lazy_config_avail, lazy_config_l = pcall(require, "lazy.core.config")
-  return lazy_config_avail and lazy_config_l.spec.plugins[plugin] ~= nil
-end
 
 -- ui
 vim.cmd("colorscheme onedark")
@@ -60,17 +56,7 @@ highlight! link IlluminatedWordWrite  HlSearchLens
 
 -- 打开文件后光标回到关闭的时候的位置
 require'nvim-lastplace'.setup{}
-
-
-
-local telescope = require("telescope")
-if is_available("zf-native") then
-    require("telescope").load_extension("zf-native")
-end
-if is_available("nvim-neoclip.lua") then
-    telescope.load_extension("neoclip")
-    telescope.load_extension("macroscope")
-end
+require('neoscroll').setup()
 
 
 local ssh_connection = vim.fn.getenv("SSH_CONNECTION")
@@ -90,33 +76,6 @@ local ssh_connection = vim.fn.getenv("SSH_CONNECTION")
 -- end
 
 
--- neoscroll 滚动顺滑
-local neoscroll = require('neoscroll')
-neoscroll.setup({
-    -- Default easing function used in any animation where
-    -- the `easing` argument has not been explicitly supplied
-    easing = "quadratic"
-})
-local keymap = {
-    -- Use the "sine" easing function
-    ["<C-u>"] = function() neoscroll.ctrl_u({ duration = 200; easing = 'sine' }) end;
-    ["<C-d>"] = function() neoscroll.ctrl_d({ duration = 200; easing = 'sine' }) end;
-    -- Use the "circular" easing function
-    ["<C-b>"] = function() neoscroll.ctrl_b({ duration = 450; easing = 'circular' }) end;
-    ["<C-f>"] = function() neoscroll.ctrl_f({ duration = 450; easing = 'circular' }) end;
-    -- When no value is passed the `easing` option supplied in `setup()` is used
-    ["<A-y>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 100 }) end;
-    ["<A-w>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 100 }) end;
-    ["<A-3>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 100 }) end;
-    ["<A-e>"] = function() neoscroll.scroll(0.1, { move_cursor=false; duration = 100 }) end;
-}
-local modes = { 'n', 'v', 'x' }
-for key, func in pairs(keymap) do
-    vim.keymap.set(modes, key, func)
-end
-
-
-
 -- Project,nvim
 vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射到 :ProjectRoot
 
@@ -127,17 +86,18 @@ require'heirline'.setup{}
 require 'bufferline'.setup{}
 require 'interestingwords'.setup{}
 require 'colorizer'.setup{}
---require 'notify'.setup{}
 require 'nvim-autopairs'.setup{}
 require 'noice'.setup{}
 require 'dressing'.setup{}
--- require 'neodev'.setup()
+
 require 'mason'.setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })
 require 'mason-lspconfig'.setup()
+
 -- indent-blankline
 require 'ibl'.setup()
+-- require('ibl').update { enabled = false }
 require 'neogen'.setup({ snippet_engine = "luasnip" })
 
 -- local status, null_ls = pcall(require, 'null-ls')

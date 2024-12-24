@@ -1,4 +1,19 @@
 
+
+local function is_available(plugin)
+  local lazy_config_avail, lazy_config_l = pcall(require, "lazy.core.config")
+  return lazy_config_avail and lazy_config_l.spec.plugins[plugin] ~= nil
+end
+
+local telescope = require("telescope")
+
+telescope.load_extension("zf-native")
+
+if is_available("nvim-neoclip.lua") then
+    telescope.load_extension("neoclip")
+    telescope.load_extension("macroscope")
+end
+
 return {
     defaults = {
         -- 全部文件，默认是如果有.gitignore 的话会根据 gitignore 进行处理

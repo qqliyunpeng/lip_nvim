@@ -19,42 +19,48 @@ hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
     vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
 end)
 
-vim.g.rainbow_delimiters = { highlight = highlight }
-hooks.register(
-    hooks.type.SCOPE_HIGHLIGHT, 
-    hooks.builtin.scope_highlight_from_extmark
-)
---隐藏开头的第一个indentation
-hooks.register(
-    hooks.type.WHITESPACE,
-    hooks.builtin.hide_first_tab_indent_level
-)
+-- vim.g.rainbow_delimiters = { highlight = highlight }
+-- hooks.register(
+--     hooks.type.SCOPE_HIGHLIGHT,
+--     hooks.builtin.scope_highlight_from_extmark
+-- )
+-- --隐藏开头的第一个indentation
+-- hooks.register(
+--     hooks.type.WHITESPACE,
+--     hooks.builtin.hide_first_tab_indent_level
+-- )
 
 local options = {
-    exclude = {
-        buftypes = {
-            "nofile",
-            "prompt",
-            "quickfix",
-            "terminal",
-        },
-        filetypes = {
-            "aerial",
-            "alpha",
-            "dashboard",
-            "help",
-            "lazy",
-            "mason",
-            "neo-tree",
-            "NvimTree",
-            "neogitstatus",
-            "notify",
-            "startify",
-            "toggleterm",
-            "Trouble",
-        },
+    -- exclude = {
+    --     buftypes = {
+    --         "nofile",
+    --         "prompt",
+    --         "quickfix",
+    --         "terminal",
+    --     },
+    --     filetypes = {
+    --         "aerial",
+    --         "alpha",
+    --         "dashboard",
+    --         "help",
+    --         "lazy",
+    --         "mason",
+    --         "neo-tree",
+    --         "NvimTree",
+    --         "neogitstatus",
+    --         "notify",
+    --         "startify",
+    --         "toggleterm",
+    --         "Trouble",
+    --     },
+    -- },
+    indent = {
+        char = "x",
+        highlight = highlight,
+        smart_indent_cap = false,
     },
-    scope = { highlight = highlight },
+    enabled = false,
+    -- scope = { highlight = highlight },
 }
 
 return options

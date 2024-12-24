@@ -33,7 +33,7 @@ return {
                 stop_eof = true,             -- Stop at <EOF> when scrolling downwards
                 respect_scrolloff = false,   -- Stop scrolling when the cursor reaches the scrolloff margin of the file
                 cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
-                easing = 'linear',           -- Default easing function
+                easing = 'quadratic',        -- Default easing function
                 pre_hook = nil,              -- Function to run before the scrolling animation starts
                 post_hook = nil,             -- Function to run after the scrolling animation ends
                 performance_mode = false,    -- Disable "Performance Mode" on all buffers.
@@ -354,64 +354,16 @@ return {
     --]]
     {
         -- 函数缩进前的条
-        "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
+        -- "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
+        "lukas-reineke/indent-blankline.nvim",
         -- event = "User FilePost",
         main = "ibl",
-        -- opts = {
-        --     exclude = {
-        --         buftypes = {
-        --             "nofile",
-        --             "prompt",
-        --             "quickfix",
-        --             "terminal",
-        --         },
-        --         filetypes = {
-        --             "aerial",
-        --             "alpha",
-        --             "dashboard",
-        --             "help",
-        --             "lazy",
-        --             "mason",
-        --             "neo-tree",
-        --             "NvimTree",
-        --             "neogitstatus",
-        --             "notify",
-        --             "startify",
-        --             "toggleterm",
-        --             "Trouble",
-        --         },
-        --     },
-        --     -- scope = { highlight = highlight },
-        -- },
-        -- config = function (_, opts)
-        --     local highlight = {
-        --         "RainbowRed",
-        --         "RainbowYellow",
-        --         "RainbowBlue",
-        --         "RainbowOrange",
-        --         "RainbowGreen",
-        --         "RainbowViolet",
-        --         "RainbowCyan",
-        --     }
-        --     local hooks = require "ibl.hooks"
-        --     hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        --         vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-        --         vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-        --         vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-        --         vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-        --         vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-        --         vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-        --         vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-        --     end)
-        --     vim.g.rainbow_delimiters = { highlight = highlight }
-            -- hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
-            -- require("ibl").setup { scope = { highlight = highlight } }
-            -- require("ibl").setup(opts)
 
         -- opts = function()
         --     return require "configs.blankline"
         -- end,
-            -- hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+        -- config = function(_, opts)
+        --     return require('ibl').setup(opts)
         -- end,
 
         config = function()
@@ -438,7 +390,18 @@ return {
                 vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
             end)
 
-            require("ibl").setup { indent = { highlight = highlight } }
+            print('lip2222')
+            require("ibl").setup {
+                debounce = 100,
+                indent = {
+                    char = "█",
+                    -- tab_char = "▸",
+                    highlight = highlight,
+                    smart_indent_cap = true,
+                    priority = 2,
+                    repeat_linebreak = false,
+                },
+            }
         end
     },
     {
