@@ -53,6 +53,15 @@ highlight! link IlluminatedWordRead HlSearchLens
 highlight! link IlluminatedWordWrite  HlSearchLens
 ]])
 
+vim.api.nvim_create_autocmd('TextYankPost', {
+    group = vim.api.nvim_create_augroup('highlight_yank', {}),
+    desc = 'Highlight selection on yank',
+    pattern = '*',
+    callback = function()
+        vim.highlight.on_yank { higroup = 'CurSearch', timeout = 400 }
+    end,
+})
+
 
 -- 打开文件后光标回到关闭的时候的位置
 require'nvim-lastplace'.setup{}
@@ -85,7 +94,7 @@ require('gitsigns').setup()
 require'heirline'.setup{}
 require 'bufferline'.setup{}
 require 'interestingwords'.setup{}
-require 'colorizer'.setup{}
+require 'colorizer'
 require 'nvim-autopairs'.setup{}
 require 'noice'.setup{}
 require 'dressing'.setup{}

@@ -473,5 +473,41 @@ return {
         }
     end
     },
+    {
+        -- indent 的动画效果
+        -- text object ii ai [i ]i
+        "https://gitee.com/yunduozhai/mini.indentscope.git",
+        version = false,
+        opts = {
+            symbol = '▎',
+            options = { try_as_border = true },
+        },
+        init = function()
+            return require("configs.indent").miniIndentInit()
+        end,
+    },
+    {
+        "https://gitee.com/sunn4mirror/snacks.nvim.git",
+        priority = 1000,
+        lazy = false,
+        opts = {
+            indent = { enabled = false },
+            notifier = { enabled = true },
+            quickfile = { enabled = true },
+            statuscolumn = { enabled = true },
+            words = { enabled = true },
+            scope = { enabled = false },
+        },
+    },
+    {
+        -- 函数缩进前的条
+        "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
+        -- event = "User FilePost",
+        -- event = "BufReadPost",
+        main = "ibl",
+        opts = function()
+            return require("configs.indent").blanklineConfig()
+        end,
+    },
 }
 
