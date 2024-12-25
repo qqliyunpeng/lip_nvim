@@ -96,8 +96,10 @@ require 'mason'.setup({
 require 'mason-lspconfig'.setup()
 
 -- indent-blankline
-require 'ibl'.setup()
--- require('ibl').update { enabled = false }
+require ('ibl')
+require('snacks')
+require('mini.indentscope')
+
 require 'neogen'.setup({ snippet_engine = "luasnip" })
 
 -- local status, null_ls = pcall(require, 'null-ls')

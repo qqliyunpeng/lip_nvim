@@ -353,56 +353,85 @@ return {
     },
     --]]
     {
-        -- 函数缩进前的条
-        -- "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
-        "lukas-reineke/indent-blankline.nvim",
-        -- event = "User FilePost",
-        main = "ibl",
-
-        -- opts = function()
-        --     return require "configs.blankline"
-        -- end,
-        -- config = function(_, opts)
-        --     return require('ibl').setup(opts)
-        -- end,
-
-        config = function()
-            local highlight = {
-                "RainbowRed",
-                "RainbowYellow",
-                "RainbowBlue",
-                "RainbowOrange",
-                "RainbowGreen",
-                "RainbowViolet",
-                "RainbowCyan",
-            }
-
-            local hooks = require "ibl.hooks"
-            -- create the highlight groups in the highlight setup hook, so they are reset
-            -- every time the colorscheme changes
-            hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-                vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-                vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-                vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-                vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-                vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-                vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-                vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-            end)
-
-            print('lip2222')
-            require("ibl").setup {
-                debounce = 100,
-                indent = {
-                    char = "█",
-                    -- tab_char = "▸",
-                    highlight = highlight,
-                    smart_indent_cap = true,
-                    priority = 2,
-                    repeat_linebreak = false,
+        -- indent 的动画效果
+        -- text object ii ai [i ]i
+        "https://gitee.com/yunduozhai/mini.indentscope.git",
+        version = false,
+        opts = {
+            symbol = '▎',
+            options = { try_as_border = true },
+        },
+        init = function()
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = {
+                    "Trouble",
+                    "alpha",
+                    "dashboard",
+                    "fzf",
+                    "help",
+                    "lazy",
+                    "mason",
+                    "neo-tree",
+                    "NvimTree",
+                    "notify",
+                    "snacks_dashboard",
+                    "snacks_notif",
+                    "snacks_terminal",
+                    "snacks_win",
+                    "toggleterm",
+                    "trouble",
                 },
+                callback = function()
+                    vim.b.miniindentscope_disable = true
+                end,
+            })
+
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "SnacksDashboardOpened",
+                callback = function(data)
+                    vim.b[data.buf].miniindentscope_disable = true
+                end,
+            })
+        end,
+    },
+    {
+        "https://gitee.com/sunn4mirror/snacks.nvim.git",
+        priority = 1000,
+        lazy = false,
+        opts = {
+            indent = { enabled = false },
+            notifier = { enabled = true },
+            quickfile = { enabled = true },
+            statuscolumn = { enabled = true },
+            words = { enabled = true },
+            scope = { enabled = false },
+        },
+    },
+    {
+        -- 函数缩进前的条
+        "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
+        -- event = "User FilePost",
+        -- event = "BufReadPost",
+        main = "ibl",
+        opts = function()
+            Snacks.toggle({
+                name = "Indention Guides",
+                get = function()
+                    return require("ibl.config").get_config(0).enabled
+                end,
+                set = function(state)
+                    require("ibl").setup_buffer(0, { enabled = state })
+                end,
+            }):map("<leader>ug")
+
+            return {
+                indent = {
+                    char = "▎",
+                    tab_char = "▎",
+                },
+                scope = { enabled = false, show_start = false, show_end = false },
             }
-        end
+        end,
     },
     {
         "https://gitee.com/yunduozhai/neogen",

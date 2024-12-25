@@ -15,7 +15,7 @@ local servers = {
         settings = {
             Lua = {
                 diagnostics = {
-                    globals = { "vim" },
+                    globals = { "vim", "Snacks" },
                 },
                 -- workspace = { checkThirdParty = false },
                 workspace = {
