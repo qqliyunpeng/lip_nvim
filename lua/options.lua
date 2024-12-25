@@ -13,6 +13,7 @@ o.scrolloff = 5
 -- 显示相对行号和当前行的设置
 o.relativenumber = true
 o.number = true
+vim.cmd[[hi CursorLineNr cterm = bold gui = bold]]
 o.wrap = false
 -- code indent and typesetting config
 o.autoindent = true
