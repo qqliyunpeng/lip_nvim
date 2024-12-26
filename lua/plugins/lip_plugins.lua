@@ -158,7 +158,7 @@ return {
         'Mr-LLLLL/interestingwords.nvim',
         config = function()
             require('interestingwords').setup{
-                colors = { '#aeee00', '#ff0000', '#0000ff', '#b88823', '#ffa724', '#ff2c4b'  },
+                colors = { '#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF' },
                 search_count = true,
                 navigation = true,
                 scroll_center = true,
@@ -309,7 +309,6 @@ return {
             string.format('%s/cmp-buffer' , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-path'   , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-cmdline', 'https://gitee.com/suyelu'),
-
         },
 
         opts = function()

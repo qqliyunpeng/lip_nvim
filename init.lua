@@ -36,23 +36,33 @@ require("lazy").setup({
 }, lazy_config)
 
 
--- ui
+-- ui or color
 vim.cmd("colorscheme onedark")
 -- 背景设置成透明
 -- vim.opt.background = 'dark' -- 或使用 'light'
-vim.cmd[[highlight Normal guibg=NONE ctermbg=NONE]]
--- 当前行高亮
-vim.opt.cursorline = true
-vim.cmd[[highlight CursorLine guibg=#3e4451 ctermbg=235]]
-vim.cmd[[highlight PmenuThumb guibg=#c678dd ctermbg=127]]
+-- vim.cmd[[highlight Normal guibg=NONE ctermbg=NONE]]
+-- vim.cmd[[hi CursorLine guibg=#3e4451 ctermbg=235]]
+-- vim.cmd[[hi CursorLineNr cterm = bold gui = bold]]
+-- vim.cmd[[hi PmenuThumb guibg=#c678dd ctermbg=127]]
 
 -- IlluminatedWordText have problem
 vim.cmd([[
-highlight! link IlluminatedWordText Search
-highlight! link IlluminatedWordRead HlSearchLens
-highlight! link IlluminatedWordWrite  HlSearchLens
+hi! link IlluminatedWordText Search
+hi! link IlluminatedWordRead HlSearchLens
+hi! link IlluminatedWordWrite  HlSearchLens
+hi Normal guibg=NONE ctermbg=NONE
+" 当前行
+hi CursorLine guibg=#3e4451 ctermbg=235
+" 当前行号
+hi CursorLineNr cterm = bold gui = bold guifg=#ff966c
+" 搜索的结果中当前的块的背景颜色
+hi CurSearch guibg=#ff966c
+" 弹出的窗口右侧的下拉框的颜色
+hi PmenuThumb guibg=#c678dd ctermbg=127
+hi MiniIndentscopeSymbol guifg=#589ed7 guibg=#1e2030
 ]])
 
+-- 复制之后高亮显示一下复制的内容
 vim.api.nvim_create_autocmd('TextYankPost', {
     group = vim.api.nvim_create_augroup('highlight_yank', {}),
     desc = 'Highlight selection on yank',
@@ -65,7 +75,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- 打开文件后光标回到关闭的时候的位置
 require'nvim-lastplace'.setup{}
-require('neoscroll').setup()
+require('neoscroll')
 
 
 local ssh_connection = vim.fn.getenv("SSH_CONNECTION")
@@ -91,9 +101,9 @@ vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射
 -- gitsigns
 require('gitsigns').setup()
 
-require'heirline'.setup{}
+require'heirline'
 require 'bufferline'.setup{}
-require 'interestingwords'.setup{}
+require 'interestingwords'
 require 'colorizer'
 require 'nvim-autopairs'.setup{}
 require 'noice'.setup{}
