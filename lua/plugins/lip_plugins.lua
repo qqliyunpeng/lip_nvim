@@ -162,10 +162,10 @@ return {
                 search_count = true,
                 navigation = true,
                 scroll_center = true,
-                search_key = "n",
-                --cancel_search_key = "<leader>M",
+                -- search_key = "n",
+                -- cancel_search_key = "<leader>N",
                 color_key = "<leader>e",
-                --cancel_color_key = "<leader>K",
+                cancel_color_key = "<leader>K",
                 select_mode = "loop",  -- random or loop
             }
         end,

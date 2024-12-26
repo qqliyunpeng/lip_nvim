@@ -7,6 +7,7 @@ map("n", " ", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 map("n", "<leader>q", "<cmd>q<CR>", { desc = "CMD quit" })
 
+require 'options'
 
 vim.env.TREE_SITTER_BOOTSTRAP_URL = "https://gitcode.net/CAPYIN/nvim-treesitter"
 
@@ -35,15 +36,11 @@ require("lazy").setup({
     { import = "plugins" },
 }, lazy_config)
 
+require 'mappings'
+
 
 -- ui or color
 vim.cmd("colorscheme onedark")
--- 背景设置成透明
--- vim.opt.background = 'dark' -- 或使用 'light'
--- vim.cmd[[highlight Normal guibg=NONE ctermbg=NONE]]
--- vim.cmd[[hi CursorLine guibg=#3e4451 ctermbg=235]]
--- vim.cmd[[hi CursorLineNr cterm = bold gui = bold]]
--- vim.cmd[[hi PmenuThumb guibg=#c678dd ctermbg=127]]
 
 -- IlluminatedWordText have problem
 vim.cmd([[
@@ -115,64 +112,12 @@ require 'mason'.setup({
 require 'mason-lspconfig'.setup()
 
 -- indent-blankline
-require ('ibl')
+require('ibl')
 require('snacks')
 require('mini.indentscope')
 
+require('whitespace-nvim')
+
 require 'neogen'.setup({ snippet_engine = "luasnip" })
 
--- local status, null_ls = pcall(require, 'null-ls')
--- if not status then
---   vim.notify '没有找到 null-ls'
---   return
--- end
---
--- local formatting = null_ls.builtins.formatting
---
--- null_ls.setup {
---   debug = true,
---   sources = {
---     null_ls.builtins.code_actions.gitsigns,
---     -- Formatting ---------------------
---     --  brew install shfmt
---     formatting.shfmt,
---     -- StyLua
---     formatting.stylua,
---     -- frontend
---     formatting.prettier.with {
---       -- 只比默认配置少了 markdown
---       filetypes = {
---         'javascript',
---         'javascriptreact',
---         'typescript',
---         'typescriptreact',
---         'vue',
---         'css',
---         'scss',
---         'less',
---         'html',
---         'json',
---         'yaml',
---         'graphql',
---         'c',
---         'cpp',
---       },
---       prefer_local = 'node_modules/.bin',
---       args = { '--tab-width', '4' },
---     },
---
---     null_ls.builtins.diagnostics.eslint,
---     null_ls.builtins.completion.spell,
---     -- formatting.fixjson,
---     -- formatting.black.with({ extra_args = { "--fast" } }),
---   },
--- }
-
--- local notify = require('notify')
--- notify("hello lip!")
--- vim.notify = require("notify")
-
-
-require 'options'
-require 'mappings'
 

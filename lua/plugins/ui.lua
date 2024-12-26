@@ -509,5 +509,27 @@ return {
             return require("configs.indent").blanklineConfig()
         end,
     },
+    {
+        -- 显示并去掉空格
+        "https://gitee.com/nvim_lip/whitespace.nvim.git",
+        config = function()
+            require("whitespace-nvim").setup({
+                highlight = 'DiffDelete',
+                ignored_filetypes = {
+                    'lazy',
+                    'help',
+                    'mason',
+                    "notify",
+                    'Trouble',
+                    'NvimTree',
+                    'dashboard',
+                    'TelescopePrompt',
+                },
+                ignore_terimal = true,
+                return_cursor = true,
+            })
+            vim.keymap.set('n', '<leader><Space>', require('whitespace-nvim').trim)
+        end
+    },
 }
 
