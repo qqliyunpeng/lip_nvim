@@ -75,7 +75,7 @@ require'nvim-lastplace'.setup{}
 require('neoscroll')
 
 
-local ssh_connection = vim.fn.getenv("SSH_CONNECTION")
+-- local ssh_connection = vim.fn.getenv("SSH_CONNECTION")
 
 -- if ssh_connection ~= vim.NIL then
 --     vim.g.clipboard = {
@@ -117,6 +117,7 @@ require('snacks')
 require('mini.indentscope')
 
 require('whitespace-nvim')
+require('lspsaga')
 
 require 'neogen'.setup({ snippet_engine = "luasnip" })
 

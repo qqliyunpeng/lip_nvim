@@ -519,7 +519,7 @@ return {
                     'lazy',
                     'help',
                     'mason',
-                    "notify",
+                    'notify',
                     'Trouble',
                     'NvimTree',
                     'dashboard',
@@ -530,6 +530,26 @@ return {
             })
             vim.keymap.set('n', '<leader><Space>', require('whitespace-nvim').trim)
         end
+    },
+    {
+        -- function tree in top
+        "https://gitee.com/yunduozhai/lspsaga.nvim.git",
+        opts = function()
+            return {
+                ui = {
+                    code_action = '󱠀',
+                }
+            }
+        end,
+        config = function(_, opts)
+            local map = vim.keymap.set
+            map("n", "gf"        , "<cmd>Lspsaga finder<CR>", { desc = "Show LSP methods search result"} )
+            map("n", "<A-k>"     , "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover Documentation"} )
+            map("n", "<leader>rn", "<cmd>Lspsaga rename ++project<cr>", { desc = '[R]e[n]ame'} )
+            map("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc ='[C]ode [A]ction'} )
+
+            require('lspsaga').setup(opts)
+        end,
     },
 }
 
