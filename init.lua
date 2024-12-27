@@ -64,6 +64,7 @@ hi! link IlluminatedWordText Search
 hi! link IlluminatedWordRead HlSearchLens
 hi! link IlluminatedWordWrite  HlSearchLens
 hi Normal guibg=NONE ctermbg=NONE
+hi LineNr guibg=NONE ctermbg=NONE
 " 当前行
 hi CursorLine guibg=#3e4451 ctermbg=235
 " 当前行号
