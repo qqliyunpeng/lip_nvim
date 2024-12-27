@@ -11,6 +11,22 @@ require 'options'
 
 vim.env.TREE_SITTER_BOOTSTRAP_URL = "https://gitcode.net/CAPYIN/nvim-treesitter"
 
+vim.api.nvim_create_augroup('MyVimEnterGroup', { clear = true })
+
+-- 监听 VimEnter 事件
+-- 解决在nvim命令开启界面的时候，snacks_dashboard 中开始的时候没有filetype
+vim.api.nvim_create_autocmd('VimEnter', {
+    group = 'MyVimEnterGroup',
+    callback = function()
+        -- 在 VimEnter 事件触发时执行的操作
+        -- 例如，检查是否是 snacks_dashboard 界面，并设置 filetype
+        if vim.bo.filetype == "" then
+            vim.bo.filetype = 'snacks_dashboard'
+        end
+    end,
+})
+
+
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then

@@ -12,6 +12,8 @@ M.miniIndentInit = function()
             "mason",
             "neo-tree",
             "NvimTree",
+            "cmp_menu",
+            "noice",
             "notify",
             "snacks_dashboard",
             "snacks_notif",

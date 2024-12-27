@@ -497,6 +497,30 @@ return {
             statuscolumn = { enabled = true },
             words = { enabled = true },
             scope = { enabled = false },
+            dashboard = {
+                preset = {
+                    header = [[
+██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z
+██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z    
+██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z       
+██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z         
+███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║           
+╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝           
+]],
+                    keys = {
+                        { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+                        { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+                        { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+                        { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+                        { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+                        { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+                        { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
+                        { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
+                        { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+                    },
+
+                },
+            },
         },
     },
     {
@@ -519,10 +543,16 @@ return {
                     'lazy',
                     'help',
                     'mason',
+                    'noice',
                     'notify',
                     'Trouble',
+                    'cmp_menu',
                     'NvimTree',
                     'dashboard',
+                    'snacks_win',
+                    'snacks_notif',
+                    'snacks_terminal',
+                    'snacks_dashboard',
                     'TelescopePrompt',
                 },
                 ignore_terimal = true,
@@ -545,7 +575,7 @@ return {
             local map = vim.keymap.set
             map("n", "gf"        , "<cmd>Lspsaga finder<CR>", { desc = "Show LSP methods search result"} )
             map("n", "<A-k>"     , "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover Documentation"} )
-            map("n", "<leader>rn", "<cmd>Lspsaga rename ++project<cr>", { desc = '[R]e[n]ame'} )
+            map("n", "<leader>cn", "<cmd>Lspsaga rename ++project<cr>", { desc = '[R]e[n]ame'} )
             map("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc ='[C]ode [A]ction'} )
 
             require('lspsaga').setup(opts)
