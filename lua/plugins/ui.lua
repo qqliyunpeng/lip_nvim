@@ -461,7 +461,7 @@ return {
                     }
                 },
 
-            -- Disable every other noice feature
+            -- false 打开下边的messages 多一行，如果是 true，则 messages 会 notify
             messages = { enabled = false },
             lsp = {
                 hover = { enabled = false },
@@ -547,6 +547,7 @@ return {
                     'notify',
                     'Trouble',
                     'cmp_menu',
+                    'markdown',
                     'NvimTree',
                     'dashboard',
                     'snacks_win',

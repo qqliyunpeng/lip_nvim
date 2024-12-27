@@ -95,7 +95,7 @@ M.on_attach = function(client, bufnr)
 
     map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
     map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
-    map("n", "gi", vim.lsp.buf.implementation, opts "Go to implementation")
+    -- map("n", "gi", vim.lsp.buf.implementation, opts "Go to implementation")
     map("n", "gr", "<cmd>Telescope lsp_references<CR>", opts "Show references")
     map("n", "<leader>sh", vim.lsp.buf.signature_help, opts "Show signature help")
     map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
@@ -119,6 +119,21 @@ M.defaults = function()
         handlers = handlers,
     })
     mason_lspconfig.setup_handlers(handlers)
+end
+
+local lsp_sig_defaults = {
+    log_path = vim.fn.expand("$HOME") .. "/tmp/sig.log",
+    debug = false,
+    hint_enable = true,
+    handler_opts = { border = "rounded" },
+    max_width = 50,
+    floating_window_off_x = 20, -- adjust float windows x position.
+}
+
+M.lspSignatureDefaults = function()
+    require('lsp_signature').setup(lsp_sig_defaults)
+    vim.keymap.set({ 'i' }, '<C-e>', function() require('lsp_signature').toggle_float_win()
+        end, { silent = true, noremap = true, desc = 'toggle signature' })
 end
 
 return M

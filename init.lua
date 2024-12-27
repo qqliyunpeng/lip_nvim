@@ -119,13 +119,15 @@ require 'bufferline'.setup{}
 require 'interestingwords'
 require 'colorizer'
 require 'nvim-autopairs'.setup{}
-require 'noice'.setup{}
+require 'noice'
 require 'dressing'.setup{}
 
 require 'mason'.setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })
 require 'mason-lspconfig'.setup()
+
+require('lsp_signature')
 
 -- indent-blankline
 require('ibl')

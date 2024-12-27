@@ -265,6 +265,25 @@ return {
         end,
     },
     {
+        -- lsp 输入的同时提示参数
+        "https://gitee.com/yunduozhai/lsp_signature.nvim.git",
+        -- opts = {
+        --     log_path = vim.fn.expand("$HOME") .. "/tmp/sig.log",
+        --     debug = false,
+        --     hint_enable = true,
+        --     handler_opts = { border = "rounded" },
+        --     max_width = 50,
+        --     floating_window_off_x = 20, -- adjust float windows x position.
+        -- },
+        config = function(_, opts)
+            -- require('lsp_signature').setup(opts)
+            -- vim.keymap.set({ 'i' }, '<C-e>', function()       require('lsp_signature').toggle_float_win()
+            -- end, { silent = true, noremap = true, desc = 'toggle signature' })
+
+            return require("configs.mason-lspconfig").lspSignatureDefaults()
+        end
+    },
+    {
             "https://gitee.com/yunduozhai/friendly-snippets.git",
             branch = 'main',
     },
@@ -285,16 +304,7 @@ return {
             "https://gitee.com/yunduozhai/friendly-snippets.git",
         },
 
-        -- opts = { history = true, updateevents = "TextChanged,TextChangedI" },
-        ---@param opts cmp.ConfigSchema
-        opts = function(_, opts)
-            -- history = true,
-            -- updateevents = "TextChanged,TextChangedI",
-            -- opts = { history = true, updateevents = "TextChanged,TextChangedI" },
-            --table.insert(opts.sources, {name = "emoji"})
-        end,
         config = function(_, opts)
-            require("luasnip").config.set_config(opts)
             require "configs.luasnip"
         end,
     },
