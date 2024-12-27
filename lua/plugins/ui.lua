@@ -481,16 +481,16 @@ return {
                     }
                 },
 
-            -- false 打开下边的messages 多一行，如果是 true，则 messages 会 notify
-            messages = { enabled = false },
-            lsp = {
-                hover = { enabled = false },
-                signature = { enabled = false },
-                progress = { enabled = false },
-                message = { enabled = false },
-                smart_move = { enabled = false },
-            },
-        }
+                -- false 打开下边的messages 多一行，如果是 true，则 messages 会 notify
+                messages = { enabled = true },
+                lsp = {
+                    hover = { enabled = false },
+                    signature = { enabled = false },
+                    progress = { enabled = true },
+                    message = { enabled = true },
+                    smart_move = { enabled = false },
+                },
+            }
     end
     },
     {
