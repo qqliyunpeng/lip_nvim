@@ -72,7 +72,7 @@ hi CursorLineNr cterm = bold gui = bold guifg=#ff966c
 hi CurSearch guibg=#ff966c
 " 弹出的窗口右侧的下拉框的颜色
 hi PmenuThumb guibg=#c678dd ctermbg=127
-hi MiniIndentscopeSymbol guifg=#589ed7 guibg=#1e2030
+hi MiniIndentscopeSymbol guifg=#589ed7 guibg=NONE
 ]])
 
 -- 复制之后高亮显示一下复制的内容
@@ -115,7 +115,7 @@ vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射
 require('gitsigns').setup()
 
 require'heirline'
-require 'bufferline'.setup{}
+require 'bufferline'
 require 'interestingwords'
 require 'colorizer'
 require 'nvim-autopairs'.setup{}

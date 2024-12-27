@@ -403,15 +403,15 @@ return {
         'https://gitee.com/yunduozhai/bufferline.nvim.git',
         version = "*",
         dependencies = 'nvim-web-devicons',
-        options = {
+        opts = {
             themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
-            numbers = "both",
+            numbers = "ordinal",
             close_command = "bdelete! %d",       -- can be a string | function, | false see "Mouse actions"
             right_mouse_command = "bdelete! %d", -- can be a string | function | false, see "Mouse actions"
             left_mouse_command = "buffer %d",    -- can be a string | function, | false see "Mouse actions"
             middle_mouse_command = nil,          -- can be a string | function, | false see "Mouse actions"
             indicator = {
-                style = 'underline',
+                style = 'icon',
             },
             offsets = {
                 {
@@ -423,13 +423,33 @@ return {
             },
             color_icons = true, -- whether or not to add the filetype icon highlights
             highlights = {
+                fill = {
+                    bg = "#ffcc00", -- 选中的缓冲区的背景颜色, not work!!!
+                },
+                numbers_visible = {
+                    bg = "#ffcc00", -- 选中的缓冲区的背景颜色, not work!!!
+                },
+
                 buffer_selected = {
                     fg = {attribute = "fg", highlight = "Normal" },
                     bg = "#ffcc00", -- 选中的缓冲区的背景颜色, not work!!!
+                    bold = true,
+                    italic = false,
                     -- gui = "bold",
+                },
+                tab_selected = {
+                },
+                pick_selected = {
+                    -- fg = '<colour-value-here>',
+                    bg = "#ffcc00", -- 选中的缓冲区的背景颜色, not work!!!
+                    bold = true,
+                    italic = false,
                 },
             },
         },
+        config = function(_, opts)
+            require('bufferline').setup({ options = opts })
+        end
     },
     {
         --  [better ui elements]
