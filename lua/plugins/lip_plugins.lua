@@ -213,7 +213,7 @@ return {
         'https://gitee.com/suyelu/mason-lspconfig.nvim',
         -- config = true,
         config = function()
-            return require("configs.mason-lspconfig").defaults()
+            return require("configs.lspconfig").defaults()
         end
     },
     -- below from https://gitee.com/suyelu/nvim/blob/master/init.lua
@@ -287,7 +287,7 @@ return {
             -- vim.keymap.set({ 'i' }, '<C-e>', function()       require('lsp_signature').toggle_float_win()
             -- end, { silent = true, noremap = true, desc = 'toggle signature' })
 
-            return require("configs.mason-lspconfig").lspSignatureDefaults()
+            return require("configs.lspconfig").lspSignatureDefaults()
         end
     },
     {

@@ -1,89 +1,113 @@
 local M = {}
 local map = vim.keymap.set
+local mason_lspconfig = require 'mason-lspconfig'
 
--- export on_attach & capabilities
-M.on_attach = function(_, bufnr)
-    print("lip5:on_attach in lspconfig.lua")
-  local function opts(desc)
-    return { buffer = bufnr, desc = "LSP " .. desc }
-  end
-
-  map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
-  map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
-  map("n", "gi", vim.lsp.buf.implementation, opts "Go to implementation")
-  map("n", "<leader>sh", vim.lsp.buf.signature_help, opts "Show signature help")
-  map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
-  map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")
-
-  map("n", "<leader>wl", function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, opts "List workspace folders")
-
-  map("n", "<leader>d", vim.lsp.buf.type_definition, opts "Go to type definition")
-  -- map("n", "<leader><leader>ra", require "nvchad.lsp.renamer", opts "NvRenamer")
-
-  map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action")
-  map("n", "gr", vim.lsp.buf.references, opts "Show references")
+local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "󰋼" }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
--- disable semanticTokens
-M.on_init = function(client, _)
-    print("lip3:on_init")
-  if client.supports_method "textDocument/semanticTokens" then
-    client.server_capabilities.semanticTokensProvider = nil
-  end
-end
-
-M.capabilities = vim.lsp.protocol.make_client_capabilities()
-
-M.capabilities.textDocument.completion.completionItem = {
-  documentationFormat = { "markdown", "plaintext" },
-  snippetSupport = true,
-  preselectSupport = true,
-  insertReplaceSupport = true,
-  labelDetailsSupport = true,
-  deprecatedSupport = true,
-  commitCharactersSupport = true,
-  tagSupport = { valueSet = { 1 } },
-  resolveSupport = {
-    properties = {
-      "documentation",
-      "detail",
-      "additionalTextEdits",
+local servers = {
+    clangd = {},
+    pyright = {},
+    lua_ls = {
+        settings = {
+            Lua = {
+                diagnostics = {
+                    globals = { "vim", "Snacks" },
+                },
+                -- workspace = { checkThirdParty = false },
+                workspace = {
+                    library = {
+                        vim.fn.expand "$VIMRUNTIME/lua",
+                        vim.fn.expand "$VIMRUNTIME/lua/vim/lsp",
+                        -- vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
+                        vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
+                        "${3rd}/luv/library",
+                    },
+                    maxPreload = 100000,
+                    preloadFileSize = 10000,
+                },
+                telemetry = { enable = false },
+            },
+        }
     },
-  },
 }
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+local handlers = {
+    function(server_name)
+        local server_setting = {}
+
+        if servers[server_name] and servers[server_name].settings ~= nil then
+            server_setting = servers[server_name].settings
+        end
+
+        require('lspconfig')[server_name].setup({
+            on_attach = M.on_attach,
+            capabilities = capabilities,
+
+            settings = server_setting,
+        })
+    end,
+}
+
+M.capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+-- 保存自动格式化
+M.on_attach = function(client, bufnr)
+    local function opts(desc)
+        return { buffer = bufnr, desc = "LSP " .. desc }
+    end
+
+    --client.offset_encoding = 'utf-16' -- 可能没有用
+    if client.server_capabilities.documentFormattingProvider then
+        local pos = vim.fn.getpos '.'
+        --vim.cmd 'autocmd BufWritePre <buffer> lua vim.lsp.buf.format(format_opts)'
+        vim.fn.setpos('.', pos)
+    end
+
+    map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
+    map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
+    -- map("n", "gi", vim.lsp.buf.implementation, opts "Go to implementation")
+    map("n", "gr", "<cmd>Telescope lsp_references<CR>", opts "Show references")
+    map("n", "<leader>sh", vim.lsp.buf.signature_help, opts "Show signature help")
+    map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
+    map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")
+
+    map("n", "<leader>wl", function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts "List workspace folders")
+
+    map("n", "<leader>d", vim.lsp.buf.type_definition, opts "Go to type definition")
+
+    map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action")
+end
+
 M.defaults = function()
-  -- dofile(vim.g.base46_cache .. "lsp")
-  -- require("nvchad.lsp").diagnostic_config()
+    mason_lspconfig.setup({
+        ensure_installed = vim.tbl_keys(servers),
+        handlers = handlers,
+    })
+    mason_lspconfig.setup_handlers(handlers)
+end
 
-  require("lspconfig").lua_ls.setup {
-        print("lip do this"),
-    on_init = M.on_init,
-    on_attach = M.on_attach,
-    capabilities = M.capabilities,
+local lsp_sig_defaults = {
+    log_path = vim.fn.expand("$HOME") .. "/tmp/sig.log",
+    debug = false,
+    hint_enable = true,
+    handler_opts = { border = "rounded" },
+    max_width = 50,
+    floating_window_off_x = 20, -- adjust float windows x position.
+}
 
-    settings = {
-      Lua = {
-        diagnostics = {
-          globals = { "vim" },
-        },
-        workspace = {
-          library = {
-            vim.fn.expand "$VIMRUNTIME/lua",
-            vim.fn.expand "$VIMRUNTIME/lua/vim/lsp",
-            -- vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
-            -- data == ~/.local/share/nvim/lazy/
-            vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
-            "${3rd}/luv/library",
-          },
-          maxPreload = 100000,
-          preloadFileSize = 10000,
-        },
-      },
-    },
-  }
+M.lspSignatureDefaults = function()
+    require('lsp_signature').setup(lsp_sig_defaults)
+    vim.keymap.set({ 'i' }, '<C-e>', function() require('lsp_signature').toggle_float_win()
+        end, { silent = true, noremap = true, desc = 'toggle signature' })
 end
 
 return M
+
