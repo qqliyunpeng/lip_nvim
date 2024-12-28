@@ -6,12 +6,20 @@ local function is_available(plugin)
 end
 
 local telescope = require("telescope")
+local db_path = os.getenv('HOME') .. '/.local/share/nvim/databases'
 
 telescope.load_extension("zf-native")
 
 if is_available("nvim-neoclip.lua") then
     telescope.load_extension("neoclip")
     telescope.load_extension("macroscope")
+end
+
+if is_available("telescope-smart-history.nvim") then
+    if not vim.loop.fs_stat(db_path) then
+        vim.loop.fs_mkdir(db_path, 493) -- 0x755
+    end
+    telescope.load_extension("smart_history")
 end
 
 return {
@@ -49,7 +57,13 @@ return {
             i = {
                 ["<C-j>"] = require("telescope.actions").move_selection_next,
                 ["<C-k>"] = require("telescope.actions").move_selection_previous,
+                ["<Up>"]  = require("telescope.actions").cycle_history_prev,
+                ["<Down>"]= require("telescope.actions").cycle_history_next,
             },
+        },
+        history = {
+            path = db_path .. '/telescope_history.sqlite3',
+            limit = 100,
         },
     },
     layout_config = {

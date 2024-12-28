@@ -58,6 +58,10 @@ return {
         },
     },
     {
+        -- need `sudo apt-get install sqlite3 libsqlite3-dev`
+        "kkharji/sqlite.lua",
+    },
+    {
         "https://gitee.com/yunduozhai/project.nvim.git",
         config = function()
             require("project_nvim").setup {
@@ -117,6 +121,9 @@ return {
         -- 优化弹出结果中的排序
         "https://gitee.com/nvim_lip/telescope-zf-native.nvim.git",
         -- config = true,
+    },
+    {
+        "nvim-telescope/telescope-smart-history.nvim",
     },
     {
         -- 语法高亮

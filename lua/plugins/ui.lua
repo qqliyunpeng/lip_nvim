@@ -448,7 +448,7 @@ return {
                     smart_move = { enabled = false },
                 },
             }
-    end
+        end
     },
     {
         -- indent 的动画效果
