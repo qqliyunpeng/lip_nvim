@@ -100,8 +100,10 @@ for key, func in pairs(keymap) do
     vim.keymap.set(modes, key, func)
 end
 
+map("n", "<leader>n", "<cmd> Telescope notify<CR>", { desc = "Notification History" })
+
 -- snacks
-map("n", "<leader>n", function() Snacks.notifier.show_history() end, { desc = "Notification History" })
+-- map("n", "<leader>n", function() Snacks.notifier.show_history() end, { desc = "Notification History" })
 map("n", "<leader>un", function() Snacks.notifier.hide() end, { desc = "Dismiss All Notifications" })
 
 
