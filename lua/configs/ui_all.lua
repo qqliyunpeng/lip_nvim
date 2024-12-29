@@ -61,13 +61,36 @@ M.lspsagaConfig = function()
     require('lspsaga').setup({
         ui = {
             code_action = '󱠀',
-        }
+        },
+        finder = {
+            max_height = 0.6,
+            keys = {
+                split  = "<C-x>",
+                vsplit = "<C-v>",
+                shuttle = "<leader>w", -- switch windows in opened windows
+                toggle_or_open = "<CR>",
+            }
+        },
+        outline = {
+            keys = {
+                toggle_or_jump = "<CR>",
+            }
+        },
+        rename = {
+            keys = {
+                quit = "<C-c>"
+            }
+        },
     })
 
-    map("n", "gf"        , "<cmd>Lspsaga finder<CR>", { desc = "Show LSP methods search result"} )
+    map("n", "gf"        , "<cmd>Lspsaga finder def+ref+imp<CR>", { desc = "Show LSP methods search result"} )
     map("n", "<A-k>"     , "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover Documentation"} )
+    map("n", "<A-l>"     , "<cmd>Lspsaga peek_definition<CR>", { desc = "Hover definition in hover"} )
     map("n", "<leader>cn", "<cmd>Lspsaga rename ++project<cr>", { desc = '[R]e[n]ame'} )
     map("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc ='[C]ode [A]ction'} )
+    map("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", { desc ='goto [N]ext diagnostic'} )
+    map("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { desc ='goto [P]rev diagnostic'} )
+    map("n", "<F2>", "<cmd>Lspsaga outline<CR>", { desc ='Show outline'} )
 end
 
 M.snacksConfig = function()
