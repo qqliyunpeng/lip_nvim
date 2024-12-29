@@ -106,4 +106,9 @@ map("n", "<leader>n", "<cmd> Telescope notify<CR>", { desc = "Notification Histo
 -- map("n", "<leader>n", function() Snacks.notifier.show_history() end, { desc = "Notification History" })
 map("n", "<leader>un", function() Snacks.notifier.hide() end, { desc = "Dismiss All Notifications" })
 
+-- treesitter
+-- not work every times
+local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
+-- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
 

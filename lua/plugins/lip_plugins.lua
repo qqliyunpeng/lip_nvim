@@ -139,6 +139,13 @@ return {
         end,
     },
     {
+        "https://gitee.com/yunduozhai/nvim-treesitter-textobjects.git",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            "nvim-treesitter",
+        },
+    },
+    {
         'https://gitee.com/nvim_lip/telescope.nvim.git', --tag = '0.1.8',
         -- dependencies = { "nvim-treesitter/nvim-treesitter" },
         cmd = "Telescope",
