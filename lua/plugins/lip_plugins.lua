@@ -146,6 +146,12 @@ return {
         },
     },
     {
+        -- 在最上边显示当前函数的函数名字
+        "nvim-treesitter/nvim-treesitter-context",
+        event = { "BufReadPost", "BufNewFile" },
+        opts = {}
+    },
+    {
         'https://gitee.com/nvim_lip/telescope.nvim.git', --tag = '0.1.8',
         -- dependencies = { "nvim-treesitter/nvim-treesitter" },
         cmd = "Telescope",
