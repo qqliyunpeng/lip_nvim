@@ -132,7 +132,7 @@ return {
         cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
         build = ":TSUpdate",
         opts = function()
-            return require "configs.treesitter"
+            return require("configs.treesitter").treesitterConfig
         end,
         config = function(_, opts)
             require("nvim-treesitter.configs").setup(opts)
@@ -144,6 +144,9 @@ return {
         dependencies = {
             "nvim-treesitter",
         },
+        config = function()
+            return require("configs.treesitter").textobjectsConfig()
+        end
     },
     {
         -- 在最上边显示当前函数的函数名字
