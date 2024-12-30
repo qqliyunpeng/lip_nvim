@@ -21,6 +21,12 @@ map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
 map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
 map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
 
+-- Resize splits with arrow keys
+map("n", "<C-up>", "<cmd>res +5<CR>", { desc = "Increase upwards" })
+map("n", "<C-down>", "<cmd>res -5<CR>", { desc ="Increase downwards" })
+map("n", "<C-left>", "<cmd>vertical resize-5<CR>", { desc = "Increase leftwards" })
+map("n", "<C-right>", "<cmd>vertical resize+5<CR>", { desc = "Increase rightwards" })
+
 
 -- nvim中在ssh的终端中C-h表示backspac
 map("n", "<BS>", "<C-w>h", { desc = "switch window left" })
@@ -105,6 +111,15 @@ map("n", "<leader>n", "<cmd> Telescope notify<CR>", { desc = "Notification Histo
 -- snacks
 -- map("n", "<leader>n", function() Snacks.notifier.show_history() end, { desc = "Notification History" })
 map("n", "<leader>un", function() Snacks.notifier.hide() end, { desc = "Dismiss All Notifications" })
+map("n", "<leader>x", function() Snacks.bufdelete() end, { desc = "Delete Buffers" })
+map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
+map("n", "<A-n>", function() Snacks.terminal() end, { desc = "Terminal Open" })
+map("t", "<A-n>", "<cmd>close<CR>", { desc = "Terminal Hide" })
+map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc =  "Go to Upper Window" })
+map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc =  "Go to Lower Window" })
+map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc =  "Go to Left Window"  })
+map("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc =  "Go to Right Window" })
+
 
 -- treesitter
 -- not work every times

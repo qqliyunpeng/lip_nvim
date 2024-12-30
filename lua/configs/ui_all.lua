@@ -84,7 +84,7 @@ M.lspsagaConfig = function()
     })
 
     map("n", "gf"        , "<cmd>Lspsaga finder def+ref+imp<CR>", { desc = "Show LSP methods search result"} )
-    map("n", "<A-k>"     , "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover Documentation"} )
+    map("n", "<A-h>"     , "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover Documentation"} )
     map("n", "<A-l>"     , "<cmd>Lspsaga peek_definition<CR>", { desc = "Hover definition in hover"} )
     map("n", "<leader>cn", "<cmd>Lspsaga rename ++project<cr>", { desc = '[R]e[n]ame'} )
     map("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc ='[C]ode [A]ction'} )
@@ -122,7 +122,6 @@ M.snacksConfig = function()
                     { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
                     { icon = " ", key = "q", desc = "Quit", action = ":qa" },
                 },
-
             },
         },
     })
