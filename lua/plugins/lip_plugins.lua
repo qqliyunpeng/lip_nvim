@@ -147,7 +147,7 @@ return {
     },
     {
         -- 在最上边显示当前函数的函数名字
-        "nvim-treesitter/nvim-treesitter-context",
+        "https://gitee.com/yunduozhai/nvim-treesitter-context.git",
         event = { "BufReadPost", "BufNewFile" },
         opts = {}
     },
