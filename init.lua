@@ -119,7 +119,7 @@ require'heirline'
 require 'bufferline'
 require 'interestingwords'
 require 'colorizer'
-require 'nvim-autopairs'.setup{}
+require 'nvim-autopairs'
 require 'noice'
 require 'dressing'.setup{}
 

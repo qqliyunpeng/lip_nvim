@@ -225,12 +225,31 @@ return {
     },
     {
         "windwp/nvim-autopairs",
+        event = "InsertEnter",
         opts = {
             fast_wrap = {},
             disable_filetype = { "TelescopePrompt", "vim"  },
         },
         config = function(_, opts)
             require("nvim-autopairs").setup(opts)
+
+            local autopairs = require("nvim-autopairs")
+
+            local enabled = true
+
+            vim.api.nvim_set_keymap('n', '<leader>a', '', {
+                noremap = true,
+                callback =function()
+                    enabled = not enabled
+                    if enabled then
+                        autopairs.enable()
+                        vim.notify("autopairs enable")
+                    else
+                        autopairs.disable()
+                        vim.notify("autopairs disable")
+                    end
+                end
+            })
 
             -- setup cmp for autopairs
             local cmp_autopairs = require "nvim-autopairs.completion.cmp"
