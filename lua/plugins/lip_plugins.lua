@@ -412,7 +412,19 @@ return {
         event = "User BaseFile",
         opts = {}
     },
-
+    {
+        -- markdown 预览
+        "https://gitee.com/yunduozhai/glow.nvim.git",
+        event = { "BufReadPost", "BufNewFile" },
+        cmd = "Glow", config = true,
+    },
+    {
+        -- 自动格式化 markdown 里边的表格 <leader>tm
+        "https://gitee.com/yaozhijin/vim-table-mode.git",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+        end
+    },
 }
 
 
