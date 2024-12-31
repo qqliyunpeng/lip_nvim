@@ -155,6 +155,26 @@ return {
         opts = {}
     },
     {
+        -- vaq/viq 选中单引号或者双引号等各种引号之间的内容
+        "https://gitee.com/nvim_lip/vim-textobj-quotes.git",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            "https://gitee.com/duyz1218/vim-textobj-user.git",
+        },
+        config = function()
+        end
+    },
+    {
+        -- vaj/vij 向上查找最近的 '{[('
+        "https://gitee.com/nvim_lip/vim-textobj-brace.git",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            "https://gitee.com/duyz1218/vim-textobj-user.git",
+        },
+        config = function()
+        end
+    },
+    {
         'https://gitee.com/nvim_lip/telescope.nvim.git', --tag = '0.1.8',
         -- dependencies = { "nvim-treesitter/nvim-treesitter" },
         cmd = "Telescope",
