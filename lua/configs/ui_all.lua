@@ -127,5 +127,17 @@ M.snacksConfig = function()
     })
 end
 
+M.visualWhitespaceConfig = function()
+    local opts = {
+        enabled = true,
+        nl_char = '',
+        cr_char = '←',
+        tab_char = '→',
+        space_char = '·',
+        highlight = { link = "Visual" },
+    }
+    require('visual-whitespace').setup(opts)
+end
+
 return M
 

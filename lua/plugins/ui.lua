@@ -149,5 +149,13 @@ return {
             require('configs.ui_all').lspsagaConfig()
         end
     },
+    {
+        "https://gitee.com/nvim_lip/visual-whitespace.nvim.git",
+        branch = 'main',
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            require('configs.ui_all').visualWhitespaceConfig()
+        end
+    },
 }
 
