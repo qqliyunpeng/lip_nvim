@@ -235,7 +235,7 @@ return {
     },
     {
         "windwp/nvim-autopairs",
-        event = "InsertEnter",
+        event = "VeryLazy",
         opts = {
             fast_wrap = {},
             disable_filetype = { "TelescopePrompt", "vim"  },
@@ -371,7 +371,7 @@ return {
     {
         -- Autocompletion
         'https://gitee.com/suyelu/nvim-cmp',
-        event = 'InsertEnter',
+        event = "VeryLazy",
         dependencies = {
             "hrsh7th/cmp-emoji",
             string.format('%s/cmp-nvim-lsp', 'https://gitee.com/suyelu'),
