@@ -113,13 +113,12 @@ require('neoscroll')
 vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射到 :ProjectRoot
 
 -- gitsigns
-require('gitsigns').setup()
+require('gitsigns')
 
 require'heirline'
 require 'bufferline'
 require 'interestingwords'
 require 'colorizer'
-require 'nvim-autopairs'
 require 'noice'
 require 'dressing'.setup{}
 

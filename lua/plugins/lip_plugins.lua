@@ -361,17 +361,17 @@ return {
         string.format('%s/LuaSnip', 'https://gitee.com/suyelu'),
         build = 'make install_jsregexp',
         dependencies = {
-            "https://gitee.com/yunduozhai/friendly-snippets.git",
+            "friendly-snippets",
         },
 
-        config = function(_, opts)
+        config = function()
             require "configs.luasnip"
         end,
     },
     {
         -- Autocompletion
         'https://gitee.com/suyelu/nvim-cmp',
-        event = "InsertEnter",
+        event = 'InsertEnter',
         dependencies = {
             "hrsh7th/cmp-emoji",
             string.format('%s/cmp-nvim-lsp', 'https://gitee.com/suyelu'),
