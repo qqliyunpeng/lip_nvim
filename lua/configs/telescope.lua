@@ -9,6 +9,8 @@ local telescope = require("telescope")
 local db_path = os.getenv('HOME') .. '/.local/share/nvim/databases'
 
 telescope.load_extension("zf-native")
+telescope.load_extension("projects")
+telescope.load_extension("noice")
 
 if is_available("nvim-neoclip.lua") then
     telescope.load_extension("neoclip")

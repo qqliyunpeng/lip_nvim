@@ -5,9 +5,13 @@ local map = vim.keymap.set
 M.noiceConfig = function()
     local enable_conceal = false          -- Hide command text if true
     require('noice').setup({
-        presets = { bottom_search = true }, -- The kind of popup used for /
+        presets = {
+            bottom_search = false, -- The kind of popup used for /
+            command_palette = true, -- position the cmdline and popupmenu together
+            long_message_to_split = true,
+        },
         cmdline = {
-            view = "cmdline",                 -- The kind of popup used for :
+            view = "cmdline_popup",                 -- The kind of popup used for :
             format = {
                 cmdline = { conceal = enable_conceal },
                 search_down = { conceal = enable_conceal },
@@ -18,6 +22,25 @@ M.noiceConfig = function()
                 input = { conceal = enable_conceal },
             }
         },
+        views = {
+            cmdline_popup = {
+                position = {
+                    row = "50%", -- 屏幕垂直方向居中
+                    col = "50%", -- 屏幕水平方向居中
+                },
+                size = {
+                    width = 40,      -- 宽度
+                    height = "auto", -- 高度根据内容自动调整
+                },
+                border = {
+                    style = "rounded",  -- 边框样式，可选："none", "single", "double", "rounded"
+                    padding = { 0, 0 }, -- 内边距 {上下: 左右}
+                },
+                win_options = {
+                    winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+                },
+            },
+        },
 
         -- false 打开下边的messages 多一行，如果是 true，则 messages 会 notify
         messages = { enabled = true },
@@ -27,6 +50,7 @@ M.noiceConfig = function()
             progress = { enabled = true },
             message = { enabled = true },
             smart_move = { enabled = false },
+            view_error = "messages",
         },
     })
 end

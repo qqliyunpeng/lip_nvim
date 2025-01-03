@@ -103,7 +103,6 @@ return {
     },
     {
         "https://gitee.com/yunduozhai/noice.nvim.git",
-        event = "VeryLazy",
         config = function()
             return require("configs.ui_all").noiceConfig()
         end

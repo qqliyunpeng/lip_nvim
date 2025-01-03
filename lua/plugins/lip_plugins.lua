@@ -180,7 +180,7 @@ return {
     },
     {
         "https://gitee.com/nvim_lip/gitsigns.nvim.git", tag = 'v0.9.0',
-        event = "User FilePost",
+        event = "VeryLazy",
         opts = function()
             return require("configs.gitsigns")
         end,

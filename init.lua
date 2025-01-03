@@ -108,11 +108,9 @@ require'nvim-lastplace'.setup{}
 -- end
 
 
--- Project,nvim
+-- Project.nvim
 vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射到 :ProjectRoot
 
--- gitsigns
-require('gitsigns')
 
 require 'mason'.setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
@@ -123,4 +121,5 @@ require 'mason-lspconfig'.setup()
 require('snacks')
 require('mini.indentscope')
 
+require('noice')
 
