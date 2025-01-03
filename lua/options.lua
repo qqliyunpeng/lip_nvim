@@ -61,6 +61,13 @@ opt.expandtab   = true -- enable the use of space in tab
 opt.whichwrap:append "<>[]hl"
 
 opt.colorcolumn = "80"
+-- 欢迎界面中禁用
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "snacks_dashboard",
+    callback = function ()
+        vim.opt_local.colorcolumn = ''
+    end,
+})
 
 -- 当前行高亮
 opt.cursorline = true

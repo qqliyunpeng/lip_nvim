@@ -21,26 +21,9 @@ return {
     },
     {
         "https://gitee.com/yunduozhai/neoscroll.nvim.git",
+        event = "VeryLazy",
         config = function ()
-            require('neoscroll').setup({
-                mappings = {                 -- Keys to be mapped to their corresponding default scrolling animation
-                    '<C-u>', '<C-d>',
-                    '<C-b>', '<C-f>',
-                    '<C-y>', '<C-e>',
-                    'zt', 'zz', 'zb',
-                },
-                hide_cursor = false,          -- Hide cursor while scrolling
-                stop_eof = true,             -- Stop at <EOF> when scrolling downwards
-                respect_scrolloff = false,   -- Stop scrolling when the cursor reaches the scrolloff margin of the file
-                cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
-                easing = 'quadratic',        -- Default easing function
-                pre_hook = nil,              -- Function to run before the scrolling animation starts
-                post_hook = nil,             -- Function to run after the scrolling animation ends
-                performance_mode = false,    -- Disable "Performance Mode" on all buffers.
-                ignored_events = {           -- Events ignored while scrolling
-                    'WinScrolled', 'CursorMoved'
-                },
-            })
+            return require('configs.neoscroll').defaultConfig()
         end
     },
     {
@@ -59,7 +42,7 @@ return {
     },
     {
         -- need `sudo apt-get install sqlite3 libsqlite3-dev`
-        "kkharji/sqlite.lua",
+        "https://gitee.com/nvim_lip/sqlite.lua.git",
     },
     {
         "https://gitee.com/yunduozhai/project.nvim.git",
@@ -111,6 +94,9 @@ return {
                 },
                 filetypes_allowlist = {'python', 'lua', 'c', 'cpp'},
             })
+
+            vim.keymap.set('n', '<a-j>', require('illuminate').goto_next_reference, { desc = "Move to next reference" })
+            vim.keymap.set('n', '<a-k>', require('illuminate').goto_prev_reference, { desc = "Move to previous reference" })
         end
     },
     {
@@ -123,7 +109,7 @@ return {
         -- config = true,
     },
     {
-        "nvim-telescope/telescope-smart-history.nvim",
+        "https://gitee.com/nvim_lip/telescope-smart-history.nvim.git",
     },
     {
         -- 语法高亮
@@ -209,6 +195,7 @@ return {
     },
     {
         'Mr-LLLLL/interestingwords.nvim',
+        event = "VeryLazy",
         config = function()
             require('interestingwords').setup{
                 colors = { '#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF' },
@@ -225,6 +212,7 @@ return {
     },
     {
         'https://gitee.com/dragon-teng140806/nvim-colorizer.lua.git',
+        event = "VeryLazy",
         config = function()
             -- Exclude some filetypes from highlighting by using `!`
             require ('colorizer').setup {
@@ -276,7 +264,6 @@ return {
     },
     {
         'https://gitee.com/suyelu/mason-lspconfig.nvim',
-        -- config = true,
         config = function()
             return require("configs.lspconfig").defaults()
         end
@@ -308,37 +295,15 @@ return {
         ellipsis_char = '...',
         show_labelDetails = true,
         preset = 'codicons',
-        opts = {
-            mode = "symbol",
-            symbol_map = {
-                Array = "󰅪",
-                Boolean = "⊨",
-                Class = "󰌗",
-                Constructor = "",
-                Key = "󰌆",
-                Namespace = "󰅪",
-                Null = "NULL",
-                Number = "#",
-                Object = "󰀚",
-                Package = "󰏗",
-                Property = "",
-                Reference = "",
-                Snippet = "",
-                String = "󰀬",
-                TypeParameter = "󰊄",
-                Unit = "",
-            },
-            menu = {},
-        },
-        config = function(_, opts)
-            require('lspkind').init({
-                opts,
-            })
-        end,
+
+        config = function()
+            return require('configs.lspconfig').lspkindInit()
+        end
     },
     {
         -- lsp 输入的同时提示参数
         "https://gitee.com/yunduozhai/lsp_signature.nvim.git",
+        event = "VeryLazy",
         config = function()
             return require("configs.lspconfig").lspSignatureDefaults()
         end
@@ -410,7 +375,10 @@ return {
     {
         "https://gitee.com/yunduozhai/neogen",
         branch = 'main',
-        config = true,
+        event = "VeryLazy",
+        config = function ()
+            require 'neogen'.setup({ snippet_engine = "luasnip" })
+        end
     },
 
     --  nvim-neoclip [nvim clipboard]
@@ -423,10 +391,9 @@ return {
         opts = {}
     },
     {
-        -- markdown 预览
-        "https://gitee.com/yunduozhai/glow.nvim.git",
-        event = { "BufReadPost", "BufNewFile" },
-        cmd = "Glow", config = true,
+        'MeanderingProgrammer/render-markdown.nvim',
+        event = "VeryLazy",
+        opts = {},
     },
     {
         -- 自动格式化 markdown 里边的表格 <leader>tm
@@ -435,6 +402,18 @@ return {
         config = function()
         end
     },
+    {
+        "https://gitee.com/yunduozhai/lazygit.nvim.git",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+        end
+    },
+    -- {
+    --     "mg979/vim-visual-multi",
+    --     event = { "BufReadPost", "BufNewFile" },
+    --     config = function()
+    --     end
+    -- },
 }
 
 

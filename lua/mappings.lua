@@ -62,10 +62,6 @@ map("v", "<leader>cc", "gc", { desc = "toggle comment", remap = true })
 map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 
--- illuminate
-vim.keymap.set('n', '<a-j>', require('illuminate').goto_next_reference, { desc = "Move to next reference" })
-vim.keymap.set('n', '<a-k>', require('illuminate').goto_prev_reference, { desc = "Move to previous reference" })
-
 -- clipboard
 -- from normalnvim
 map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
@@ -85,25 +81,6 @@ map("n", "C", '"_C', { desc = "Change without yanking" })
 map("x", "x", '"_x', { desc = "Delete all characters in line" })
 map("x", "X", '"_X', { desc = "Delete all characters in line" })
 
--- neoscroll 滚动顺滑
-local neoscroll = require('neoscroll')
-local keymap = {
-    -- Use the "sine" easing function
-    ["<C-u>"] = function() neoscroll.ctrl_u({ duration = 200; easing = 'sine' }) end;
-    ["<C-d>"] = function() neoscroll.ctrl_d({ duration = 200; easing = 'sine' }) end;
-    -- Use the "circular" easing function
-    ["<C-b>"] = function() neoscroll.ctrl_b({ duration = 450; easing = 'circular' }) end;
-    ["<C-f>"] = function() neoscroll.ctrl_f({ duration = 450; easing = 'circular' }) end;
-    -- When no value is passed the `easing` option supplied in `setup()` is used
-    ["<A-y>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 100 }) end;
-    ["<A-w>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 100 }) end;
-    ["<A-3>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 100 }) end;
-    ["<A-e>"] = function() neoscroll.scroll(0.1, { move_cursor=false; duration = 100 }) end;
-}
-local modes = { 'n', 'v', 'x' }
-for key, func in pairs(keymap) do
-    vim.keymap.set(modes, key, func)
-end
 
 map("n", "<leader>n", "<cmd> Telescope notify<CR>", { desc = "Notification History" })
 
@@ -119,10 +96,4 @@ map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc =  "Go to Lower Window" })
 map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc =  "Go to Left Window"  })
 map("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc =  "Go to Right Window" })
 
-
--- treesitter
--- not work every times
-local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
-vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
--- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
 

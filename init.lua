@@ -89,7 +89,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- 打开文件后光标回到关闭的时候的位置
 require'nvim-lastplace'.setup{}
-require('neoscroll')
 
 
 -- local ssh_connection = vim.fn.getenv("SSH_CONNECTION")
@@ -115,28 +114,13 @@ vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射
 -- gitsigns
 require('gitsigns')
 
-require'heirline'
-require 'bufferline'
-require 'interestingwords'
-require 'colorizer'
-require 'noice'
-require 'dressing'.setup{}
-
 require 'mason'.setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })
 require 'mason-lspconfig'.setup()
 
-require('lsp_signature')
-
 -- indent-blankline
-require('ibl')
 require('snacks')
 require('mini.indentscope')
-
-require('whitespace-nvim')
-require('lspsaga')
-
-require 'neogen'.setup({ snippet_engine = "luasnip" })
 
 

@@ -74,10 +74,10 @@ return {
     },
     {
         "https://gitee.com/yunduozhai/heirline.nvim.git",
+        event = { "BufReadPost", "BufNewFile" },
         dependencies = {
             "heirline-components.nvim"
         },
-        event = "User BaseDefered",
         config = function()
             return require("configs.heirline").config()
         end
@@ -85,6 +85,7 @@ return {
     {
         'https://gitee.com/yunduozhai/bufferline.nvim.git',
         version = "*",
+        event = { "BufReadPost", "BufNewFile" },
         dependencies = 'nvim-web-devicons',
         config = function()
             local opts = require('configs.bufferline')
@@ -93,9 +94,8 @@ return {
     },
     {
         --  [better ui elements]
-        -- https://github.com/stevearc/dressing.nvim
         "https://gitee.com/yunduozhai/dressing.nvim.git",
-        event = "User BaseDefered",
+        event = "VeryLazy",
         opts = {
             input = { default_prompt = "➤ " },
             select = { backend = { "telescope", "builtin" } },
@@ -103,7 +103,7 @@ return {
     },
     {
         "https://gitee.com/yunduozhai/noice.nvim.git",
-        event = "User BaseDefered",
+        event = "VeryLazy",
         config = function()
             return require("configs.ui_all").noiceConfig()
         end
@@ -128,8 +128,7 @@ return {
     {
         -- 函数缩进前的条
         "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
-        -- event = "User FilePost",
-        -- event = "BufReadPost",
+        event = "VeryLazy",
         main = "ibl",
         opts = function()
             return require("configs.indent").blanklineConfig()
@@ -138,6 +137,7 @@ return {
     {
         -- 显示并去掉空格
         "https://gitee.com/nvim_lip/whitespace.nvim.git",
+        event = "VeryLazy",
         config = function()
             require('configs.ui_all').whitespaceConfig()
         end
@@ -145,6 +145,7 @@ return {
     {
         -- function tree in top
         "https://gitee.com/yunduozhai/lspsaga.nvim.git",
+        event = "VeryLazy",
         config = function()
             require('configs.ui_all').lspsagaConfig()
         end
