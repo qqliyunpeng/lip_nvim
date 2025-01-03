@@ -34,7 +34,7 @@ return {
         },
         -- 排除这些文件
         file_ignore_patterns = {
-            ".git/*", "tags", ".gitignore", "build/*", ".vscode/*", "*.out",
+            "%.git/", "tags", "%.gitignore", "build/", "%.vscode/", "%.out$",
         },
         -- layout_strategy = "bottom_pane",
         path_display = {

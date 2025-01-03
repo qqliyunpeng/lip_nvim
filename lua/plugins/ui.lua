@@ -150,12 +150,21 @@ return {
         end
     },
     {
+        -- 选中行后，在选中的里边显示空格和Tab
         "https://gitee.com/nvim_lip/visual-whitespace.nvim.git",
         branch = 'main',
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             require('configs.ui_all').visualWhitespaceConfig()
         end
+    },
+    {
+        -- 在最上边显示当前函数的函数名字
+        "https://gitee.com/yunduozhai/nvim-treesitter-context.git",
+        event = { "BufReadPost", "BufNewFile" },
+        opts = {
+            max_lines = 5,
+        }
     },
 }
 

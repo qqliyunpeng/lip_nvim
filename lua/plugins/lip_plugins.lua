@@ -135,12 +135,6 @@ return {
         end
     },
     {
-        -- 在最上边显示当前函数的函数名字
-        "https://gitee.com/yunduozhai/nvim-treesitter-context.git",
-        event = { "BufReadPost", "BufNewFile" },
-        opts = {}
-    },
-    {
         -- vaq/viq 选中单引号或者双引号等各种引号之间的内容
         "https://gitee.com/nvim_lip/vim-textobj-quotes.git",
         event = { "BufReadPost", "BufNewFile" },
