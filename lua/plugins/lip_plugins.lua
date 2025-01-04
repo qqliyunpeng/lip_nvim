@@ -385,7 +385,8 @@ return {
         opts = {}
     },
     {
-        'MeanderingProgrammer/render-markdown.nvim',
+        'https://gitee.com/yunduozhai/render-markdown.nvim.git',
+        branch = "main",
         event = "VeryLazy",
         opts = {},
     },
