@@ -22,13 +22,13 @@ map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
 map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
 
 -- Resize splits with arrow keys
-map("n", "<C-up>", "<cmd>res +5<CR>", { desc = "Increase upwards" })
-map("n", "<C-down>", "<cmd>res -5<CR>", { desc ="Increase downwards" })
-map("n", "<C-left>", "<cmd>vertical resize-5<CR>", { desc = "Increase leftwards" })
-map("n", "<C-right>", "<cmd>vertical resize+5<CR>", { desc = "Increase rightwards" })
+map("n", "<C-S-up>", "<cmd>res +5<CR>", { desc = "Increase upwards" })
+map("n", "<C-S-down>", "<cmd>res -5<CR>", { desc ="Increase downwards" })
+map("n", "<C-S-left>", "<cmd>vertical resize-5<CR>", { desc = "Increase leftwards" })
+map("n", "<C-S-right>", "<cmd>vertical resize+5<CR>", { desc = "Increase rightwards" })
 
 
--- nvim中在ssh的终端中C-h表示backspac
+-- nvim中在ssh的终端中C-h表示backspace
 map("n", "<BS>", "<C-w>h", { desc = "switch window left" })
 map("n", "J", "5j", { desc = "line down 5" })
 map("n", "K", "5k", { desc = "line up 5" })
@@ -59,7 +59,7 @@ map("n", "<leader>cc", "gcc", { desc = "toggle comment", remap = true })
 map("v", "<leader>cc", "gc", { desc = "toggle comment", remap = true })
 
 -- nvimtree
-map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
+map("n", "<F2>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 
 -- clipboard

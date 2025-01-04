@@ -114,7 +114,7 @@ M.lspsagaConfig = function()
     map("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc ='[C]ode [A]ction'} )
     map("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", { desc ='goto [N]ext diagnostic'} )
     map("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { desc ='goto [P]rev diagnostic'} )
-    map("n", "<F2>", "<cmd>Lspsaga outline<CR>", { desc ='Show outline'} )
+    map("n", "<F3>", "<cmd>Lspsaga outline<CR>", { desc ='Show outline'} )
 end
 
 M.snacksConfig = function()

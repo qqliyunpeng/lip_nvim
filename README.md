@@ -22,7 +22,55 @@ compiledb make
 
 | cmd  | 功能                                                                |
 |------|---------------------------------------------------------------------|
-| Root | cd 到当前文件的根目录下，依据目录下是不是有
+| Root | cd 到当前文件的根目录下，依据目录下是不是有                         |
 |      | ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" |
 
+# 3. mul line control
+
+| cmd       | 功能                                                     |
+|-----------|----------------------------------------------------------|
+| C-n       | the word select and you can select next same word        |
+| C-up/down | create cursor in up and down                             |
+| `\\\`     | three \ is to create a cursor and use up/down/left/right |
+|           | to move to cursor and tree \ to select the other         |
+
+## 3.1 pattern
+- \\w toggles whole word search
+- \\c cycle case setting(case sensitive -> ignorecase -> smartcase)
+
+## 3.2 select you want in scope
+- 1 in visual mode, select some
+- 2 and C-n to enter mul-mode
+- 3 mii / mai / maq / maj / ...
+- 4 8mj is to 8 line below search the same selected word
+- 5 if you don't select some, you use `\\\` or C-down select some, you need use
+    sii / sai /saq / saj / ...
+
+## 3.3 C-n how to use
+- 1 C-n select the word of current cursor
+- 2 `C-n`/`n`/`N` goto next/next/prev select word the same of follow
+- 3 q disseselect the current of jumped word
+- 4 retry 2 and 3
+- 5 use `[`/`]` goto previous/next the selected word
+
+## 3.4 alian
+- 1 C-down select some
+- 2 w/e to need alian pos
+- 3 `\\a` will alian
+
+## 3.5 numbering
+- 1 C-down select some
+- 2 `\\N` will have a window `begin number\step(can native)\same some text`
+- 3 '\\N' is before the cursor/regin, `\\n` to append the numbers
+
+## 3.6 some line to one line
+| origin | to dest |
+|--------|---------|
+| 123    | 123 145 |
+| 145    | 156 178 |
+| 156    |         |
+| 178    |         |
+- 1 C-down to select begin of all
+- 2 `\\R` geyihangxuanze
+- 3 J
 

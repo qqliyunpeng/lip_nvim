@@ -202,6 +202,8 @@ return {
                 cancel_color_key = "<leader>K",
                 select_mode = "loop",  -- random or loop
             }
+            vim.keymap.del({'n', 'x'}, '<leader>m')
+            vim.keymap.del('n', '<leader>M')
         end,
     },
     {
@@ -212,7 +214,6 @@ return {
             require ('colorizer').setup {
                 'lua'; -- Highlight lua files, but customize some others.
             }
-            vim.cmd('ColorizerAttachToBuffer')
         end
     },
     {
@@ -282,9 +283,7 @@ return {
     {
         "https://gitee.com/nvim_lip/lspkind.nvim.git",
         lazy = true,
-        -- enabled = vim.g.icons_enabled ~= false,
         enabled = true,
-        -- mode = 'symbol_text',
         mode = 'symbol_text',
         ellipsis_char = '...',
         show_labelDetails = true,
@@ -403,12 +402,12 @@ return {
         config = function()
         end
     },
-    -- {
-    --     "mg979/vim-visual-multi",
-    --     event = { "BufReadPost", "BufNewFile" },
-    --     config = function()
-    --     end
-    -- },
+    {
+        "https://gitee.com/yunduozhai/vim-visual-multi.git",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+        end
+    },
 }
 
 
