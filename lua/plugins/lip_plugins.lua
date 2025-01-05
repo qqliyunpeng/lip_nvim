@@ -230,7 +230,7 @@ return {
 
             local enabled = true
 
-            vim.api.nvim_set_keymap('n', '<leader>a', '', {
+            vim.api.nvim_set_keymap('n', '<leader>ua', '', {
                 noremap = true,
                 callback =function()
                     enabled = not enabled
@@ -241,7 +241,8 @@ return {
                         autopairs.disable()
                         vim.notify("autopairs disable")
                     end
-                end
+                end,
+                desc = "Autopairs Toggle"
             })
 
             -- setup cmp for autopairs
@@ -406,6 +407,34 @@ return {
         "https://gitee.com/yunduozhai/vim-visual-multi.git",
         event = { "BufReadPost", "BufNewFile" },
         config = function()
+        end
+    },
+    {
+        "https://gitee.com/yunduozhai/which-key.nvim.git", branch = "main",
+        event = "VeryLazy",
+        opts = {},
+        keys = {
+            {
+                "<leader>?",
+                function()
+                    require('which-key').show({ global = false })
+                end,
+                desc = "Buffer Local Keymaps (which-key)",
+            },
+        },
+        config = function ()
+            local wk = require('which-key')
+            wk.add({
+                {"<leader>f", group = "Telescope" },
+                {"<leader>b", group = "Buffer" },
+                {"<leader>g", desc = "Git" },
+                {"<leader>m", desc = "Marks" },
+                {"<leader>t", desc = "Markdown Table" },
+                {"<leader>w", desc = "LSP Workspace" },
+                {"<leader>u", desc = "Disable/Dismiss/Toggle" },
+                {"<leader><Space>", desc = "Remove the space ends" },
+                {"<leader>K", hidden = true },
+            })
         end
     },
 }
