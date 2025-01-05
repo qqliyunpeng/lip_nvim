@@ -19,6 +19,9 @@ compiledb make
 | ctrl-h/j/k/l | n    | 在窗口间移动                                     |
 | ctrl-h/j/k/l | i    | 相当于在不退出插入模式的情况下上下左右           |
 | <leader>tm   | n    | 开启/关闭markdown里边的表格的自动化              |
+| <leader>mm   | n    | create/del a bookmark                            |
+| <leader>mc   | n    | del a bookmark                                   |
+| <leader>ma   | n    | open telescope  show all bookmakr                |
 
 | cmd  | 功能                                                                |
 |------|---------------------------------------------------------------------|

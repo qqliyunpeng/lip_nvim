@@ -395,6 +395,11 @@ return {
         "https://gitee.com/yaozhijin/vim-table-mode.git",
         event = { "BufReadPost", "BufNewFile" },
         config = function()
+            vim.cmd[[
+                unmap <leader>tm
+                unmap <leader>tt
+                nnoremap <leader>ut :TableModeToggle<CR>
+            ]]
         end
     },
     {
@@ -408,6 +413,26 @@ return {
         event = { "BufReadPost", "BufNewFile" },
         config = function()
         end
+    },
+    {
+        "zongben/navimark.nvim",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function ()
+            require('navimark').setup({
+                keymap = {
+                    base = {
+                        mark_add = nil,
+                        mark_remove = "<leader>mc",
+                        open_mark_picker = "<leader>ma",
+                    },
+                },
+                sign = {
+                    text = "",
+                    color = "#589ed7",
+                },
+                persist = true,
+            })
+        end,
     },
     {
         "https://gitee.com/yunduozhai/which-key.nvim.git", branch = "main",
@@ -429,11 +454,13 @@ return {
                 {"<leader>b", group = "Buffer" },
                 {"<leader>g", desc = "Git" },
                 {"<leader>m", desc = "Marks" },
-                {"<leader>t", desc = "Markdown Table" },
                 {"<leader>w", desc = "LSP Workspace" },
                 {"<leader>u", desc = "Disable/Dismiss/Toggle" },
                 {"<leader><Space>", desc = "Remove the space ends" },
                 {"<leader>K", hidden = true },
+                {"<leader>ma", desc = "Bookmark picker" },
+                {"<leader>mm", desc = "Bookmark Toggle" },
+                {"<leader>mc", desc = "Bookmark Delete" },
             })
         end
     },
