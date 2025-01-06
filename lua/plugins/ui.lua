@@ -166,5 +166,22 @@ return {
             max_lines = 5,
         }
     },
+    {
+        "https://gitee.com/yunduozhai/which-key.nvim.git", branch = "main",
+        event = "VeryLazy",
+        opts_extend = { "spec" },
+        keys = {
+            {
+                "<leader>?",
+                function()
+                    require('which-key').show({ global = false })
+                end,
+                desc = "Buffer Local Keymaps (which-key)",
+            },
+        },
+        config = function ()
+            require('configs.ui_all').whichKeyConfig()
+        end
+    },
 }
 

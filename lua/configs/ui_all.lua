@@ -163,5 +163,30 @@ M.visualWhitespaceConfig = function()
     require('visual-whitespace').setup(opts)
 end
 
+M.whichKeyConfig = function()
+    local wk = require('which-key')
+    local opts = {
+        preset = "helix",
+        defaults = {},
+        spec = {
+            {
+                mode = { "n", "v" },
+                {"<leader>f", group = "Telescope" },
+                {"<leader>b", group = "Buffer" },
+                {"<leader>g", desc = "Git" },
+                {"<leader>m", desc = "Marks" },
+                {"<leader>w", desc = "LSP Workspace" },
+                {"<leader>u", desc = "Disable/Dismiss/Toggle" },
+                {"<leader><Space>", desc = "Remove the space ends" },
+                {"<leader>K", hidden = true },
+                {"<leader>ma", desc = "Bookmark picker" },
+                {"<leader>mm", desc = "Bookmark Toggle" },
+                {"<leader>mc", desc = "Bookmark Delete" },
+            }
+        },
+    }
+    wk.setup(opts)
+end
+
 return M
 

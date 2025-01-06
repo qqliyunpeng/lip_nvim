@@ -434,36 +434,6 @@ return {
             })
         end,
     },
-    {
-        "https://gitee.com/yunduozhai/which-key.nvim.git", branch = "main",
-        event = "VeryLazy",
-        opts = {},
-        keys = {
-            {
-                "<leader>?",
-                function()
-                    require('which-key').show({ global = false })
-                end,
-                desc = "Buffer Local Keymaps (which-key)",
-            },
-        },
-        config = function ()
-            local wk = require('which-key')
-            wk.add({
-                {"<leader>f", group = "Telescope" },
-                {"<leader>b", group = "Buffer" },
-                {"<leader>g", desc = "Git" },
-                {"<leader>m", desc = "Marks" },
-                {"<leader>w", desc = "LSP Workspace" },
-                {"<leader>u", desc = "Disable/Dismiss/Toggle" },
-                {"<leader><Space>", desc = "Remove the space ends" },
-                {"<leader>K", hidden = true },
-                {"<leader>ma", desc = "Bookmark picker" },
-                {"<leader>mm", desc = "Bookmark Toggle" },
-                {"<leader>mc", desc = "Bookmark Delete" },
-            })
-        end
-    },
 }
 
 
