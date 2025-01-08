@@ -112,6 +112,9 @@ return {
         "https://gitee.com/nvim_lip/telescope-smart-history.nvim.git",
     },
     {
+        "https://gitee.com/dragon-teng140806/telescope-live-grep-args.nvim.git",
+    },
+    {
         -- 语法高亮
         "https://gitee.com/zgpio/nvim-treesitter.git",
         event = { "BufReadPost", "BufNewFile" },
