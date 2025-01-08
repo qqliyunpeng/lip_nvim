@@ -179,7 +179,7 @@ return {
         "https://gitee.com/nvim_lip/gitsigns.nvim.git", tag = 'v0.9.0',
         event = "VeryLazy",
         opts = function()
-            return require("configs.gitsigns")
+            require("configs.gitsigns").config()
         end,
     },
     {

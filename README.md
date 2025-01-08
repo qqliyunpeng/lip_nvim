@@ -13,7 +13,7 @@ compiledb make
 | vaq/viq      | n    | 选中" ' \` 这些引号间的内容                      |
 | vaj/vij      | n    | 选中 {[( 这些符号间的内容                        |
 | var/vir      | n    | 选中 相同的缩进认为的段落，空格和不同的缩进结束  |
-| <leader>a    | n    | 切换开启和关闭 autopairs 的功能                  |
+| <leader>ua   | n    | 切换开启和关闭 autopairs 的功能                  |
 | alt-h        | n    | 简短的hover形式的说明                            |
 | alt-l        | n    | 打开一个小窗口，相当于进入了一个中，并显示上下文 |
 | ctrl-h/j/k/l | n    | 在窗口间移动                                     |
@@ -22,6 +22,9 @@ compiledb make
 | <leader>mm   | n    | create/del a bookmark                            |
 | <leader>mc   | n    | del a bookmark                                   |
 | <leader>ma   | n    | open telescope  show all bookmakr                |
+| <leader>sr   | n    | grug-far 查找替换                                |
+| ]g           | n    | next git changs                                  |
+| [g           | n    | prev git changs                                  |
 
 | cmd  | 功能                                                                |
 |------|---------------------------------------------------------------------|
