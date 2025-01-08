@@ -1,6 +1,7 @@
 
 local map = vim.keymap.set
 vim.g.mapleader = ","
+vim.g.maplocalleader = ","
 
 -- system
 map("n", " ", ":", { desc = "CMD enter command mode" })
@@ -71,9 +72,11 @@ hi CursorLine guibg=#3e4451 ctermbg=235
 hi CursorLineNr cterm = bold gui = bold guifg=#ff966c
 " 搜索的结果中当前的块的背景颜色
 hi CurSearch guibg=#ff966c
+hi Search guifg=#c8d3f5 guibg=#3e68d7
 " 弹出的窗口右侧的下拉框的颜色
 hi PmenuThumb guibg=#c678dd ctermbg=127
 hi MiniIndentscopeSymbol guifg=#589ed7 guibg=NONE
+hi GrugFarResultsMatch guifg=#1b1d2b guibg=#ff757f
 ]])
 
 -- 复制之后高亮显示一下复制的内容
