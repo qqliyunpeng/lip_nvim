@@ -183,5 +183,13 @@ return {
             require('configs.ui_all').whichKeyConfig()
         end
     },
+    {
+        "folke/todo-comments.nvim",
+        event = "VeryLazy",
+        opts = {},
+        config = function ()
+            require('configs.ui_all').todoConfig()
+        end
+    }
 }
 

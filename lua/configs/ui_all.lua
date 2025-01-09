@@ -188,5 +188,22 @@ M.whichKeyConfig = function()
     wk.setup(opts)
 end
 
+M.todoConfig = function()
+    local todo = require('todo-comments')
+
+    todo.setup()
+
+    map("n", "]t", function()
+        todo.jump_next({keywords = { "TODO", "NOTE", "FIX", "FIXME" }})
+    end, { desc = "Next TODO/NOTE comment" })
+
+    map("n", "[t", function()
+        todo.jump_prev({keywords = { "TODO", "NOTE", "FIX", "FIXME" }})
+    end, { desc = "Previous TODO/NOTE comment" })
+
+    map("n", "<leader>to", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME,NOTE,PERF<CR>",
+        { desc = "Open todo/fixed/note list" })
+end
+
 return M
 

@@ -48,10 +48,9 @@ return {
         "https://gitee.com/yunduozhai/project.nvim.git",
         config = function()
             require("project_nvim").setup {
-                -- your configuration comes here
-                -- or leave it empty to use the default settings
-                -- refer to the configuration section below
-                manual_mode = true,
+                -- 需不需要手动切换到工程目录下
+                manual_mode  = false,
+                silent_chdir = false,
                 patterns = {
                     -- use
                     ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json",
