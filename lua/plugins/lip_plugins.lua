@@ -451,7 +451,7 @@ return {
                         transient = true,
                         prefills = {
                             search = vim.fn.expand("<cword>"),
-                            filesFilter = ext and ext ~= "" and "*.*" or nil,
+                            filesFilter = ext and ext ~= "" and "*.*\n!/cscope.out" or nil,
                         },
                     })
                 end,

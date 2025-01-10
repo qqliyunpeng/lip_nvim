@@ -64,7 +64,15 @@ vim.cmd([[
 hi! link IlluminatedWordText Search
 hi! link IlluminatedWordRead HlSearchLens
 hi! link IlluminatedWordWrite  HlSearchLens
-hi Normal guibg=NONE ctermbg=NONE
+"hi Normal guibg=NONE ctermbg=NONE
+hi Normal guibg=black ctermbg=black
+"hi NormalNC guibg=black ctermbg=black
+hi TelescopeNormal guibg=black ctermbg=black
+hi! link TelescopeTitle  TelescopeNormal
+hi! link TelescopeBorder TelescopeNormal
+hi! link TelescopeResultsNumber TelescopeNormal
+hi! link TelescopePreviewTile TelescopeNormal
+"hi TelescopeNormal guibg=NONE ctermbg=NONE
 hi LineNr guibg=NONE ctermbg=NONE
 " 当前行
 hi CursorLine guibg=#3e4451 ctermbg=235
