@@ -57,7 +57,7 @@ require 'mappings'
 
 
 -- ui or color
-vim.cmd("colorscheme onedark")
+vim.cmd.colorscheme "onedark"
 
 -- IlluminatedWordText have problem
 vim.cmd([[
@@ -76,7 +76,10 @@ hi Search guifg=#c8d3f5 guibg=#3e68d7
 " 弹出的窗口右侧的下拉框的颜色
 hi PmenuThumb guibg=#c678dd ctermbg=127
 hi MiniIndentscopeSymbol guifg=#589ed7 guibg=NONE
-hi GrugFarResultsMatch guifg=#1b1d2b guibg=#ff757f
+hi GrugFarResultsMatch      guifg=#1b1d2b guibg=#ff757f
+hi GrugFarResultsMatchAdded guifg=#1b1d2b guibg=#589ed7
+hi! link GrugFarResultsMatchRemoved GrugFarResultsMatch
+hi GrugFarResultsHeader     guifg=#ff966c guibg=NONE
 ]])
 
 -- 复制之后高亮显示一下复制的内容

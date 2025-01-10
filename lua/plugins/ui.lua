@@ -184,12 +184,11 @@ return {
         end
     },
     {
-        "folke/todo-comments.nvim",
+        "https://gitee.com/masa-laboratory/todo-comments.nvim.git",
         event = "VeryLazy",
-        opts = {},
         config = function ()
             require('configs.ui_all').todoConfig()
         end
-    }
+    },
 }
 
