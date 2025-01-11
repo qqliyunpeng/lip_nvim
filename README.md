@@ -13,6 +13,7 @@ compiledb make
 | vaq/viq      | n    | 选中" ' \` 这些引号间的内容                      |
 | vaj/vij      | n    | 选中 {[( 这些符号间的内容                        |
 | var/vir      | n    | 选中 相同的缩进认为的段落，空格和不同的缩进结束  |
+| vau/viu      | n    | 选中 to , . : ; ! ?                              |
 | <leader>ua   | n    | 切换开启和关闭 autopairs 的功能                  |
 | alt-h        | n    | 简短的hover形式的说明                            |
 | alt-l        | n    | 打开一个小窗口，相当于进入了一个中，并显示上下文 |

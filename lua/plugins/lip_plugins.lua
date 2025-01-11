@@ -142,26 +142,12 @@ return {
         event = { "BufReadPost", "BufNewFile" },
         dependencies = {
             "https://gitee.com/duyz1218/vim-textobj-user.git",
-        },
-        config = function()
-        end
-    },
-    {
-        -- vaj/vij 向上查找最近的 '{[('
-        "https://gitee.com/nvim_lip/vim-textobj-brace.git",
-        event = { "BufReadPost", "BufNewFile" },
-        dependencies = {
-            "https://gitee.com/duyz1218/vim-textobj-user.git",
-        },
-        config = function()
-        end
-    },
-    {
-        -- var/vir 相同缩进的一整个认为的段落
-        "https://gitee.com/nvim_lip/vim-textobj-indented-paragraph.git",
-        event = { "BufReadPost", "BufNewFile" },
-        dependencies = {
-            "https://gitee.com/duyz1218/vim-textobj-user.git",
+            -- vaj/vij 向上查找最近的 '{[('
+            "https://gitee.com/nvim_lip/vim-textobj-brace.git",
+            -- var/vir 相同缩进的一整个认为的段落
+            "https://gitee.com/nvim_lip/vim-textobj-indented-paragraph.git",
+            -- vau/viu to first , . : ; ! ?
+            "https://gitee.com/nvim_lip/vim-textobj-punctuation.git",
         },
         config = function()
         end
