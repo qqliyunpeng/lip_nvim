@@ -190,5 +190,9 @@ return {
             require('configs.ui_all').todoConfig()
         end
     },
+    {
+        "https://gitee.com/yunduozhai/rainbow-delimiters.nvim.git",
+        event = "VeryLazy",
+    },
 }
 
