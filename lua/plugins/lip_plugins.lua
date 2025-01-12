@@ -469,6 +469,12 @@ return {
             require('configs.edit').miniSurroundConfig()
         end,
     },
+    {
+        "https://gitee.com/yunduozhai/ts-comments.nvim.git",
+        opts = {},
+        event = "VeryLazy",
+        enabled = vim.fn.has("nvim-0.10.0") == 1,
+    },
 }
 
 
