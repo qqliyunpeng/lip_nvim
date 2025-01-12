@@ -5,10 +5,6 @@ local neogen = require 'neogen'
 local luasnip = require 'luasnip'
 local lspkind = require 'lspkind'
 
-require('luasnip.loaders.from_vscode').load()
-require('luasnip.loaders.from_snipmate').load()
-require('luasnip.loaders.from_lua').load()
-
 local options = {
   completionopt = { completeopt = "menu,menuone,noinsert" },
 
