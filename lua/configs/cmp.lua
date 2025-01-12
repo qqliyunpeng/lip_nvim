@@ -77,7 +77,7 @@ local options = {
         },
     },
     -- 自定义高亮颜色
-    vim.api.nvim_set_hl(0, 'FloatBorder', { fg = '#ffffff', bg = '#282828' }), -- 设置边框颜色
+    vim.api.nvim_set_hl(0, 'FloatBorder', { link = "Comment" }), -- 设置边框颜色
 
     formatting = {
         -- format = function(entry, vim_item)
