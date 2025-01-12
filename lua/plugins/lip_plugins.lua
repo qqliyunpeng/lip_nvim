@@ -462,6 +462,13 @@ return {
             require("configs.session").setDefault()
         end
     },
+    {
+        "https://gitee.coyunduozhai/mini.surround.git",
+        event = 'VeryLazy',
+        config = function ()
+            require('configs.edit').miniSurroundConfig()
+        end,
+    },
 }
 
 
