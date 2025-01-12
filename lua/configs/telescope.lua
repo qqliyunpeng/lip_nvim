@@ -10,6 +10,7 @@ local db_path = os.getenv('HOME') .. '/.local/share/nvim/databases'
 
 telescope.load_extension("live_grep_args")
 telescope.load_extension("zf-native")
+telescope.load_extension("persisted")
 telescope.load_extension("projects")
 telescope.load_extension("noice")
 

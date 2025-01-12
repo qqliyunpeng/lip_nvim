@@ -453,7 +453,15 @@ return {
                 },
             })
         end,
-    };
+    },
+    {
+        -- session
+        "https://gitee.com/nvim_lip/persisted.nvim.git",
+        lazy = false,
+        config = function ()
+            require("configs.session").setDefault()
+        end
+    },
 }
 
 

@@ -82,3 +82,7 @@ compiledb make
 - 2 `\\R` geyihangxuanze
 - 3 J
 
+# bugs
+1. telescope persisted open the workspace select ui, C-c don't close the window,
+    but to copy a session. we need to close.
+
