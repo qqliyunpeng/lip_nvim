@@ -463,7 +463,7 @@ return {
         end
     },
     {
-        "https://gitee.coyunduozhai/mini.surround.git",
+        "https://gitee.com/yunduozhai/mini.surround.git",
         event = 'VeryLazy',
         config = function ()
             require('configs.edit').miniSurroundConfig()
