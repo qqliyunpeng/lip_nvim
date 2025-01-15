@@ -25,6 +25,7 @@ compiledb make
 | <leader>ma   | n    | open telescope  show all bookmakr                |
 | <leader>sr   | n    | grug-far 查找替换                                |
 | <leader>to   | n    | todo telescope find all                          |
+| <leader>y    | n    | yank telescope picker                            |
 | ]g           | n    | next git changs                                  |
 | [g           | n    | prev git changs                                  |
 

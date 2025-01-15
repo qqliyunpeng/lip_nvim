@@ -99,10 +99,6 @@ return {
         end
     },
     {
-        "https://gitee.com/rulei_mirror/vim-oscyank.git",
-        config = true,
-    },
-    {
         -- 优化弹出结果中的排序
         "https://gitee.com/nvim_lip/telescope-zf-native.nvim.git",
         -- config = true,
@@ -471,9 +467,19 @@ return {
     },
     {
         "https://gitee.com/yunduozhai/ts-comments.nvim.git",
-        opts = {},
         event = "VeryLazy",
+        opts = {},
         enabled = vim.fn.has("nvim-0.10.0") == 1,
+    },
+    {
+        "https://gitee.com/yunduozhai/yanky.nvim.git",
+        event = "VeryLazy",
+        keys = function()
+            return require("configs.edit").yankKeys
+        end,
+        config = function ()
+            return require("configs.edit").yankConfig()
+        end
     },
 }
 

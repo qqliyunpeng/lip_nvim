@@ -90,16 +90,6 @@ hi! link GrugFarResultsMatchRemoved GrugFarResultsMatch
 hi GrugFarResultsHeader     guifg=#ff966c guibg=NONE
 ]])
 
--- 复制之后高亮显示一下复制的内容
-vim.api.nvim_create_autocmd('TextYankPost', {
-    group = vim.api.nvim_create_augroup('highlight_yank', {}),
-    desc = 'Highlight selection on yank',
-    pattern = '*',
-    callback = function()
-        vim.highlight.on_yank { higroup = 'CurSearch', timeout = 150 }
-    end,
-})
-
 
 -- 打开文件后光标回到关闭的时候的位置
 require'nvim-lastplace'.setup{}
