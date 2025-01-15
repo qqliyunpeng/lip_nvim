@@ -322,6 +322,7 @@ return {
             string.format('%s/cmp-buffer' , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-path'   , 'https://gitee.com/suyelu'),
             string.format('%s/cmp-cmdline', 'https://gitee.com/suyelu'),
+            "https://gitee.com/nvim_lip/cmp_yanky.git",
         },
 
         opts = function()
