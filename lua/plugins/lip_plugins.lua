@@ -144,6 +144,8 @@ return {
             "https://gitee.com/nvim_lip/vim-textobj-indented-paragraph.git",
             -- vau/viu to first , . : ; ! ?
             "https://gitee.com/nvim_lip/vim-textobj-punctuation.git",
+            -- val/vil 选中一行
+            "https://gitee.com/nvim_lip/vim-textobj-line.git",
         },
         config = function()
         end
@@ -358,16 +360,6 @@ return {
         config = function ()
             require 'neogen'.setup({ snippet_engine = "luasnip" })
         end
-    },
-
-    --  nvim-neoclip [nvim clipboard]
-    --  https://github.com/AckslD/nvim-neoclip.lua
-    --  Read their docs to enable cross-session history.
-    {
-        "AckslD/nvim-neoclip.lua",
-        requires = 'nvim-telescope/telescope.nvim',
-        event = "User BaseFile",
-        opts = {}
     },
     {
         'https://gitee.com/yunduozhai/render-markdown.nvim.git',
