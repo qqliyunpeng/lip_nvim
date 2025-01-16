@@ -8,7 +8,7 @@ map("n", " ", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 map("n", "<leader>q", "<cmd>q<CR>", { desc = "CMD quit" })
 
-require 'options'
+require('options')
 
 vim.env.TREE_SITTER_BOOTSTRAP_URL = "https://gitcode.net/CAPYIN/nvim-treesitter"
 
@@ -53,7 +53,7 @@ require("lazy").setup({
     { import = "plugins" },
 }, lazy_config)
 
-require 'mappings'
+require('mappings')
 
 
 -- ui or color
@@ -92,7 +92,7 @@ hi GrugFarResultsHeader     guifg=#ff966c guibg=NONE
 
 
 -- 打开文件后光标回到关闭的时候的位置
-require'nvim-lastplace'.setup{}
+require('nvim-lastplace').setup{}
 
 
 -- local ssh_connection = vim.fn.getenv("SSH_CONNECTION")
@@ -116,10 +116,10 @@ require'nvim-lastplace'.setup{}
 vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射到 :ProjectRoot
 
 
-require 'mason'.setup({
+require('mason').setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })
-require 'mason-lspconfig'.setup()
+require('mason-lspconfig').setup()
 
 -- indent-blankline
 require('snacks')
