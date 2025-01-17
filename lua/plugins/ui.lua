@@ -104,6 +104,9 @@ return {
     {
         "https://gitee.com/yunduozhai/which-key.nvim.git", branch = "main",
         event = "VeryLazy",
+        dependencies = {
+            "https://gitee.com/yunduozhai/mini.icons.git",
+        },
         opts_extend = { "spec" },
         keys = {
             {

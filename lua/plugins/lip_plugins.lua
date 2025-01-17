@@ -49,7 +49,7 @@ return {
         config = function()
             require("project_nvim").setup {
                 -- 需不需要手动切换到工程目录下
-                manual_mode  = false,
+                manual_mode  = true,
                 silent_chdir = false,
                 patterns = {
                     -- use
