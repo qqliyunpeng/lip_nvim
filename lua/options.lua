@@ -44,7 +44,7 @@ o.undofile = true
 -- interval for writing swap file to disk, also used by gitsigns
 o.updatetime = 250
 
-o.sessionoptions = "buffers,curdir,folds,globals,tabpages,winpos,winsize"
+o.sessionoptions = "buffers,curdir,folds,tabpages,winpos,winsize"
 
 -- o.exrc = true -- open .nvim.lua, .nvimrc and .exrc support
 

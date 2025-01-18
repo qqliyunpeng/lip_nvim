@@ -87,7 +87,7 @@ map("n", "<leader>n", "<cmd> Telescope notify<CR>", { desc = "Notification Histo
 -- snacks
 -- map("n", "<leader>n", function() Snacks.notifier.show_history() end, { desc = "Notification History" })
 map("n", "<leader>un", function() Snacks.notifier.hide() end, { desc = "Dismiss All Notifications" })
-map("n", "<leader>x", function() Snacks.bufdelete() end, { desc = "Delete Buffers" })
+map("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete Buffers" })
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
 map("n", "<A-n>", function() Snacks.terminal() end, { desc = "Terminal Open" })
 map("t", "<A-n>", "<cmd>close<CR>", { desc = "Terminal Hide" })
