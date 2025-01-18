@@ -9,9 +9,14 @@ local allowed_dirs = {
 }
 
 M.setDefault = function ()
+    persisted.branch = function()
+        local branch = vim.fn.systemlist("git branch --show-current")[1]
+        return vim.v.shell_error == 0 and branch
+    end
     persisted.setup({
         save_dir = vim.fn.expand(vim.fn.stdpath("data") .. "/sessions/"),
         autoload = true,
+        use_git_branch = true,
         should_save = function ()
             return utils.dirs_match(vim.fn.getcwd(), allowed_dirs)
         end,
