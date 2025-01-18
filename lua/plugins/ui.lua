@@ -55,9 +55,15 @@ return {
         "https://gitee.com/sunn4mirror/snacks.nvim.git",
         priority = 1000,
         lazy = false,
+        keys = function ()
+            return require("configs.ui_all").snacksKeys
+        end,
+        init = function ()
+            return require("configs.ui_all").snacksInit()
+        end,
         config = function()
             return require("configs.ui_all").snacksConfig()
-        end
+        end,
     },
     {
         -- 函数缩进前的条
