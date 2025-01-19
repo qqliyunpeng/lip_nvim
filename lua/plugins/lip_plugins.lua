@@ -147,7 +147,7 @@ return {
             -- val/vil 选中一行
             "https://gitee.com/nvim_lip/vim-textobj-line.git",
             -- va%/vi% match [] () {} or jump ]% [%
-            "https://gitee.com/zgpio/vim-matchup.git",
+            -- "https://gitee.com/zgpio/vim-matchup.git",
         },
         config = function()
         end
