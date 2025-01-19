@@ -138,5 +138,15 @@ return {
         "https://gitee.com/yunduozhai/rainbow-delimiters.nvim.git",
         event = "VeryLazy",
     },
+    {
+        "https://gitee.com/yunduozhai/nvim-ufo.git",
+        event = "VeryLazy",
+        dependencies = {
+            "https://gitee.com/yunduozhai/promise-async.git",
+        },
+        config = function()
+            require("configs.ui_all").ufoConfig()
+        end
+    },
 }
 
