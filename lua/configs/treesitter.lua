@@ -29,8 +29,9 @@ M.treesitterConfig = {
             keymaps = {
                 ["af"] = "@function.outer",
                 ["if"] = "@function.inner",
-                ["ac"] = "@class.outer",
-                ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
+                -- 这里和vim-textobj-comment冲突，先临时使用vim-textobj-comment
+                -- ["ac"] = "@class.outer",
+                -- ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
                 ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
             },
 

@@ -148,6 +148,8 @@ return {
             "https://gitee.com/nvim_lip/vim-textobj-line.git",
             -- va%/vi% match [] () {} or jump ]% [%
             -- "https://gitee.com/zgpio/vim-matchup.git",
+            -- vac/vic 选中注释
+            "https://gitee.com/nvim_lip/vim-textobj-comment.git",
         },
         config = function()
         end
@@ -482,7 +484,7 @@ return {
         config = function ()
             return require("configs.edit").nvimToggleConfig()
         end
-    }
+    },
 }
 
 
