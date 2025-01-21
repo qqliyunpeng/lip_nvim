@@ -92,5 +92,24 @@ M.yankConfig = function ()
     end, {desc = 'Last yank put'})
 end
 
+M.nvimToggleConfig = function ()
+    require('nvim-toggler').setup({
+        inverses = {
+            ['YES'] = 'NO',
+            ['ON'] = 'OFF',
+            ['UP'] = 'DOWN',
+            ['LEFT'] = 'RIGHT',
+            ['TRUE'] = 'FALSE',
+            ['ENABLE'] = 'DISABLE',
+        },
+        -- removes the default <leader>i keymap
+        remove_default_keybinds = true,
+        -- auto-selects the longest match when there are multiple matches
+        autoselect_longest_match = false
+    })
+    vim.keymap.set({ 'n', 'v' }, '<leader>ui', require('nvim-toggler').toggle,
+                                                    { desc = "True <-> False" })
+end
+
 return M
 

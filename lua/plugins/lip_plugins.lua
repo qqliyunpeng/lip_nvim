@@ -476,6 +476,13 @@ return {
             return require("configs.edit").yankConfig()
         end
     },
+    {
+        "https://gitee.com/nvim_lip/nvim-toggler.git",
+        event = "VeryLazy",
+        config = function ()
+            return require("configs.edit").nvimToggleConfig()
+        end
+    }
 }
 
 
