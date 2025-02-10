@@ -58,7 +58,7 @@ M.yankConfig = function ()
             enabled = true,
         },
         textobj = {
-            enable = true,
+            enable = false,
         },
         picker = {
             telescope = {
@@ -87,9 +87,8 @@ M.yankConfig = function ()
     hi! link YankyYanked Cursearch
     ]])
 
-    vim.keymap.set({ "o", "x" }, "lp", function()
-        require("yanky.textobj").last_put()
-    end, {desc = 'Last yank put'})
+    vim.keymap.set({ "i" }, "<C-y>", "<cmd>Telescope yank_history<CR>",
+        {noremap = true, silent = true, desc = 'Yanky Picker in Insert Mode'})
 end
 
 M.nvimToggleConfig = function ()

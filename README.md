@@ -26,6 +26,8 @@ compiledb make
 | <leader>sr   | n    | grug-far 查找替换                                |
 | <leader>to   | n    | todo telescope find all                          |
 | <leader>y    | n    | yank telescope picker                            |
+| C-y          | i    | yank telescope picker                            |
+| <leader>ui   | n    | True <-> False 交替变化                          |
 | ]g           | n    | next git changs                                  |
 | [g           | n    | prev git changs                                  |
 
