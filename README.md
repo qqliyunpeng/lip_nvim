@@ -31,10 +31,11 @@ compiledb make
 | ]g           | n    | next git changs                                  |
 | [g           | n    | prev git changs                                  |
 
-| cmd  | 功能                                                                |
-|------|---------------------------------------------------------------------|
-| Root | cd 到当前文件的根目录下，依据目录下是不是有                         |
-|      | ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" |
+| cmd    | 功能                                                                |
+|--------|---------------------------------------------------------------------|
+| Root   | cd 到当前文件的根目录下，依据目录下是不是有                         |
+|        | ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" |
+| Neogen | 生成doxgen类型的函数注释                                            |
 
 # 3. mul line control
 
