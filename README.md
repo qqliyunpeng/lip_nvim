@@ -86,6 +86,12 @@ compiledb make
 - 2 `\\R` geyihangxuanze
 - 3 J
 
+# 4. search
+- 非全词匹配：
+<leader>fc 后出现   "光标下的词" -F
+- 全词匹配：
+<leader>fc 后出现   "光标下的词" -F 后更改 -F 为 -w
+
 # bugs
 1. telescope persisted open the workspace select ui, C-c don't close the window,
     but to copy a session. we need to close.

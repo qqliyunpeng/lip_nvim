@@ -322,8 +322,8 @@ end
 -- TODO: need relize session open with fold
 M.ufoConfig = function()
     -- vim.o.foldcolumn = '1' -- '0' is not bad
-    -- vim.o.foldlevel = 99
-    -- vim.o.foldlevelstart = 99
+    vim.o.foldlevel = 99
+    vim.o.foldlevelstart = 99
     vim.o.foldenable = false
 
     -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself

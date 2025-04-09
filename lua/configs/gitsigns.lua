@@ -5,6 +5,7 @@ local M = {}
 
 M.config = function ()
     local opts = {
+        current_line_blame = true, -- 默认启用当前行 blame
         signs = {
             delete = { text = "󰍵"},
             changedelete = { text = "󱕖" },

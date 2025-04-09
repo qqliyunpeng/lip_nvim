@@ -444,6 +444,11 @@ return {
                     qflist = { n = nil },
                     close = { n = 'q'},
                 },
+                rg = {
+                    options = {
+                        '--no-ignore',
+                    },
+                },
             })
         end,
     },
