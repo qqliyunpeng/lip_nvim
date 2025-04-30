@@ -5,6 +5,10 @@ clangd 需要在文件夹下生成 compile_commands.json 文件，辅助 clangd 
 compiledb make
 ```
 
+```c++
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+```
+
 # 2. Key maps
 
 | key          | 模式 | 功能                                             |
@@ -95,4 +99,7 @@ compiledb make
 # bugs
 1. telescope persisted open the workspace select ui, C-c don't close the window,
     but to copy a session. we need to close.
+
+# 5. 生成注释
+: neogen
 
