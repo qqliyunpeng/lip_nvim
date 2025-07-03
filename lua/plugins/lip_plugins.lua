@@ -409,7 +409,7 @@ return {
                     base = {
                         mark_add = nil,
                         mark_remove = "<leader>mc",
-                        open_mark_picker = "<leader>ma",
+                        open_mark_picker = "<leader>fm",
                     },
                 },
                 sign = {
