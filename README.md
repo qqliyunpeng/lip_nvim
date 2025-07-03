@@ -45,8 +45,8 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 
 | cmd       | 功能                                                     |
 |-----------|----------------------------------------------------------|
-| C-n       | the word select and you can select next same word        |
-| C-up/down | create cursor in up and down                             |
+| C-n       | the                           word select and you can select next same word        |
+| C-up/down | create                        cursor in up and down                             |
 | `\\\`     | three \ is to create a cursor and use up/down/left/right |
 |           | to move to cursor and tree \ to select the other         |
 
@@ -87,8 +87,21 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | 156    |         |
 | 178    |         |
 - 1 C-down to select begin of all
-- 2 `\\R` geyihangxuanze
+- 2 `\\R` 隔一行选择
 - 3 J
+
+## 3.6 多行数字递增
+```c
+1
+1
+1
+
+希望变成
+1
+2
+3
+```
+选中第二三行的 1 , g<c-a>, <c-a> 表示的是增加数字，添加g表示递增的加，对应的<a-x> 是减
 
 # 4. search
 - 非全词匹配：

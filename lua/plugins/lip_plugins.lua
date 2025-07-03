@@ -34,6 +34,11 @@ return {
         -- stylua: ignore
         keys = {
             { "m", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+            { "gl", mode = { "n", "x", "o" }, function() require("flash").jump({
+                search = { mode = "search", max_length = 0 },
+                label = { after = { 0, 0 }},
+                pattern = "^"
+            }) end, desc = "Flash" },
             -- { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
             -- { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
             -- { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
@@ -390,7 +395,7 @@ return {
         end
     },
     {
-        "https://gitee.com/yunduozhai/vim-visual-multi.git",
+        "https://gitee.com/nvim_lip/vim-visual-multi.git",
         event = { "BufReadPost", "BufNewFile" },
         config = function()
         end
