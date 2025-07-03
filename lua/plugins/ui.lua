@@ -38,6 +38,8 @@ return {
     },
     {
         "https://gitee.com/yunduozhai/noice.nvim.git",
+        branch = 'main',
+        tag = 'v4.10.0',
         config = function()
             return require("configs.ui_all").noiceConfig()
         end
