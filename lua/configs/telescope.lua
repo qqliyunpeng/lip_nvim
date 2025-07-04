@@ -5,6 +5,10 @@ local function is_available(plugin)
   return lazy_config_avail and lazy_config_l.spec.plugins[plugin] ~= nil
 end
 
+local function send_key(key)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), "n", false)
+end
+
 local telescope = require("telescope")
 local db_path = os.getenv('HOME') .. '/.local/share/nvim/databases'
 
@@ -27,7 +31,13 @@ if is_available("telescope-smart-history.nvim") then
 end
 
 local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
-vim.keymap.set("n", "<leader>fc", live_grep_args_shortcuts.grep_word_under_cursor)
+-- vim.keymap.set("n", "<leader>fc", live_grep_args_shortcuts.grep_word_under_cursor)
+vim.keymap.set("n", "<leader>fc", function ()
+    live_grep_args_shortcuts.grep_word_under_cursor()
+
+    -- simulator push left
+    vim.defer_fn(function() send_key("<Left><Left><Left><Left><Left>") end, 50) -- delay ms
+end)
 
 return {
     defaults = {
@@ -60,10 +70,15 @@ return {
             height = 0.40,
         },
         mappings = {
-            n = { ["q"] = require("telescope.actions").close },
+            n = {
+                ["q"] = require("telescope.actions").close,
+                ["<S-h>"] = function() send_key("^<Right><Right><Right>") end,
+                ["<S-l>"] = function() send_key("$") end,
+            },
             i = {
                 ["<C-j>"] = require("telescope.actions").move_selection_next,
                 ["<C-k>"] = require("telescope.actions").move_selection_previous,
+                ["<C-l>"] = function() send_key("<Right>") end,
                 ["<Up>"]  = require("telescope.actions").cycle_history_prev,
                 ["<Down>"]= require("telescope.actions").cycle_history_next,
             },
