@@ -215,6 +215,7 @@ return {
         "windwp/nvim-autopairs",
         event = "VeryLazy",
         opts = {
+            map_bs = false,
             fast_wrap = {},
             disable_filetype = { "TelescopePrompt", "vim"  },
         },
