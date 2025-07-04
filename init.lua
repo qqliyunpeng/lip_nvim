@@ -8,6 +8,8 @@ map("n", " ", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 map("i", "kj", "<ESC>")
 map("v", "q", "<Esc>")
+map("n", "<a-q>", "<Esc>")
+map("x", "<a-q>", "<Esc>")
 map("n", "<leader>q", "<cmd>q<CR>", { desc = "CMD quit" })
 map("n", "<leader>x", "<cmd>qa<CR>", { desc = "CMD quit all" })
 
