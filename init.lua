@@ -93,6 +93,10 @@ hi GrugFarResultsMatch      guifg=#1b1d2b guibg=#ff757f
 hi GrugFarResultsMatchAdded guifg=#1b1d2b guibg=#589ed7
 hi! link GrugFarResultsMatchRemoved GrugFarResultsMatch
 hi GrugFarResultsHeader     guifg=#ff966c guibg=NONE
+hi! link VM_Cursor GrugFarResultsMatch
+hi! link VM_Extend GrugFarResultsMatchAdded
+hi! link VM_Mono   GrugFarResultsMatchAdded
+hi! link VM_Insert GrugFarResultsMatch
 ]])
 
 
