@@ -399,6 +399,8 @@ return {
         "https://gitee.com/nvim_lip/vim-visual-multi.git",
         event = { "BufReadPost", "BufNewFile" },
         config = function()
+            vim.keymap.set("n", "<a-q>", "<Cmd>call vm#reset()<cr>", { noremap = true, silent = true })
+            vim.keymap.set("x", "<a-q>", "<Cmd>call vm#reset()<cr>", { noremap = true, silent = true })
         end
     },
     {
