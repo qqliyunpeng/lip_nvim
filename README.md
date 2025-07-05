@@ -35,20 +35,22 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | ]g           | n    | next git changs                                  |
 | [g           | n    | prev git changs                                  |
 
-| cmd    | 功能                                                                |
-|--------|---------------------------------------------------------------------|
-| Root   | cd 到当前文件的根目录下，依据目录下是不是有                         |
-|        | ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" |
-| Neogen | 生成doxgen类型的函数注释                                            |
+| cmd     | 功能                                                                |
+|---------|---------------------------------------------------------------------|
+| Root    | cd 到当前文件的根目录下，依据目录下是不是有                         |
+|         | ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" |
+| Neogen  | 生成doxgen类型的函数注释                                            |
+| message | 显示右上角显示过的message信息                                       |
 
 # 3. mul line control
 
 | cmd       | 功能                                                     |
 |-----------|----------------------------------------------------------|
-| C-n       | the                           word select and you can select next same word        |
-| C-up/down | create                        cursor in up and down                             |
+| C-n       | the word select and you can select next same word        |
+| C-up/down | create cursor in up and down                             |
 | `\\\`     | three \ is to create a cursor and use up/down/left/right |
 |           | to move to cursor and tree \ to select the other         |
+| C-c       | cancle VM mode                                           |
 
 ## 3.1 pattern
 - \\w toggles whole word search
@@ -67,7 +69,7 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 - 2 `C-n`/`n`/`N` goto next/next/prev select word the same of follow
 - 3 q disseselect the current of jumped word
 - 4 retry 2 and 3
-- 5 use `[`/`]` goto previous/next the selected word
+- 5 use `alt-[`/`alt-]` goto previous/next the selected word
 
 ## 3.4 alian
 - 1 C-down select some

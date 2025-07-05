@@ -383,8 +383,8 @@ return {
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             vim.cmd[[
-                unmap <leader>tm
-                unmap <leader>tt
+                " unmap <leader>tm
+                " unmap <leader>tt
                 nnoremap <leader>ut :TableModeToggle<CR>
             ]]
         end
