@@ -104,10 +104,12 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 选中第二三行的 1 , g<c-a>, <c-a> 表示的是增加数字，添加g表示递增的加，对应的<a-x> 是减
 
 # 4. search
-- 非全词匹配：
+- 非全词匹配(default):
 <leader>fc 后出现   "光标下的词" -F
-- 全词匹配：
+- 全词匹配:
 <leader>fc 后出现   "光标下的词" -F 后更改 -F 为 -w
+- 搜索当前光标下的单词
+Alt-/
 
 # bugs
 1. telescope persisted open the workspace select ui, C-c don't close the window,
