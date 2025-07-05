@@ -94,7 +94,7 @@ M.noiceConfig = function()
         views = {
             cmdline_popup = {
                 position = {
-                    row = "50%", -- 屏幕垂直方向居中
+                    row = "60%", -- 屏幕垂直方向居中
                     col = "50%", -- 屏幕水平方向居中
                 },
                 size = {
@@ -205,7 +205,7 @@ M.snacksKeys = {
 }
 
 M.snacksInit = function ()
-    print("123")
+    -- print("123")
     vim.api.nvim_create_autocmd("User", {
         pattern = "VeryLazy",
         callback = function()
