@@ -451,8 +451,8 @@ return {
         config = function()
             require('grug-far').setup({
                 keymaps = {
-                    qflist = { n = nil },
-                    close = { n = 'q'},
+                    qflist = { n = '=' },
+                    close = { n = 'q' },
                 },
                 rg = {
                     options = {
