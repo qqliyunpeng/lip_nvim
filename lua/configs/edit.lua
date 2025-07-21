@@ -100,6 +100,10 @@ M.nvimToggleConfig = function ()
             ['LEFT'] = 'RIGHT',
             ['TRUE'] = 'FALSE',
             ['ENABLE'] = 'DISABLE',
+            ['GET'] = 'SET',
+            ['get'] = 'set',
+            ['SHOW'] = 'HIDE',
+            ['show'] = 'hide',
         },
         -- removes the default <leader>i keymap
         remove_default_keybinds = true,
