@@ -26,7 +26,7 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | <leader>tm   | n    | 开启/关闭markdown里边的表格的自动化              |
 | <leader>mm   | n    | create/del a bookmark                            |
 | <leader>mc   | n    | del a bookmark                                   |
-| <leader>ma   | n    | open telescope  show all bookmakr                |
+| <leader>fm   | n    | open telescope  show all bookmakr                |
 | <leader>sr   | n    | grug-far 查找替换                                |
 | <leader>to   | n    | todo telescope find all                          |
 | <leader>y    | n    | yank telescope picker                            |

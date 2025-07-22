@@ -99,6 +99,7 @@ hi! link VM_Mono   GrugFarResultsMatchAdded
 hi! link VM_Insert GrugFarResultsMatch
 ]])
 
+vim.lsp.set_log_level("off")
 
 -- 打开文件后光标回到关闭的时候的位置
 require('nvim-lastplace').setup{}
