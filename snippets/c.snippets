@@ -22,7 +22,7 @@ snippet inc
 	#include "${1:`Filename("$1")`}.h"${2}
 # macro defines
 snippet def
-	#define 
+	#define ${1} $2
 snippet ifd
 	#ifdef ${1}
 	#endif
@@ -42,6 +42,10 @@ snippet if
 	{
 		${2:/* code */}
 	}
+snippet el
+	else {
+		${1}
+	}
 snippet else
 	else
 	{
@@ -49,19 +53,16 @@ snippet else
 	}
 # loop
 snippet do
-	do
-	{
-		${2:/* code */}
-	} while (${1:/* condition */});
+	do {
+		${2}
+	} while (${1/});
 snippet while
-	while (${1:/* condition */})
-	{
-		${2:/* code */}
+	while (${1}) {
+		${2}
 	}
 snippet for
-	for (${1:/* initialize */}; ${2:/* condition */}; ${3:/* loop */})
-	{
-		${4:/* code */}
+	for (size_t ${1:i} = 0; $1 < ${2}; $1++}) {
+		${4}
 	}
 # structure
 snippet struct
@@ -89,4 +90,7 @@ snippet main
 # sizeof()
 snippet sizeof
 	sizeof(${1})
+
+snippet pr
+    printf("${1:lip: %s}\n", ${2:__FUNCTION__});
 
