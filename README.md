@@ -34,6 +34,8 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | <leader>ui   | n    | True <-> False 交替变化                          |
 | ]g           | n    | next git changs                                  |
 | [g           | n    | prev git changs                                  |
+| <leader>fe   | n    | 打开 harpoon 的界面，里边显示所有索引了的文件    |
+| <leader>a    | n    | 当前文件加入到 harpoon 列表中                    |
 
 | cmd     | 功能                                                                |
 |---------|---------------------------------------------------------------------|

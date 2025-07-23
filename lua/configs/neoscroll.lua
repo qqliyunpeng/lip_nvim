@@ -34,7 +34,6 @@ M.defaultConfig = function()
         -- When no value is passed the `easing` option supplied in `setup()` is used
         ["<A-y>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 100 }) end;
         ["<A-w>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 100 }) end;
-        ["<A-3>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 100 }) end;
         ["<A-e>"] = function() neoscroll.scroll(0.1, { move_cursor=false; duration = 100 }) end;
     }
     local modes = { 'n', 'v', 'x' }

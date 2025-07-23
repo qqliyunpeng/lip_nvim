@@ -39,28 +39,28 @@ vim.keymap.set("n", "<leader>fc", function ()
     vim.defer_fn(function() send_key("<Left><Left><Left><Left><Left>") end, 50) -- delay ms
 end)
 
-local harpoon = require('harpoon')
-local conf = require("telescope.config").values
-local function toggle_telescope(harpoon_files)
-    local file_paths = {}
-    for _, item in ipairs(harpoon_files.items) do
-        table.insert(file_paths, item.value)
-    end
+-- 暂时使用 harpoon自己的弹出界面，telescope不太好
+-- local harpoon = require('harpoon')
+-- local conf = require("telescope.config").values
+-- local function toggle_telescope(harpoon_files)
+--     local file_paths = {}
+--     for _, item in ipairs(harpoon_files.items) do
+--         table.insert(file_paths, item.value)
+--     end
+--
+--     require("telescope.pickers").new({}, {
+--         prompt_title = "Harpoon",
+--         finder = require("telescope.finders").new_table({
+--             results = file_paths,
+--         }),
+--         previewer = conf.file_previewer({}),
+--         sorter = conf.generic_sorter({}),
+--     }):find()
+-- end
+--
+-- vim.keymap.set("n", "<leader>fe", function() toggle_telescope(harpoon:list()) end,
+--     { desc = "Open harpoon window"})
 
-    require("telescope.pickers").new({}, {
-        prompt_title = "Harpoon",
-        finder = require("telescope.finders").new_table({
-            results = file_paths,
-        }),
-        previewer = conf.file_previewer({}),
-        sorter = conf.generic_sorter({}),
-    }):find()
-end
-
-vim.keymap.set("n", "<leader>fe", function() toggle_telescope(harpoon:list()) end,
-    { desc = "Open harpoon window"})
-
-vim.keymap.set("n", "<leader>fe", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
 return {
     defaults = {
         -- 全部文件，默认是如果有.gitignore 的话会根据 gitignore 进行处理
