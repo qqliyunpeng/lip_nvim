@@ -1,6 +1,7 @@
 return {
     {
         "https://gitee.com/nvim_lip/onedarkpro.nvim.git",
+        branch = 'main',
         priority = 1000, -- Ensure it loads first
     },
     {
