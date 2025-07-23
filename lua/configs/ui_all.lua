@@ -299,6 +299,14 @@ M.whichKeyConfig = function()
                 {"<leader>ma", desc = "Bookmark picker" },
                 {"<leader>mm", desc = "Bookmark Toggle" },
                 {"<leader>mc", desc = "Bookmark Delete" },
+                {"<leader>fc", desc = "Search with parameter" },
+                {"<leader>fm", desc = "Mark list" },
+                {"<leader>fe", desc = "Harpoon list" },
+                {"<leader>a" , desc = "Harpoon add current file" },
+                {"<leader>t" , desc = "Table and todo" },
+                {"<leader>tm", desc = "Table mode toggle" },
+                {"<leader>s" , desc = "Surround, search, replace" },
+                {"<leader>c" , desc = "Code action, rename, comment" },
             }
         },
     }
