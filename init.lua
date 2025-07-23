@@ -85,6 +85,7 @@ hi CursorLine guibg=#3e4451 ctermbg=235
 hi CursorLineNr cterm = bold gui = bold guifg=#ff966c
 " 搜索的结果中当前的块的背景颜色
 hi CurSearch guibg=#ff966c
+" set guicursor=n-v-c-sm:block-CursorLineNr,i-ci-ve:ver25,r-cr-o:hor20
 hi Search guifg=#c8d3f5 guibg=#3e68d7
 " 弹出的窗口右侧的下拉框的颜色
 hi PmenuThumb guibg=#c678dd ctermbg=127
