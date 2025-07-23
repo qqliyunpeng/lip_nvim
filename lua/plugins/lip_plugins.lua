@@ -1,6 +1,6 @@
 return {
     {
-        "olimorris/onedarkpro.nvim",
+        "https://gitee.com/nvim_lip/onedarkpro.nvim.git",
         priority = 1000, -- Ensure it loads first
     },
     {
@@ -183,7 +183,7 @@ return {
         end,
     },
     {
-        'Mr-LLLLL/interestingwords.nvim',
+        'https://gitee.com/nvim_lip/interestingwords.nvim.git',
         event = "VeryLazy",
         config = function()
             require('interestingwords').setup{
@@ -212,7 +212,7 @@ return {
         end
     },
     {
-        "windwp/nvim-autopairs",
+        "https://gitee.com/nvim_lip/nvim-autopairs.git",
         event = "VeryLazy",
         opts = {
             map_bs = false,
@@ -406,7 +406,7 @@ return {
         end
     },
     {
-        "zongben/navimark.nvim",
+        "https://gitee.com/nvim_lip/navimark.nvim.git",
         event = { "BufReadPost", "BufNewFile" },
         config = function ()
             require('navimark').setup({
@@ -501,9 +501,9 @@ return {
         end
     },
     {
-        "ThePrimeagen/harpoon",
+        "https://gitee.com/nvim_lip/harpoon.git",
         branch = "harpoon2",
-        dependencies = { "nvim-lua/plenary.nvim" },
+        dependencies = { "https://gitee.com/suyelu/plenary.nvim" },
         event = "VeryLazy",
         config = function()
             local harpoon = require("harpoon")
