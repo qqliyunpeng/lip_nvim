@@ -46,7 +46,7 @@ M.yankConfig = function ()
 
     require('yanky').setup({
         ring = {
-            history_length = 20,
+            history_length = 100,
             storage = "shada",
         },
         highlight = {
