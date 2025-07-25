@@ -114,5 +114,21 @@ M.nvimToggleConfig = function ()
                                                     { desc = "True <-> False" })
 end
 
+M.visualMulConfig = function ()
+    vim.api.nvim_create_autocmd("User", {
+        pattern = "visual_multi_start",
+        callback = function ()
+            vim.keymap.set("n", "<A-q>", "<cmd>call vm#reset()<CR>")
+        end
+    })
+    vim.api.nvim_create_autocmd("User", {
+        pattern = "visual_multi_exit",
+        callback = function ()
+            vim.keymap.set("n", "<A-q>", "<Esc><cmd>noh<CR>")
+        end
+    })
+
+end
+
 return M
 
