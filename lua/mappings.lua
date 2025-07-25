@@ -70,6 +70,8 @@ map("n", "<leader>`", "<cmd>e #<CR>"      , { desc = "Switch to Other Buffer" })
 -- Comment 注释
 map("n", "<leader>cc", "gcc", { desc = "toggle comment", remap = true })
 map("v", "<leader>cc", "gc", { desc = "toggle comment", remap = true })
+map("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below"})
+map("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above"})
 
 -- nvimtree
 map("n", "<F2>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
@@ -112,6 +114,10 @@ map("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc =  "Go to Right Window" })
 -- search
 map('n', '<A-/>', function()
     vim.cmd('let @/ = expand("<cword>") | set hlsearch')   -- 设置搜索寄存器
+end, { desc = '搜索光标下单词' })
+map('x', '<A-/>', function()
+    vim.cmd('noautocmd normal! "vy')        -- 设置搜索寄存器
+    vim.cmd('let @/ = @v | set hlsearch')   -- 设置搜索寄存器
 end, { desc = '搜索光标下单词' })
 
 
