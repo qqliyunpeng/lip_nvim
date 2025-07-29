@@ -24,6 +24,7 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | ctrl-h/j/k/l | n    | 在窗口间移动                                     |
 | ctrl-h/j/k/l | i    | 相当于在不退出插入模式的情况下上下左右           |
 | <leader>tm   | n    | 开启/关闭markdown里边的表格的自动化              |
+| <leader>tr   | n    | markdown里边的表格的自动化              |
 | <leader>mm   | n    | create/del a bookmark                            |
 | <leader>mc   | n    | del a bookmark                                   |
 | <leader>fm   | n    | open telescope  show all bookmakr                |
@@ -36,8 +37,8 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | [g           | n    | prev git changs                                  |
 | <leader>fe   | n    | 打开 harpoon 的界面，里边显示所有索引了的文件    |
 | <leader>a    | n    | 当前文件加入到 harpoon 列表中                    |
-| <leader>.    | n    | 打开 scratch                    |
-| <leader>S    | n    | 打开不同工作区的 scratch                     |
+| <leader>.    | n    | 打开 scratch                                     |
+| <leader>S    | n    | 打开不同工作区的 scratch                         |
 
 | cmd     | 功能                                                                |
 |---------|---------------------------------------------------------------------|
@@ -48,13 +49,13 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 
 # 3. mul line control
 
-| cmd       | 功能                                                     |
-|-----------|----------------------------------------------------------|
-| C-n       | the word select and you can select next same word        |
-| C-up/down | create cursor in up and down                             |
-| `\\\`     | three \ is to create a cursor and use up/down/left/right |
-|           | to move to cursor and tree \ to select the other         |
-| C-c       | cancle VM mode                                           |
+| cmd         | 功能                                                     |
+|-------------|----------------------------------------------------------|
+| C-n         | the word select and you can select next same word        |
+| C-up/down   | create cursor in up and down                             |
+| `\\\`       | three \ is to create a cursor and use up/down/left/right |
+|             | to move to cursor and tree \ to select the other         |
+| C-c / alt-q | cancle VM mode                                           |
 
 ## 3.1 pattern
 - \\w toggles whole word search
