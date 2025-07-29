@@ -18,8 +18,8 @@ map("i", "<C-k>", "<Up>", { desc = "move up" })
 
 map("n", "<C-h>", "<C-w>h", { desc = "switch window left" })
 map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
-map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
-map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
+-- map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
+-- map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
 
 -- Resize splits with arrow keys
 map("n", "<C-S-up>", "<cmd>res +5<CR>", { desc = "Increase upwards" })
@@ -104,8 +104,8 @@ map("n", "<leader>n", "<cmd> Telescope notify<CR>", { desc = "Notification Histo
 map("n", "<leader>un", function() Snacks.notifier.hide() end, { desc = "Dismiss All Notifications" })
 map("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete Buffers" })
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
-map("n", "<A-t>", function() Snacks.terminal() end, { desc = "Terminal Open" })
-map("t", "<A-t>", "<cmd>close<CR>", { desc = "Terminal Hide" })
+map("n", "<A-b>", function() Snacks.terminal() end, { desc = "Terminal Open" })
+map("t", "<A-b>", "<cmd>close<CR>", { desc = "Terminal Hide" })
 map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc =  "Go to Upper Window" })
 map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc =  "Go to Lower Window" })
 map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc =  "Go to Left Window"  })
