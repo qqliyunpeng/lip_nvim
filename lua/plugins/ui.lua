@@ -138,7 +138,7 @@ return {
         end
     },
     {
-        "https://gitee.com/yunduozhai/rainbow-delimiters.nvim.git",
+        "https://gitee.com/nvim_lip/rainbow-delimiters.nvim.git",
         event = "VeryLazy",
     },
     {
