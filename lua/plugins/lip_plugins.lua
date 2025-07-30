@@ -85,9 +85,9 @@ return {
         config = function()
             require('illuminate').configure({
                 providers = {
-                    -- 'lsp',
+                    'lsp',
                     'treesitter',
-                    -- 'regex',
+                    'regex',
                 },
                 delay = 800,
                 -- disable in below
@@ -98,6 +98,7 @@ return {
                     'NvimTree',
                 },
                 filetypes_allowlist = {'python', 'lua', 'c', 'cpp'},
+                large_file_cutoff = 10000,
             })
 
             vim.keymap.set('n', '<a-j>', require('illuminate').goto_next_reference, { desc = "Move to next reference" })

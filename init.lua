@@ -98,6 +98,10 @@ hi! link VM_Cursor GrugFarResultsMatch
 hi! link VM_Extend GrugFarResultsMatchAdded
 hi! link VM_Mono   GrugFarResultsMatchAdded
 hi! link VM_Insert GrugFarResultsMatch
+hi LspReferenceText guifg=NONE guibg=NONE
+hi! link IlluminatedWordText  CursorLine
+hi! link IlluminatedWordWrite CursorLine
+hi! link IlluminatedWordRead  CursorLine
 ]])
 
 vim.lsp.set_log_level("off")
