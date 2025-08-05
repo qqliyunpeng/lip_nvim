@@ -92,5 +92,7 @@ snippet sizeof
 	sizeof(${1})
 
 snippet printf
-    printf("lip: ${1:%s}\n", ${2:__FUNCTION__});
+    printf("lip: ${1:%s}${2}\n", ${3:__FUNCTION__}${4});
 
+snippet printf__
+    printf("lip: [%s, %d]${1}\n", __FUNCTION__, __LINE__${2});${3}
