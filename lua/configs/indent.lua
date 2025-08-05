@@ -42,7 +42,8 @@ end
 
 M.blanklineConfig = function()
     Snacks.toggle({
-        name = "Indention Guides",
+        -- name = "Indention Guides",
+        name = "|",
         get = function()
             return require("ibl.config").get_config(0).enabled
         end,
