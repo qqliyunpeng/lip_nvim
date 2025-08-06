@@ -74,8 +74,8 @@ M.yankConfig = function ()
                     n = {
                         p = mapping.put("p"),
                         P = mapping.put("P"),
-                        x = mapping.delete(),
-                        r = mapping.set_register(utils.get_default_register())
+                        d = mapping.delete(),
+                        r = mapping.set_register(utils.get_default_register()),
                     },
                 }
             }
