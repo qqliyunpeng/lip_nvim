@@ -82,15 +82,23 @@ return {
         prompt_prefix = "   ",
         selection_caret = "▍",
         entry_prefix = " ",
+        layout_strategy = 'flex',
         sorting_strategy = "ascending",
         sort_lastused = false,
         layout_config = {
+            width = 0.85,
+            height = 0.60,
             horizontal = {
                 prompt_position = "top",
+                preview_cutoff = 145, -- 宽度太窄，变成 vertical
                 preview_width = 0.55,
             },
-            width = 0.90,
-            height = 0.40,
+            vertical = {
+                prompt_position = "top",
+                preview_cutoff = 35, -- 窗口太低的时候，去掉预览窗口
+                preview_height = 0.4,
+                mirror = true,
+            },
         },
         mappings = {
             n = {
