@@ -139,7 +139,7 @@ return {
     },
     {
         "https://gitee.com/nvim_lip/rainbow-delimiters.nvim.git",
-        event = "VeryLazy",
+        event = "BufReadPost",
     },
     {
         "https://gitee.com/yunduozhai/nvim-ufo.git",

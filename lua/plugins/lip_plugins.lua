@@ -210,7 +210,7 @@ return {
     },
     {
         'https://gitee.com/dragon-teng140806/nvim-colorizer.lua.git',
-        event = "VeryLazy",
+        event = "BufReadPost",
         config = function()
             -- Exclude some filetypes from highlighting by using `!`
             require ('colorizer').setup {
