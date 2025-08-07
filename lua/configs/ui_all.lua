@@ -186,6 +186,28 @@ M.lspsagaConfig = function()
     map("n", "<F3>", "<cmd>Lspsaga outline<CR>", { desc ='Show outline'} )
 end
 
+local open_lazygit_with_refresh = function ()
+    Snacks.lazygit()
+    local bufnr = vim.api.nvim_get_current_buf()
+    vim.api.nvim_create_autocmd("TermClose", {
+        buffer = bufnr,
+        once = true,
+        callback = function ()
+            vim.defer_fn(function()
+                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                    if vim.api.nvim_buf_is_loaded(buf) then
+                        local name = vim.api.nvim_buf_get_name(buf)
+                        if name ~= "" then
+                            vim.cmd("silent keepalt keepjumps edit " .. vim.fn.fnameescape(name))
+                        end
+                    end
+                end
+            end, 100) -- 延迟 100ms 防止懵逼的界面冲突
+            vim.notify("ALL files reloaded")
+        end,
+    })
+end
+
 M.snacksKeys = {
     -- { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
     -- { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
@@ -197,7 +219,7 @@ M.snacksKeys = {
     -- { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
     { "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
     { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
-    { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+    { "<leader>gg", function() open_lazygit_with_refresh() end, desc = "Lazygit" },
     { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
     { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
     { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
