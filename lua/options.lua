@@ -46,6 +46,14 @@ o.updatetime = 250
 
 o.sessionoptions = "buffers,curdir,folds,tabpages,winpos,winsize"
 
+-- q: 出来的扩展模式下的历史命令，q/ 和 q? 相应的窗口
+o.cmdwinheight = 15
+vim.api.nvim_create_autocmd("CmdwinEnter", {
+    callback = function()
+        vim.keymap.set("n", "q", "<C-w>c", { buffer = true }) -- 关闭当前窗口
+    end
+})
+
 -- o.exrc = true -- open .nvim.lua, .nvimrc and .exrc support
 
 -- disable nvim intro
