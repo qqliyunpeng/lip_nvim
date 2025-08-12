@@ -21,8 +21,8 @@ end
 M.yankKeys = {
     { "<leader>y", function() require('telescope').extensions.yank_history.yank_history({ }) end, desc = "Open Yank History" },
     { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Yank text" },
-    { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put yanked text after cursor" },
-    { "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" }, desc = "Put yanked text before cursor" },
+    -- { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put yanked text after cursor" },
+    -- { "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" }, desc = "Put yanked text before cursor" },
     { "gp", "<Plug>(YankyGPutAfter)", mode = { "n", "x" }, desc = "Put yanked text after selection" },
     { "gP", "<Plug>(YankyGPutBefore)", mode = { "n", "x" }, desc = "Put yanked text before selection" },
     -- 在已经粘贴的上边换成列表中之前的一个
@@ -104,6 +104,8 @@ M.nvimToggleConfig = function ()
             ['get'] = 'set',
             ['SHOW'] = 'HIDE',
             ['show'] = 'hide',
+            ['top'] = 'bottom',
+            ['TOP'] = 'BOTTOM',
         },
         -- removes the default <leader>i keymap
         remove_default_keybinds = true,
@@ -141,6 +143,34 @@ M.ColorizerToggleDo = function ()
         vim.cmd([[ColorizerToggle]])
         vim.notify("Enable colorizer")
         map("n", "<leader>uo", function() require("configs.edit").ColorizerToggleDo() end, { desc = "Disable colorizer" })
+    end
+end
+
+M.pasteSmart = function ()
+    local clipboard_content = vim.fn.getreg('"')
+    local ends_with_newline = clipboard_content:sub(-1) == '\n'
+
+    if clipboard_content == nil or not ends_with_newline then
+        vim.cmd('execute "normal \\<Plug>(YankyPutAfter)"')
+        return
+    end
+
+    if ends_with_newline then
+        vim.cmd('execute "normal \\<Plug>(YankyPutAfterFilter)"')
+    end
+end
+
+M.PasteSmart = function ()
+    local clipboard_content = vim.fn.getreg('"')
+    local ends_with_newline = clipboard_content:sub(-1) == '\n'
+
+    if clipboard_content == nil or not ends_with_newline then
+        vim.cmd('execute "normal \\<Plug>(YankyPutBefore)"')
+        return
+    end
+
+    if ends_with_newline then
+        vim.cmd('execute "normal \\<Plug>(YankyPutBeforeFilter)"')
     end
 end
 

@@ -122,4 +122,7 @@ map('x', '<A-/>', function()
     vim.cmd('let @/ = @v | set hlsearch')   -- 设置搜索寄存器
 end, { desc = '搜索光标下单词' })
 
+-- 粘贴快捷键 (当粘贴的内容最后是换行符，则需要格式化，如果不是 不格式化)
+map("n", "p", function() require("configs.edit").pasteSmart() end, { desc = "Paste smart" })
+map("n", "P", function() require("configs.edit").PasteSmart() end, { desc = "Paste smart" })
 
