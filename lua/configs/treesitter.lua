@@ -76,10 +76,16 @@ M.textobjectsConfig = function()
     end
 
     -- treesitter
-    -- not work every times
+    local ts_move = require("nvim-treesitter.textobjects.move")
     local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
     vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
     vim.keymap.set({ "n", "x", "o" }, "<a-;>", ts_repeat_move.repeat_last_move_previous)
+
+    -- 启动时设定默认为“下一个函数”
+    -- 执行一次跳到下一个函数定义的动作，记录到 repeat move
+    ts_move.goto_next_start("@function.outer")
+    -- 再跳回原位置，这样不影响初始光标位置
+    vim.cmd("normal! ``")
 end
 
 return M
