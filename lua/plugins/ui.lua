@@ -88,7 +88,7 @@ return {
     {
         -- function tree in top
         "https://gitee.com/yunduozhai/lspsaga.nvim.git",
-        event = "VeryLazy",
+        event = "LspAttach",
         config = function()
             require('configs.ui_all').lspsagaConfig()
         end
@@ -151,5 +151,17 @@ return {
             require("configs.ui_all").ufoConfig()
         end
     },
+    {
+        "https://gitee.com/nvim_lip/twilight.nvim.git",
+        branch = 'main',
+        event = "VeryLazy",
+        opts = {}
+    },
+    {
+        "https://gitee.com/nvim_lip/smear-cursor.nvim.git",
+        branch = 'main',
+        event = { "BufReadPost", "BufNewFile" },
+        opts = {},
+    }
 }
 
