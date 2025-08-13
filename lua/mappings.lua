@@ -126,3 +126,6 @@ end, { desc = '搜索光标下单词' })
 map("n", "p", function() require("configs.edit").pasteSmart() end, { desc = "Paste smart" })
 map("n", "P", function() require("configs.edit").PasteSmart() end, { desc = "Paste smart" })
 
+-- 头文件中生成声明信息
+map("n", "<leader>h", function() require("configs.gendeclare").create_declare() end, { desc = "Create header declare" })
+
