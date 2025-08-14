@@ -103,10 +103,12 @@ return {
         mappings = {
             n = {
                 ["q"] = require("telescope.actions").close,
+                ["<A-q>"] = require("telescope.actions").close,
                 ["<S-h>"] = function() send_key("^<Right><Right><Right>") end,
                 ["<S-l>"] = function() send_key("$") end,
             },
             i = {
+                ["<A-q>"] = require("telescope.actions").close,
                 ["<C-j>"] = require("telescope.actions").move_selection_next,
                 ["<C-k>"] = require("telescope.actions").move_selection_previous,
                 ["<C-l>"] = function() send_key("<Right>") end,
