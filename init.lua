@@ -138,7 +138,6 @@ require('mason-lspconfig').setup()
 
 -- indent-blankline
 require('snacks')
-require('mini.indentscope')
 
 require('noice')
 
