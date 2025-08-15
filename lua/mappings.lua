@@ -97,7 +97,7 @@ map("x", "x", '"_x', { desc = "Delete all characters in line" })
 map("x", "X", '"_X', { desc = "Delete all characters in line" })
 
 
-map("n", "<leader>n", "<cmd> Telescope notify<CR>", { desc = "Notification History" })
+map("n", "<leader>n", "<cmd> Noice<CR>", { desc = "Notification History" })
 
 -- snacks
 -- map("n", "<leader>n", function() Snacks.notifier.show_history() end, { desc = "Notification History" })
