@@ -159,9 +159,15 @@ return {
     },
     {
         "https://gitee.com/nvim_lip/smear-cursor.nvim.git",
-        branch = 'main',
+        branch = 'dev',
         event = { "BufReadPost", "BufNewFile" },
-        opts = {},
+        opts = {
+            cursor_color = "#ff8800",
+            stiffness = 0.8,
+            trailing_stiffness = 0.2,
+            trailing_exponent = 5,
+            gamma = 1,
+        },
     }
 }
 
