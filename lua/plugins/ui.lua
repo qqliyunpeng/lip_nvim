@@ -96,8 +96,8 @@ return {
     {
         -- 选中行后，在选中的里边显示空格和Tab
         "https://gitee.com/nvim_lip/visual-whitespace.nvim.git",
-        branch = 'main',
-        event = { "BufReadPost", "BufNewFile" },
+        branch = 'compat-v10',
+        event = "ModeChanged *:[vV\22]",
         config = function()
             require('configs.ui_all').visualWhitespaceConfig()
         end
@@ -168,6 +168,27 @@ return {
             trailing_exponent = 5,
             gamma = 1,
         },
+    },
+    {
+        "chrisgrieser/nvim-early-retirement",
+        event = "VeryLazy",
+        config = function ()
+            require('early-retirement').setup({
+                -- If a buffer has been inactive for this many minutes, close it.
+                retirementAgeMins = 1,
+                -- Minimum number of open buffers for auto-closing to become active. E.g.,
+                -- by setting this to 4, no auto-closing will take place when you have 3
+                -- or fewer open buffers. Note that this plugin never closes the currently
+                -- active buffer, so a number < 2 will effectively disable this setting.
+                minimumBufferNum = 20,
+                -- Ignore buffers with unsaved changes. If false, the buffers will
+                -- automatically be written and then closed.
+                ignoreUnsavedChangesBufs = false,
+                -- Show notification on closing. Works with plugins like nvim-notify.
+                notificationOnAutoClose = true,
+
+            })
+        end
     }
 }
 
