@@ -528,6 +528,14 @@ return {
             harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
         end,
     },
+    {
+        'https://github.com/echasnovski/mini.ai.git',
+        version = '*',
+        event = "VeryLazy",
+        config = function ()
+            require("mini.ai").setup()
+        end
+    },
 }
 
 
