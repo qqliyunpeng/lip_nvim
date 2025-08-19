@@ -529,13 +529,21 @@ return {
         end,
     },
     {
-        'https://github.com/echasnovski/mini.ai.git',
+        "https://githob.com/echasnovski/mini.ai.git",
         version = '*',
         event = "VeryLazy",
         config = function ()
             require("mini.ai").setup()
         end
     },
+    {
+        "https://github.com/echasnovski/mini.operators.git",
+        version = '*',
+        event = "VeryLazy",
+        config = function ()
+            return require("configs.edit").operatorsConfig()
+        end
+    }
 }
 
 

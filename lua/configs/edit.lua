@@ -174,5 +174,56 @@ M.PasteSmart = function ()
     end
 end
 
+--- Supports dec / hex / bin / oct
+--- Respects parentheses and keeps original prefix case
+local function evaluate_func(mode)
+    local text = table.concat(mode.lines, "\n")
+    text = vim.trim(text or "")
+    if text == "" then return text end
+
+    -- 保留括号和空格
+    local prefix, inner, suffix = text:match("^(%s*%(*)(.-)(%)*%s*)$")
+    if not inner or inner == "" then return text end
+
+    local chunk, _ = load("return " .. inner)
+    if not chunk then return text end
+    local ok, result = pcall(chunk)
+    if not ok then return text end
+
+    -- 如果是 0x / 0X 开头的十六进制，保持大小写
+    if inner:match("^0[xX]") then
+        local fmt = inner:match("^0x") and "0x%X" or "0X%X"
+        return prefix .. string.format(fmt, result) .. suffix
+    else
+        return prefix .. tostring(result) .. suffix
+    end
+end
+
+M.operatorsConfig = function ()
+    require("mini.operators").setup({
+        -- 计算
+        evaluate = {
+            prefix = 'gz=',
+            func = evaluate_func,
+        },
+        -- 交换
+        exchange = {
+            prefix = 'gzx',
+        },
+        -- 向下复制一行当前的内容
+        multiply = {
+            prefix = 'gzc',
+        },
+        -- 将寄存器中的内容复制到当前行
+        replace = {
+            prefix = 'gzr',
+        },
+        -- 排序
+        sort = {
+            prefix = 'gzs',
+        }
+    })
+end
+
 return M
 
