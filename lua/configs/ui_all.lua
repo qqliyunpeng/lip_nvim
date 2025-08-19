@@ -1,74 +1,10 @@
 local M = {}
+local use_ascii_icons = require("configs.icons").use_ascii_icons()
 
 local map = vim.keymap.set
 
 M.componentsConfig = function()
-    return {
-        icons = {
-            ActiveLSP = "",
-            ActiveTS = "",
-            ArrowLeft = "",
-            ArrowRight = "",
-            Bookmarks = "",
-            BufferClose = "󰅖",
-            DapBreakpoint = "",
-            DapBreakpointCondition = "",
-            DapBreakpointRejected = "",
-            DapLogPoint = ".>",
-            DapStopped = "󰁕",
-            Debugger = "",
-            DefaultFile = "󰈙",
-            Diagnostic = "󰒡",
-            DiagnosticError = "",
-            DiagnosticHint = "󰌵",
-            DiagnosticInfo = "󰋼",
-            DiagnosticWarn = "",
-            Ellipsis = "…",
-            Environment = "",
-            FileNew = "",
-            FileModified = "",
-            FileReadOnly = "",
-            FoldClosed = "",
-            FoldOpened = "",
-            FoldSeparator = " ",
-            FolderClosed = "",
-            FolderEmpty = "",
-            FolderOpen = "",
-            Git = "󰊢",
-            GitAdd = "",
-            GitBranch = "",
-            GitChange = "",
-            GitConflict = "",
-            GitDelete = "",
-            GitIgnored = "◌",
-            GitRenamed = "➜",
-            GitSign = "▎",
-            GitStaged = "✓",
-            GitUnstaged = "✗",
-            GitUntracked = "★",
-            LSPLoaded = "",
-            LSPLoading1 = "",
-            LSPLoading2 = "󰀚",
-            LSPLoading3 = "",
-            MacroRecording = "",
-            Package = "󰏖",
-            Paste = "󰅌",
-            Refresh = "",
-            Run = "󰑮",
-            Search = "",
-            Selected = "❯",
-            Session = "󱂬",
-            Sort = "󰒺",
-            Spellcheck = "󰓆",
-            Tab = "󰓩",
-            TabClose = "󰅙",
-            Terminal = "",
-            Window = "",
-            WordFile = "󰈭",
-            Test = "󰙨",
-            Docs = "",
-        }
-    }
+    return {icons = require("configs.icons").componentsIcons() }
 end
 
 M.noiceConfig = function()
@@ -153,7 +89,7 @@ end
 M.lspsagaConfig = function()
     require('lspsaga').setup({
         ui = {
-            code_action = '󱠀',
+            code_action = use_ascii_icons and " A" or '󱠀',
         },
         finder = {
             max_height = 0.6,
@@ -194,7 +130,6 @@ local open_lazygit_with_refresh = function ()
         "snacks_notif",
         "snacks_terminal",
     }
-    local bufnr = vim.api.nvim_get_current_buf()
     vim.api.nvim_create_autocmd("TermClose", {
         pattern = "*lazygit*", -- 匹配 lazygit 终端
         once = true,
@@ -266,6 +201,7 @@ M.snacksInit = function ()
 end
 
 M.snacksConfig = function()
+    local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
         indent = { enabled = false },
         notifier = { enabled = true },
@@ -284,16 +220,16 @@ M.snacksConfig = function()
 ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝           
 ]],
                 keys = {
-                    { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
-                    { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-                    { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-                    { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
-                    { icon = " ", key = "w", desc = "All Session", action = ":Telescope persisted" },
-                    { icon = " ", key = "s", desc = "Restore Session", action = ":SessionLoadLast" },
-                    { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
-                    { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
-                    { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+                    { icon = icons.find_file  , key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+                    { icon = icons.new_file   , key = "n", desc = "New File", action = ":ene | startinsert" },
+                    { icon = icons.find_text  , key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+                    { icon = icons.recent     , key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+                    { icon = icons.config     , key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+                    { icon = icons.all_session, key = "w", desc = "All Session", action = ":Telescope persisted" },
+                    { icon = icons.restore    , key = "s", desc = "Restore Session", action = ":SessionLoadLast" },
+                    { icon = icons.extras     , key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
+                    { icon = icons.lazy       , key = "l", desc = "Lazy", action = ":Lazy" },
+                    { icon = icons.quit       , key = "q", desc = "Quit", action = ":qa" },
                 },
             },
         },

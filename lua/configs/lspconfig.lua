@@ -1,8 +1,12 @@
 local M = {}
 local map = vim.keymap.set
 local mason_lspconfig = require 'mason-lspconfig'
+local use_ascii_icons = require("configs.icons").use_ascii_icons()
 
-local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "󰋼" }
+local dia_nerd_icons = { Error = "", Warn = "", Hint = "󰌵", Info = "󰋼" }
+local dia_ascii_icons = { Error = "E", Warn = "W", Hint = "H", Info = "I" }
+local signs = use_ascii_icons and dia_ascii_icons or dia_nerd_icons
+
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
@@ -109,27 +113,48 @@ M.lspSignatureDefaults = function()
         end, { silent = true, noremap = true, desc = 'toggle signature' })
 end
 
+local lspkind_nerd_icons = {
+    Array         = "󰅪",
+    Boolean       = "⊨",
+    Class         = "󰌗",
+    Constructor   = "",
+    Key           = "󰌆",
+    Namespace     = "󰅪",
+    Null          = "NULL",
+    Number        = "#",
+    Object        = "󰀚",
+    Package       = "󰏗",
+    Property      = "",
+    Reference     = "",
+    Snippet       = "",
+    String        = "󰀬",
+    TypeParameter = "󰊄",
+    Unit          = "",
+}
+
+local lspkind_ascii_icons = {
+    Array         = "[]",
+    Boolean       = "B",
+    Class         = "C",
+    Constructor   = "ctor",
+    Key           = "K",
+    Namespace     = "NS",
+    Null          = "NULL",
+    Number        = "#",
+    Object        = "Obj",
+    Package       = "Pkg",
+    Property      = "",
+    Reference     = "Ref",
+    Snippet       = "Snp",
+    String        = "Str",
+    TypeParameter = "T",
+    Unit          = "U",
+}
+
 M.lspkindInit = function ()
     local opts = {
         mode = "symbol",
-        symbol_map = {
-            Array = "󰅪",
-            Boolean = "⊨",
-            Class = "󰌗",
-            Constructor = "",
-            Key = "󰌆",
-            Namespace = "󰅪",
-            Null = "NULL",
-            Number = "#",
-            Object = "󰀚",
-            Package = "󰏗",
-            Property = "",
-            Reference = "",
-            Snippet = "",
-            String = "󰀬",
-            TypeParameter = "󰊄",
-            Unit = "",
-        },
+        symbol_map = use_ascii_icons and lspkind_ascii_icons or lspkind_nerd_icons,
         menu = {},
     }
 

@@ -1,13 +1,24 @@
+local use_ascii_icons = require("configs.icons").use_ascii_icons()
+
+local nerd_icons = {
+    ft = "",
+    lazy = "󰂠 ",
+    loaded = "",
+    not_loaded = "",
+}
+
+local ascii_icons = {
+    ft = "F",
+    lazy = "L",
+    loaded = "+",
+    not_loaded = "",
+}
+
 return {
   defaults = { lazy = true },
 
   ui = {
-    icons = {
-      ft = "",
-      lazy = "󰂠 ",
-      loaded = "",
-      not_loaded = "",
-    },
+    icons = use_ascii_icons and ascii_icons or nerd_icons,
   },
 
   performance = {
