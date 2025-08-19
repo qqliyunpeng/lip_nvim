@@ -94,11 +94,11 @@ M.noiceConfig = function()
         views = {
             cmdline_popup = {
                 position = {
-                    row = "60%", -- 屏幕垂直方向居中
+                    row = "60%",
                     col = "50%", -- 屏幕水平方向居中
                 },
                 size = {
-                    width = 40,      -- 宽度
+                    width = 60,      -- 宽度
                     height = "auto", -- 高度根据内容自动调整
                 },
                 border = {
@@ -188,22 +188,32 @@ end
 
 local open_lazygit_with_refresh = function ()
     Snacks.lazygit()
+    local exclude_filetypes = {
+        "noice",
+        "NvimTree",
+        "snacks_notif",
+        "snacks_terminal",
+    }
     local bufnr = vim.api.nvim_get_current_buf()
     vim.api.nvim_create_autocmd("TermClose", {
-        buffer = bufnr,
+        pattern = "*lazygit*", -- 匹配 lazygit 终端
         once = true,
         callback = function ()
             vim.defer_fn(function()
                 for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-                    if vim.api.nvim_buf_is_loaded(buf) then
-                        local name = vim.api.nvim_buf_get_name(buf)
-                        if name ~= "" then
-                            vim.cmd("silent keepalt keepjumps edit " .. vim.fn.fnameescape(name))
+                    local name = vim.api.nvim_buf_get_name(buf)
+
+                    if name ~= "" then
+                        local filetype = vim.fn.getbufvar(buf, "&filetype")
+
+                        if not vim.tbl_contains(exclude_filetypes, filetype) then
+                            require('gitsigns').detach()
+                            require('gitsigns').attach()
                         end
                     end
                 end
             end, 100) -- 延迟 100ms 防止懵逼的界面冲突
-            vim.notify("ALL files reloaded")
+            vim.notify("ALL files refreshed.")
         end,
     })
 end
