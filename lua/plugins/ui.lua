@@ -80,7 +80,7 @@ return {
     {
         -- 显示并去掉空格
         "https://gitee.com/nvim_lip/whitespace.nvim.git",
-        event = "VeryLazy",
+        event = "BufReadPost",
         config = function()
             require('configs.ui_all').whitespaceConfig()
         end

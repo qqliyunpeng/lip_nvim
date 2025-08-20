@@ -1,6 +1,5 @@
 local M = {}
 local map = vim.keymap.set
-local mason_lspconfig = require 'mason-lspconfig'
 local use_ascii_icons = require("configs.icons").use_ascii_icons()
 
 local dia_nerd_icons = { Error = "", Warn = "", Hint = "󰌵", Info = "󰋼" }
@@ -91,6 +90,7 @@ M.on_attach = function(client, bufnr)
 end
 
 M.defaults = function()
+    local mason_lspconfig = require 'mason-lspconfig'
     mason_lspconfig.setup({
         ensure_installed = vim.tbl_keys(servers),
         handlers = handlers,

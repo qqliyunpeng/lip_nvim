@@ -79,6 +79,8 @@ M.whitespaceConfig = function()
             'snacks_terminal',
             'snacks_dashboard',
             'TelescopePrompt',
+            'blink-cmp-menu',
+            'blink-cmp-documentation',
         },
         ignore_terimal = true,
         return_cursor = true,

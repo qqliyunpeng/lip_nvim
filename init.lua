@@ -102,6 +102,13 @@ hi LspReferenceText guifg=NONE guibg=NONE
 hi! link IlluminatedWordText  CursorLine
 hi! link IlluminatedWordWrite CursorLine
 hi! link IlluminatedWordRead  CursorLine
+hi! link BlinkCmpMenu       Normal
+hi! link BlinkCmpMenuBorder Normal
+hi! link BlinkCmpDoc        Normal
+hi! link BlinkCmpDocBorder  Normal
+hi! link BlinkCmpDocCursorLine  Normal
+hi! link BlinkCmpDocSeparator   Normal
+hi! link BlinkCmpMenuSelection  CursorLine
 ]])
 
 vim.lsp.set_log_level("off")
