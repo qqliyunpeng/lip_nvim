@@ -134,7 +134,6 @@ vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射
 require('mason').setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })
-require('mason-lspconfig').setup()
 
 -- indent-blankline
 require('snacks')

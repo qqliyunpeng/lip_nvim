@@ -247,10 +247,6 @@ return {
                 end,
                 desc = "Autopairs Toggle"
             })
-
-            -- setup cmp for autopairs
-            local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-            require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
         end,
     },
     {
@@ -263,6 +259,7 @@ return {
     },
     {
         'https://gitee.com/suyelu/mason-lspconfig.nvim',
+        event = { "BufReadPre", "BufNewFile" },
         config = function()
             return require("configs.lspconfig").defaults()
         end
@@ -310,16 +307,6 @@ return {
             branch = 'main',
     },
     {
-        "https://gitee.com/zhengqijun/cmp-emoji.git",
-        config = function()
-            require'cmp'.setup {
-                sources = {
-                    { name = 'emoji' }
-                }
-            }
-        end
-    },
-    {
         string.format('%s/LuaSnip', 'https://gitee.com/suyelu'),
         build = 'make install_jsregexp',
         dependencies = {
@@ -328,24 +315,6 @@ return {
 
         config = function()
             require "configs.luasnip"
-        end,
-    },
-    {
-        -- Autocompletion
-        'https://gitee.com/suyelu/nvim-cmp',
-        event = "VeryLazy",
-        dependencies = {
-            "hrsh7th/cmp-emoji",
-            string.format('%s/cmp-nvim-lsp', 'https://gitee.com/suyelu'),
-            string.format('%s/cmp_luasnip', 'https://gitee.com/suyelu'),
-            string.format('%s/cmp-buffer' , 'https://gitee.com/suyelu'),
-            string.format('%s/cmp-path'   , 'https://gitee.com/suyelu'),
-            string.format('%s/cmp-cmdline', 'https://gitee.com/suyelu'),
-            "https://gitee.com/nvim_lip/cmp_yanky.git",
-        },
-
-        opts = function()
-            return require "configs.cmp"
         end,
     },
     {
@@ -529,7 +498,7 @@ return {
         end,
     },
     {
-        "https://githob.com/echasnovski/mini.ai.git",
+        "https://github.com/echasnovski/mini.ai.git",
         version = '*',
         event = "VeryLazy",
         config = function ()
@@ -542,6 +511,14 @@ return {
         event = "VeryLazy",
         config = function ()
             return require("configs.edit").operatorsConfig()
+        end
+    },
+    {
+        "https://gitee.com/nvim_lip/blink.cmp.git",
+        branch = "main",
+        event = "VeryLazy",
+        config = function()
+            require("configs.blink_cmp").blinkConfig()
         end
     }
 }

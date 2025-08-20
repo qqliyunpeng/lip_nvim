@@ -58,7 +58,7 @@ local handlers = {
     end,
 }
 
-M.capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+-- M.capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- 保存自动格式化
 M.on_attach = function(client, bufnr)
