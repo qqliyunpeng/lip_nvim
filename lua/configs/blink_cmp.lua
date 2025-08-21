@@ -60,9 +60,9 @@ M.blinkConfig = function()
                 -- ['<CR>']  = { 'show_and_insert', 'fallback' },
             },
             completion = {
-                -- menu = { auto_show  = true },
+                menu = { auto_show  = true },
                 list = {
-                    selection = { preselect = true, auto_insert = true },
+                    selection = { preselect = false, auto_insert = true },
                 },
                 ghost_text = {
                     enabled = true,
