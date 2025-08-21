@@ -131,21 +131,6 @@ M.visualMulConfig = function ()
     })
 end
 
-M.ColorizerToggleDo = function ()
-    local map = vim.keymap.set
-    local is_open = require('colorizer').is_buffer_attached(0)
-
-    if is_open then
-        vim.cmd([[ColorizerToggle]])
-        vim.notify("Disable colorizer", vim.log.levels.WARN)
-        map("n", "<leader>uo", function() require("configs.edit").ColorizerToggleDo() end, { desc = "Enable colorizer" })
-    else
-        vim.cmd([[ColorizerToggle]])
-        vim.notify("Enable colorizer")
-        map("n", "<leader>uo", function() require("configs.edit").ColorizerToggleDo() end, { desc = "Disable colorizer" })
-    end
-end
-
 M.pasteSmart = function ()
     local clipboard_content = vim.fn.getreg('"')
     local ends_with_newline = clipboard_content:sub(-1) == '\n'

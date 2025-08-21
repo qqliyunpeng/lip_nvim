@@ -346,5 +346,23 @@ M.ufoConfig = function()
     })
 end
 
+M.colorizerConfig = function ()
+    local colorizer = require("colorizer")
+    -- Exclude some filetypes from highlighting by using `!`
+    colorizer.setup {
+        'lua'; -- Highlight lua files, but customize some others.
+    }
+
+    Snacks.toggle({
+        name = "colorizer",
+        get = function()
+            return colorizer.is_buffer_attached(0)
+        end,
+        set = function(_)
+            vim.cmd("ColorizerToggle")
+        end,
+    }):map("<leader>uo")
+end
+
 return M
 

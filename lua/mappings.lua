@@ -111,8 +111,6 @@ map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc =  "Go to Lower Window" })
 map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc =  "Go to Left Window"  })
 map("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc =  "Go to Right Window" })
 
-map("n", "<leader>uo", function() require("configs.edit").ColorizerToggleDo() end, { desc = "Open colorizer" })
-
 -- search
 map('n', '<A-/>', function()
     vim.cmd('let @/ = expand("<cword>") | set hlsearch')   -- 设置搜索寄存器

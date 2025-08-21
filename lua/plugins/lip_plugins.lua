@@ -212,42 +212,20 @@ return {
         'https://gitee.com/dragon-teng140806/nvim-colorizer.lua.git',
         event = "BufReadPost",
         config = function()
-            -- Exclude some filetypes from highlighting by using `!`
-            require ('colorizer').setup {
-                'lua'; -- Highlight lua files, but customize some others.
-            }
+            return require("configs.ui_all").colorizerConfig()
         end
     },
     {
         "https://gitee.com/nvim_lip/nvim-autopairs.git",
         event = "VeryLazy",
         opts = {
-            map_bs = false,
+            map_bs = true,
             fast_wrap = {},
             disable_filetype = { "TelescopePrompt", "vim"  },
         },
-        config = function(_, opts)
-            require("nvim-autopairs").setup(opts)
-
-            local autopairs = require("nvim-autopairs")
-
-            local enabled = true
-
-            vim.api.nvim_set_keymap('n', '<leader>ua', '', {
-                noremap = true,
-                callback =function()
-                    enabled = not enabled
-                    if enabled then
-                        autopairs.enable()
-                        vim.notify("autopairs enable")
-                    else
-                        autopairs.disable()
-                        vim.notify("autopairs disable")
-                    end
-                end,
-                desc = "Autopairs Toggle"
-            })
-        end,
+        config = function (_, opts)
+            require("configs.autopairs").setup(opts)
+        end
     },
     {
         -- Automatically install LSPs to stdpath for neovim

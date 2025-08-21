@@ -1,0 +1,90 @@
+local M = {}
+
+function M.setup(opts)
+    local npairs = require("nvim-autopairs")
+    local Rule = require("nvim-autopairs.rule")
+    local cond = require("nvim-autopairs.conds")
+    local ts_conds = require("nvim-autopairs.ts-conds")
+    local luasnip = require("luasnip")
+
+    -- 默认配置
+    local defaults = {
+        check_ts = true,
+        enable_moveright = true,
+        map_cr = true,
+        map_bs = true,
+        enable_afterquote = true,
+        fast_wrap = {},
+        disable_filetype = { "TelescopePrompt", "vim" },
+    }
+
+    -- 合并 opts (优先使用外部传入的)
+    opts = vim.tbl_deep_extend("force", defaults, opts or {})
+
+    -- 基本配置
+    npairs.setup(opts)
+
+    -- 自动补全括号/引号
+    local pairs = { {"(",")"}, {"[","]"}, {"{","}"}, {'"','"'},{ "'", "'" } }
+    for _, p in ipairs(pairs) do
+        npairs.add_rule(Rule(p[1], p[2]))
+    end
+
+    -- 空格补全两个空格
+    npairs.add_rules({
+        Rule(" ", " ")
+        :with_pair(function(context)
+            local pair = context.line:sub(context.col - 1, context.col)
+            return vim.tbl_contains({ "()", "[]", "{}", "\'\'", "\"\"" }, pair)
+        end)
+    })
+
+    -- LuaSnip 占位符联动, 从括号中跳到括号闭合的地方
+    luasnip.setup({ store_selection_keys = "<Tab>" })
+    npairs.add_rules({
+        Rule("(", ")")
+        :with_pair(cond.not_inside_quote())
+        :with_move(function()
+            local inside_snip = luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
+            return inside_snip ~= nil
+        end),
+        Rule("[", "]")
+        :with_move(function()
+            local inside_snip = luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
+            return inside_snip ~= nil
+        end),
+        Rule("{", "}")
+        :with_move(function()
+            local inside_snip = luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
+            return inside_snip ~= nil
+        end),
+    })
+
+    -- Treesitter 高级支持: 字符串和注释中禁止自动配对
+    for _, p in ipairs(pairs) do
+        npairs.add_rule(
+        Rule(p[1], p[2])
+        :with_pair(ts_conds.is_not_ts_node({'string','comment'}))
+        :with_move(ts_conds.is_not_ts_node({'string','comment'}))
+        )
+    end
+
+
+    -- 自动补全开关
+    Snacks.toggle({
+        name = "autopairs",
+        get = function()
+            return npairs.state.disabled == false
+        end,
+        set = function(state)
+            if state then
+                npairs.enable()
+            else
+                npairs.disable()
+            end
+        end,
+    }):map("<leader>ua")
+end
+
+return M
+
