@@ -144,3 +144,8 @@ Alt-/
 ```
 当选中里边的内容后，gz= 直接算出结果
 
+# 7. 删除swap文件
+```bash
+rm ~/.local/state/nvim/swap/*
+```
+
