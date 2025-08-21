@@ -1,5 +1,40 @@
 
 local M = {}
+local use_ascii_icons = require("configs.icons").use_ascii_icons()
+
+local ascii_icons = {
+    Text = "[T]",
+    Method = "[M]",
+    Function = "[F]",
+    Constructor = "[C]",
+
+    Field = "[Fd]",
+    Variable = "[V]",
+    Property = "[P]",
+
+    Class = "[Cl]",
+    Interface = "[I]",
+    Struct = "[S]",
+    Module = "[Mo]",
+
+    Unit = "[U]",
+    Value = "[Val]",
+    Enum = "[E]",
+    EnumMember = "[Em]",
+
+    Keyword = "[K]",
+    Constant = "[Co]",
+
+    Snippet = "[Snip]",
+    Color = "[Col]",
+    File = "[File]",
+    Reference = "[Ref]",
+    Folder = "[Dir]",
+    Event = "[Evt]",
+    Operator = "[Op]",
+    TypeParameter = "[Ty]",
+}
+
 
 M.blinkConfig = function()
     local cmp = require("blink.cmp")
@@ -17,7 +52,8 @@ M.blinkConfig = function()
             ['<C-e>'] = { 'cancel' }, -- or {}
         },
         appearance = {
-            nerd_font_variant = 'mono'
+            nerd_font_variant = 'mono',
+            kind_icons = use_ascii_icons and ascii_icons or {},
         },
         cmdline = {
             keymap = {
@@ -76,6 +112,11 @@ M.blinkConfig = function()
             prebuilt_binaries = {
                 force_version = "v1.6.0",
             },
+            sorts = {
+                'score',      -- Primary sort: by fuzzy matching score
+                'sort_text',  -- Secondary sort: by sortText field if scores are equal
+                'label',      -- Tertiary sort: by label if still tied
+            }
         },
     })
 end
