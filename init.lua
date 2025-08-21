@@ -32,6 +32,12 @@ vim.api.nvim_create_autocmd('VimEnter', {
     end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "help", "man", "lspinfo", "checkhealth" },
+    callback = function()
+        vim.keymap.set("n", "q", "<cmd>quit<cr>", { buffer = true, silent = true })
+    end,
+})
 
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
