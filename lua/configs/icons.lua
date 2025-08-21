@@ -2,24 +2,16 @@ local M = {}
 
 M.detect_terminal = function ()
     local term = vim.env.TERM or ""
-    local term_program = vim.env.TERM_PROGRAM or ""
-    local ssh = vim.env.SSH_TTY
-    local mobax = vim.env.MOBAXTERM_HOME
-
-    if mobax or term:match("mobaxterm") then
-        return "mobaxterm"
-    elseif ssh then
-        return "ssh"
-    elseif term_program ~= "" then
-        return term_program:lower()
+    if term == "xterm-256color" then
+        return "nerd"
     else
-        return term:lower()
+        return "ascii"
     end
 end
 
 M.use_ascii_icons = function ()
     local term = M.detect_terminal()
-    if term == "mobaxterm" or term == "ssh" then
+    if term == "ascii" then
         return true
     end
     return false
