@@ -35,7 +35,6 @@ local ascii_icons = {
     TypeParameter = "[Ty]",
 }
 
-
 M.blinkConfig = function()
     local cmp = require("blink.cmp")
 
@@ -44,10 +43,8 @@ M.blinkConfig = function()
             preset = 'default',
             ['<C-j>'] = { 'select_next', 'fallback' },
             ['<C-k>'] = { 'select_prev', 'fallback' },
-            ['<Tab>'] = { 'select_next', 'fallback' },
-            ['<S-Tab>'] = { 'select_prev', 'fallback' },
-            -- ["<Tab>"]   = { "snippet_forward", "fallback" },
-            -- ["<S-Tab>"] = { "snippet_backward", "fallback" },
+            ["<Tab>"]   = { 'select_next', 'snippet_forward' , 'fallback' },
+            ["<S-Tab>"] = { 'select_prev', 'snippet_backward', 'fallback' },
             ['<CR>']  = { 'accept', 'fallback' },
             ['<C-e>'] = { 'cancel' }, -- or {}
         },
