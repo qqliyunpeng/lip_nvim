@@ -115,6 +115,10 @@ hi! link BlinkCmpDocBorder  Normal
 hi! link BlinkCmpDocCursorLine  Normal
 hi! link BlinkCmpDocSeparator   Normal
 hi! link BlinkCmpMenuSelection  CursorLine
+hi! link HoverNormal Normal
+hi! link HoverBorder Normal
+hi! link SagaNormal  Normal
+hi! link SagaBorder  Normal
 ]])
 
 vim.lsp.set_log_level("off")
