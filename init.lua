@@ -119,6 +119,8 @@ hi! link HoverNormal Normal
 hi! link HoverBorder Normal
 hi! link SagaNormal  Normal
 hi! link SagaBorder  Normal
+hi! link WhichKeyBorder  Normal
+hi! link WhichKeyNormal  Normal
 ]])
 
 vim.lsp.set_log_level("off")
