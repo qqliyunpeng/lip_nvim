@@ -6,10 +6,8 @@ opt.cursorline = true
 
 
 -- 大小的L和H映射
-map({ "n", "t" }, "L", "$", { noremap = true, silent = true,  desc = "to end of line" })
-map({ "n", "t" }, "H", "<ESC>^", { noremap = true, silent = true,  desc = "to begin of line" })
-map({ "n", "t" }, "dL", "d$", { noremap = true, silent = true, desc = "del to end of line" })
-map({ "n", "t" }, "dH", "d0", { noremap = true, silent = true, desc = "del to begin of line" })
+map({ "x", "n", "o" }, "L", "g_",  { noremap = true, silent = true, desc = "To end of line" })
+map({ "x", "n", "o" }, "H", "^" ,  { noremap = true, silent = true, desc = "To begin of line" })
 
 map("i", "<C-h>", "<Left>", { desc = "move left" })
 map("i", "<C-l>", "<Right>", { desc = "move right" })
