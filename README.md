@@ -118,7 +118,7 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 - 搜索当前光标下的单词
 Alt-/
 
-# bugs
+> [!Bug]
 1. telescope persisted open the workspace select ui, C-c don't close the window,
     but to copy a session. we need to close.
 
