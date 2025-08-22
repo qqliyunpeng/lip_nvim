@@ -166,7 +166,7 @@ return {
         -- dependencies = { "nvim-treesitter/nvim-treesitter" },
         cmd = "Telescope",
         opts = function()
-            return require('configs/telescope')
+            return require('configs.telescope')
         end,
     },
     {
@@ -326,10 +326,12 @@ return {
         end
     },
     {
-        'https://gitee.com/yunduozhai/render-markdown.nvim.git',
+        'https://gitee.com/nvim_lip/render-markdown.nvim.git',
         branch = "main",
-        event = "VeryLazy",
-        opts = {},
+        event = "BufReadPost",
+        config = function ()
+            require('configs.ui_all').markdownConfig()
+        end,
     },
     {
         -- 自动格式化 markdown 里边的表格 <leader>tm

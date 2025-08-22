@@ -364,5 +364,56 @@ M.colorizerConfig = function ()
     }):map("<leader>uo")
 end
 
+local ascii_icons = {
+    -- bullet   = { icons = { '●', '○', '◆', '◇' } },
+    checkbox = {
+        unchecked = { icon = "[ ] " },
+        checked   = { icon = "[x] " },
+    },
+    quote    = { icon = "> " },
+    heading  = {
+        -- icons = { "[1]", "[2] ", "[3] ", "[3] ", "[4] ", "[5] " },
+        icons = { "", "", "", "", "", "" },
+        signs = { '>' }
+    },
+    code = {
+        render_modes = false,
+        language = false,
+        language_icon = false,
+        language_name = false,
+    },
+}
+
+M.markdownConfig = function ()
+    local mk = require('render-markdown')
+
+    local opts = {
+        file_types = { 'markdown', 'vimwiki' },
+        heading = {
+            position = 'inline',
+            sign = false,
+            width = 'block',
+            min_width = 0,
+            border_virtual = true,
+        },
+        code = {
+            sign = false,
+            width = 'block',
+            min_width = 45,
+            left_pad = 2,
+            right_pad = 2,
+            style = 'normal',
+        },
+        dash = { width = 79, },
+
+    }
+
+    if use_ascii_icons then
+        opts = vim.tbl_deep_extend("force", opts, ascii_icons)
+    end
+
+    mk.setup(opts)
+end
+
 return M
 
