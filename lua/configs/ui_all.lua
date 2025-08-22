@@ -365,14 +365,12 @@ M.colorizerConfig = function ()
 end
 
 local ascii_icons = {
-    -- bullet   = { icons = { '●', '○', '◆', '◇' } },
     checkbox = {
         unchecked = { icon = "[ ] " },
         checked   = { icon = "[x] " },
     },
     quote    = { icon = "> " },
     heading  = {
-        -- icons = { "[1]", "[2] ", "[3] ", "[3] ", "[4] ", "[5] " },
         icons = { "", "", "", "", "", "" },
         signs = { '>' }
     },
