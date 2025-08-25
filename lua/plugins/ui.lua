@@ -97,7 +97,7 @@ return {
         -- 选中行后，在选中的里边显示空格和Tab
         "https://gitee.com/nvim_lip/visual-whitespace.nvim.git",
         branch = 'compat-v10',
-        event = "ModeChanged *:[vV\22]",
+        event = 'BufReadPost',
         config = function()
             require('configs.ui_all').visualWhitespaceConfig()
         end
