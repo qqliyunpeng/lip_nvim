@@ -217,7 +217,7 @@ return {
     },
     {
         "https://gitee.com/nvim_lip/nvim-autopairs.git",
-        event = "VeryLazy",
+        event = "InsertEnter",
         opts = {
             map_bs = true,
             fast_wrap = {},

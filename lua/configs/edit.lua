@@ -117,15 +117,38 @@ M.nvimToggleConfig = function ()
 end
 
 M.visualMulConfig = function ()
+    local npairs = require("nvim-autopairs")
+
+    -- 单独禁用/启用 BS
+    local function disable_bs_now()
+        vim.keymap.del("i", "<BS>", { buffer = 0 })
+    end
+
+    local function restore_bs_now()
+        vim.api.nvim_buf_set_keymap(
+            0,  -- 当前 buffer
+            "i",
+            "<BS>",
+            "",  -- 必须给个空字符串，callback 会覆盖执行逻辑
+            {
+                callback = npairs.autopairs_bs,
+                expr = true,
+                noremap = true,
+            }
+        )
+    end
+
     vim.api.nvim_create_autocmd("User", {
         pattern = "visual_multi_start",
         callback = function ()
+            disable_bs_now()
             vim.keymap.set("n", "<A-q>", "<cmd>call vm#reset()<CR>")
         end
     })
     vim.api.nvim_create_autocmd("User", {
         pattern = "visual_multi_exit",
         callback = function ()
+            restore_bs_now()
             vim.keymap.set("n", "<A-q>", "<Esc><cmd>noh<CR>")
         end
     })
