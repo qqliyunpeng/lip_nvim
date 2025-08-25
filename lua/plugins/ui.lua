@@ -54,7 +54,7 @@ return {
         end,
     },
     {
-        "https://gitee.com/sunn4mirror/snacks.nvim.git",
+        "https://gitee.com/nvim_lip/snacks.nvim.git",
         branch = 'main',
         priority = 1000,
         lazy = false,

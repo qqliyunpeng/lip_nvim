@@ -35,8 +35,7 @@ map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
 -- telescope
 map("n", "<leader>r", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
-map("n", "<leader>p", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
-map("n", "<leader>fp", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
+map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
 map("n", "<leader><tab>", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
@@ -78,12 +77,6 @@ map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 -- clipboard
 -- from normalnvim
 map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
-map("n", "<C-y>", '"+y<esc>', { desc = "Copy to cliboard" })
-map("n", "<C-y>", '"+y<esc>', { desc = "Copy to cliboard" })
-map("n", "<C-d>", '"+y<esc>dd', { desc = "Copy to clipboard and delete line" })
-map("n", "<C-d>", '"+y<esc>dd', { desc = "Copy to clipboard and delete line" })
-map("n", "<C-p>", '"+p<esc>', { desc = "Paste from clipboard" })
-
 
 -- Make 'c' key not copy to clipboard when changing a character.
 map("n", "c", '"_c', { desc = "Change without yanking" })

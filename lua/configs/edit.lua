@@ -19,7 +19,7 @@ M.miniSurroundConfig = function ()
 end
 
 M.yankKeys = {
-    { "<leader>y", function() require('telescope').extensions.yank_history.yank_history({ }) end, desc = "Open Yank History" },
+    { "<C-p>", function() require('telescope').extensions.yank_history.yank_history({}) end, desc = "Open Yank History" },
     { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Yank text" },
     -- { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put yanked text after cursor" },
     -- { "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" }, desc = "Put yanked text before cursor" },
@@ -66,8 +66,6 @@ M.yankConfig = function ()
                 mappings = {
                     default = mapping.put("p"),
                     i = {
-                        ["<c-p>"] = mapping.put("p"),
-                        ["<c-P>"] = mapping.put("P"),
                         ["<c-x>"] = mapping.delete(),
                         ["<c-r>"] = mapping.set_register(utils.get_default_register()),
                     },
@@ -87,8 +85,9 @@ M.yankConfig = function ()
     hi! link YankyYanked Cursearch
     ]])
 
-    vim.keymap.set({ "i" }, "<C-y>", "<cmd>Telescope yank_history<CR>",
-        {noremap = true, silent = true, desc = 'Yanky Picker in Insert Mode'})
+    vim.keymap.set("i", "<C-p>", function()
+        require("telescope").extensions.yank_history.yank_history({})
+    end, { silent = true, desc = "Yank history in insert mode" })
 end
 
 M.nvimToggleConfig = function ()

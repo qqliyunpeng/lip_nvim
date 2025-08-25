@@ -27,11 +27,11 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | <leader>tr   | n    | markdown里边的表格的自动化              |
 | <leader>mm   | n    | create/del a bookmark                            |
 | <leader>mc   | n    | del a bookmark                                   |
-| <leader>fm   | n    | open telescope  show all bookmakr                |
+| <leader>fm   | n    | open telescope  show all bookmark                |
 | <leader>sr   | n    | grug-far 查找替换                                |
 | <leader>to   | n    | todo telescope find all                          |
-| <leader>y    | n    | yank telescope picker                            |
-| C-y          | i    | yank telescope picker                            |
+| <leader>p    | n    | yank telescope picker                            |
+| C-p          | i    | yank telescope picker                            |
 | <leader>ui   | n    | True <-> False 交替变化                          |
 | ]g           | n    | next git changs                                  |
 | [g           | n    | prev git changs                                  |

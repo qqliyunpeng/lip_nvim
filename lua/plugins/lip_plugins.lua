@@ -437,7 +437,7 @@ return {
         enabled = vim.fn.has("nvim-0.10.0") == 1,
     },
     {
-        "https://gitee.com/yunduozhai/yanky.nvim.git",
+        "https://gitee.com/nvim_lip/yanky.nvim.git",
         event = "VeryLazy",
         keys = function()
             return require("configs.edit").yankKeys

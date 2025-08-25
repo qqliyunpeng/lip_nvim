@@ -47,6 +47,12 @@ M.blinkConfig = function()
             ["<S-Tab>"] = { 'select_prev', 'snippet_backward', 'fallback' },
             ['<CR>']  = { 'accept', 'fallback' },
             ['<C-e>'] = { 'cancel' }, -- or {}
+            ["<C-b>"] = false,
+            ["<C-f>"] = false,
+            ["<Down>"] = false,
+            ["<Up>"] = false,
+            ["<C-n>"] = false,
+            ["<C-p>"] = false,
         },
         appearance = {
             nerd_font_variant = 'mono',
