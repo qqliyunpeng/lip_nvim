@@ -144,8 +144,8 @@ local open_lazygit_with_refresh = function ()
                         local filetype = vim.fn.getbufvar(buf, "&filetype")
 
                         if not vim.tbl_contains(exclude_filetypes, filetype) then
-                            require('gitsigns').detach()
-                            require('gitsigns').attach()
+                            require('gitsigns').detach(buf)
+                            require('gitsigns').attach(buf)
                         end
                     end
                 end
@@ -206,21 +206,28 @@ M.snacksConfig = function()
     local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
         indent = { enabled = false },
+        picker = { enabled = false },
+        bigfile = { enabled = true },
         notifier = { enabled = true },
         quickfile = { enabled = true },
         statuscolumn = { enabled = true },
         words = { enabled = true },
         scope = { enabled = false },
         dashboard = {
+            enabled = true,
+            width = 50,
+            row = nil, -- dashboard position. nil for center
+            col = nil, -- dashboard position. nil for center
+            -- pane_gap = 4, -- empty columns between vertical panes
+            autokeys = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", -- autokey sequence
+            sections = {
+                { section = "header" },
+                { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
+                { icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
+                { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+                { section = "startup" },
+            },
             preset = {
-                header = [[
-██╗     ██╗██████╗ ██╗   ██╗██╗███╗   ███╗               
-██║     ██║██╔══██╗██║   ██║██║████╗ ████║   /\_/\       
-██║     ██║██████╔╝██║   ██║██║██╔████╔██║  ( o.o )      
-██║     ██║██╔═══╝ ╚██╗ ██╔╝██║██║╚██╔╝██║  (  -  )っ    
-███████╗██║██║      ╚████╔╝ ██║██║ ╚═╝ ██║   > ^ <   ~~~~
-╚══════╝╚═╝╚═╝       ╚═══╝  ╚═╝╚═╝     ╚═╝               
-]],
                 keys = {
                     { icon = icons.find_file  , key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
                     { icon = icons.new_file   , key = "n", desc = "New File", action = ":ene | startinsert" },
@@ -233,6 +240,14 @@ M.snacksConfig = function()
                     { icon = icons.lazy       , key = "l", desc = "Lazy", action = ":Lazy" },
                     { icon = icons.quit       , key = "q", desc = "Quit", action = ":qa" },
                 },
+                header = [[
+██╗     ██╗██████╗ ██╗   ██╗██╗███╗   ███╗               
+██║     ██║██╔══██╗██║   ██║██║████╗ ████║   /\_/\       
+██║     ██║██████╔╝██║   ██║██║██╔████╔██║  ( o.o )      
+██║     ██║██╔═══╝ ╚██╗ ██╔╝██║██║╚██╔╝██║  (  -  )っ    
+███████╗██║██║      ╚████╔╝ ██║██║ ╚═╝ ██║   > ^ <   ~~~~
+╚══════╝╚═╝╚═╝       ╚═══╝  ╚═╝╚═╝     ╚═╝               
+                ]],
             },
         },
     })
