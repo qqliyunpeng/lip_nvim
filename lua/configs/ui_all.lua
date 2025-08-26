@@ -205,14 +205,14 @@ end
 M.snacksConfig = function()
     local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
-        indent = { enabled = false },
-        picker = { enabled = false },
-        bigfile = { enabled = true },
-        notifier = { enabled = true },
+        indent    = { enabled = false },
+        picker    = { enabled = false },
+        bigfile   = { enabled = true },
+        words     = { enabled = true },
+        scope     = { enabled = false },
+        notifier  = { enabled = true },
         quickfile = { enabled = true },
         statuscolumn = { enabled = true },
-        words = { enabled = true },
-        scope = { enabled = false },
         dashboard = {
             enabled = true,
             width = 50,
@@ -229,16 +229,16 @@ M.snacksConfig = function()
             },
             preset = {
                 keys = {
-                    { icon = icons.find_file  , key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
-                    { icon = icons.new_file   , key = "n", desc = "New File", action = ":ene | startinsert" },
-                    { icon = icons.find_text  , key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-                    { icon = icons.recent     , key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-                    { icon = icons.config     , key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
-                    { icon = icons.all_session, key = "w", desc = "All Session", action = ":Telescope persisted" },
+                    { icon = icons.find_file  , key = "f", desc = "Find File",       action = ":lua Snacks.dashboard.pick('files')" },
+                    { icon = icons.new_file   , key = "n", desc = "New File",        action = ":ene | startinsert" },
+                    { icon = icons.find_text  , key = "w", desc = "Find Text",       action = ":lua Snacks.dashboard.pick('live_grep')" },
+                    { icon = icons.recent     , key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
+                    { icon = icons.config     , key = "c", desc = "Config",          action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+                    { icon = icons.all_session, key = "w", desc = "All Session",     action = ":Telescope persisted" },
                     { icon = icons.restore    , key = "s", desc = "Restore Session", action = ":SessionLoadLast" },
-                    { icon = icons.extras     , key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
-                    { icon = icons.lazy       , key = "l", desc = "Lazy", action = ":Lazy" },
-                    { icon = icons.quit       , key = "q", desc = "Quit", action = ":qa" },
+                    { icon = icons.extras     , key = "x", desc = "Lazy Extras",     action = ":LazyExtras" },
+                    { icon = icons.lazy       , key = "l", desc = "Lazy",            action = ":Lazy" },
+                    { icon = icons.quit       , key = "q", desc = "Quit",            action = ":qa" },
                 },
                 header = [[
 ██╗     ██╗██████╗ ██╗   ██╗██╗███╗   ███╗               
