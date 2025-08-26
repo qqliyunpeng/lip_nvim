@@ -96,3 +96,6 @@ g.snips_copyright = 'AoHua'
 g.snips_author = 'liyunpeng'
 g.snips_email = 'liyunpeng.shyq@aohua.com'
 
+-- 现有问题是 vm 的 CR 和 autopair 的 CR 是冲突的, 如果要尝试解决，开启下边的
+g.VM_show_warnings = 0
+
