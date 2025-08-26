@@ -33,7 +33,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "help", "man", "lspinfo", "checkhealth" },
+    pattern = { "help", "man", "lspinfo", "checkhealth", "qf" },
     callback = function()
         vim.keymap.set("n", "q", "<cmd>quit<cr>", { buffer = true, silent = true })
     end,

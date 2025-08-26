@@ -102,10 +102,11 @@ return {
         },
         mappings = {
             n = {
-                ["q"] = require("telescope.actions").close,
-                ["<A-q>"] = require("telescope.actions").close,
                 ["<S-h>"] = function() send_key("^<Right><Right><Right>") end,
                 ["<S-l>"] = function() send_key("$") end,
+                ["q"]     = require("telescope.actions").close,
+                ["<C-c>"] = require("telescope.actions").close,
+                ["<A-q>"] = require("telescope.actions").close,
             },
             i = {
                 ["<A-q>"] = require("telescope.actions").close,
