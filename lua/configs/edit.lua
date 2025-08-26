@@ -232,5 +232,53 @@ M.operatorsConfig = function ()
     })
 end
 
+M.toggleNumFormat = function ()
+    -- 十进制转二进制字符串
+    local function dec_to_bin(n)
+        if n == 0 then return "0" end
+        local t = {}
+        while n > 0 do
+            local rest = n % 2
+            table.insert(t, 1, rest)
+            n = math.floor(n / 2)
+        end
+        return table.concat(t)
+    end
+
+    -- 自动识别并转换数字
+    local function convert_number(word)
+        if word:match("^%d+$") then
+            return string.format("0x%X", tonumber(word)) -- dec → hex
+        elseif word:match("^0x[0-9a-fA-F]+$") then
+            return "0b" .. dec_to_bin(tonumber(word, 16)) -- hex → bin
+        elseif word:match("^0b[01]+$") then
+            return tostring(tonumber(word:sub(3), 2)) -- bin → dec
+        else
+            return nil
+        end
+    end
+
+    -- 切换数字进制（dot-repeatable，保持 Normal 模式）
+    local function toggle_number_base()
+        local word = vim.fn.expand("<cword>")
+        print("word: ", word)
+        if not word or word == "" then return end
+
+        local new = convert_number(word)
+        if not new then
+            print("not a supported number:", word)
+            return end
+
+            vim.api.nvim_feedkeys(
+            "ciw" .. new .. vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
+            "n",
+            false
+            )
+        end
+
+        vim.api.nvim_set_keymap("n", "<Plug>(toggle-number-base)", "", { callback = toggle_number_base, noremap = false })
+        vim.keymap.set("n", "<leader>ux", "<Plug>(toggle-number-base)", { desc = "Dec <-> Hex <-> Bin" })
+end
+
 return M
 

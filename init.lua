@@ -115,24 +115,6 @@ vim.lsp.set_log_level("off")
 -- 打开文件后光标回到关闭的时候的位置
 require('nvim-lastplace').setup{}
 
-
--- local ssh_connection = vim.fn.getenv("SSH_CONNECTION")
-
--- if ssh_connection ~= vim.NIL then
---     vim.g.clipboard = {
---         name = 'OSC 52',
---         copy = {
---             ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
---             ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
---         },
---         paste = {
---             ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
---             ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
---         },
---     }
--- end
-
-
 -- Project.nvim
 vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射到 :ProjectRoot
 
@@ -144,4 +126,6 @@ require('mason').setup({
 -- indent-blankline
 
 require('noice')
+
+require("configs.edit").toggleNumFormat()
 
