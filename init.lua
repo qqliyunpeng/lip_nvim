@@ -127,5 +127,5 @@ require('mason').setup({
 
 require('noice')
 
-require("configs.edit").toggleNumFormat()
+require("configs.num_change").toggleNumFormat()
 
