@@ -1,6 +1,6 @@
--- function: 实现 十进制 十六进制 和 二进制 数的格式的转换
 local M = {}
 
+-- 实现 十进制 十六进制 和 二进制 数的格式的转换
 M.toggle_format = function ()
     local function dec_to_bin(n)
         if n == 0 then return "0" end
@@ -115,6 +115,82 @@ M.toggle_format = function ()
     end
 
     vim.keymap.set("n", "<leader>ux", toggle_number_base_main, { expr = true, desc = "Dec <-> Hex <-> Bin" })
+end
+
+-- 将数组按最多一行16个逗号为一行进行整理
+M.tg_format_array = function ()
+    -- 配置
+    local max_items = 15                -- 每行最多元素数
+    local supported_separators = {',', ':', ';'} -- 支持的分隔符
+
+    local function do_format_array(buf, line_nr)
+        local line = vim.api.nvim_buf_get_lines(buf, line_nr, line_nr+1, false)[1]
+        if not line then return end
+
+        local content = line:match("{(.*)}")
+        if not content then return end
+
+        -- 自动检测分隔符（遇到的第一个有效分隔符）
+        local sep = nil
+        for _, s in ipairs(supported_separators) do
+            if content:find(s, 1, true) then
+                sep = s
+                break
+            end
+        end
+        if not sep then return end
+
+        -- 拆分元素（支持任意非分隔符、非空白的 token）
+        local items = {}
+        for item in content:gmatch("%s*([^"..vim.pesc(sep).." %s]+)%s*") do
+            table.insert(items, item)
+        end
+        if #items == 0 then return end
+
+        -- 组装输出行
+        local lines = {"{"}
+        local line_buf = "    " -- 4-space indent
+        for i, item in ipairs(items) do
+            line_buf = line_buf .. item
+            if i < #items then
+                line_buf = line_buf .. sep .. " "
+            end
+
+            if i % max_items == 0 and i < #items then
+                line_buf = line_buf:gsub("%s+$", "")
+                table.insert(lines, line_buf)
+                line_buf = "    "
+            end
+        end
+        line_buf = line_buf:gsub("%s+$", "")
+        table.insert(lines, line_buf)
+        table.insert(lines, "}")
+
+        vim.api.nvim_buf_set_lines(buf, line_nr, line_nr+1, false, lines)
+    end
+
+    -- operatorfunc 封装
+    _G.op_format_array = function ()
+        local buf = vim.api.nvim_get_current_buf()
+        local start_line, end_line
+
+        if type == "line" then
+            start_line = vim.fn.line("'<") - 1
+            end_line = vim.fn.line("'>")
+        else
+            start_line = vim.fn.line(".") - 1
+            end_line = start_line + 1
+        end
+
+        for l = start_line, end_line - 1 do
+            do_format_array(buf, l)
+        end
+    end
+
+    vim.keymap.set("n", "<leader>ucf", function()
+        vim.o.operatorfunc = "v:lua.op_format_array"
+        return "g@l"
+    end, {expr = true, noremap = true, desc = "Format {array} with max N items per line"})
 end
 
 return M
