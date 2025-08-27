@@ -170,7 +170,7 @@ return {
         },
     },
     {
-        "chrisgrieser/nvim-early-retirement",
+        "https://gitee.com/nvim_lip/nvim-early-retirement.git",
         event = "VeryLazy",
         config = function ()
             require('early-retirement').setup({
