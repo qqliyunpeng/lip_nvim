@@ -127,6 +127,6 @@ require('mason').setup({
 
 require('noice')
 
-require("configs.num_change").toggle_format()
+require("configs.num_change").tg_format()
 require("configs.num_change").tg_format_array()
 

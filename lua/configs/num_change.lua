@@ -1,7 +1,7 @@
 local M = {}
 
 -- 实现 十进制 十六进制 和 二进制 数的格式的转换
-M.toggle_format = function ()
+M.tg_format = function ()
     local function dec_to_bin(n)
         if n == 0 then return "0" end
         local t = {}
