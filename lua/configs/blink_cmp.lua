@@ -50,9 +50,10 @@ M.blinkConfig = function()
             ["<C-b>"] = false,
             ["<C-f>"] = false,
             ["<Down>"] = false,
-            ["<Up>"] = false,
+            ["<Up>"]  = false,
             ["<C-n>"] = false,
             ["<C-p>"] = false,
+            ["<C-h>"] = false,
         },
         appearance = {
             nerd_font_variant = 'mono',
