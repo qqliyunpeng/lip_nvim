@@ -500,7 +500,15 @@ return {
         config = function()
             require("configs.blink_cmp").blinkConfig()
         end
-    }
+    },
+    {
+        "https://gitee.com/nvim_lip/overseer.nvim.git",
+        branch = "master",
+        event = "BufReadPost",
+        config = function ()
+            require('configs.overseer').overseerConfig()
+        end
+    },
 }
 
 

@@ -242,6 +242,7 @@ local StatusLine = {
     Align,
     -- lib.component.lsp(),
     lib.component.compiler_state(),
+    Space, Space,
     lib.component.diagnostics(),
     -- lib.component.virtual_env(),
     Space, Space,
