@@ -105,6 +105,8 @@ M.nvimToggleConfig = function ()
             ['show']   = 'hide',
             ['top']    = 'bottom',
             ['TOP']    = 'BOTTOM',
+            ['prev']   = 'next',
+            ['PREV']   = 'NEXT',
         },
         -- removes the default <leader>i keymap
         remove_default_keybinds = true,
@@ -325,14 +327,14 @@ M.toggleNumFormat = function ()
 
         local start_idx, end_idx = find_number_under_cursor(line, col)
         if not start_idx or not end_idx then
-            vim.notify("Not a supported number at cursor")
+            vim.notify("Not a supported number at cursor", vim.log.levels.ERROR)
             return
         end
 
         local word = line:sub(start_idx, end_idx)
         local new = convert_number(word)
         if not new then
-            vim.notify("Not a supported number: " .. word)
+            vim.notify("Not a supported number: " .. word, vim.log.levels.ERROR)
             return
         end
 
