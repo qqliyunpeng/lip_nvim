@@ -267,7 +267,6 @@ M.miniFileConfig = function ()
     vim.api.nvim_create_autocmd("BufWipeout", {
         callback = function(args)
             local bufname = vim.api.nvim_buf_get_name(args.buf)
-            vim.notify(bufname)
             if bufname:match("^minifiles://") then
                 restore_color()
             end
