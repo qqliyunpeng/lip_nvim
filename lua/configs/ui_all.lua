@@ -14,6 +14,7 @@ M.noiceConfig = function()
             bottom_search = false, -- The kind of popup used for /
             command_palette = true, -- position the cmdline and popupmenu together
             long_message_to_split = true,
+            lsp_doc_border = true, -- 给浮窗加边框
         },
         cmdline = {
             view = "cmdline_popup",                 -- The kind of popup used for :
@@ -51,13 +52,15 @@ M.noiceConfig = function()
         messages = { enabled = true },
         lsp = {
             hover = { enabled = false },
-            signature = { enabled = false },
+            signature = { enabled = true, auto_open = { enabled = false, } },
             progress = { enabled = true },
             message = { enabled = true },
             smart_move = { enabled = false },
             view_error = "messages",
         },
     })
+
+    map("i", "<A-f>", function() vim.lsp.buf.signature_help() end)
 end
 
 M.whitespaceConfig = function()

@@ -108,6 +108,7 @@ hi! link SagaNormal  Normal
 hi! link SagaBorder  Normal
 hi! link WhichKeyBorder  Normal
 hi! link WhichKeyNormal  Normal
+hi FloatBorder guibg=Black
 ]])
 
 vim.lsp.set_log_level("off")

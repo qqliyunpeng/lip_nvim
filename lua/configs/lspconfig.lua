@@ -98,43 +98,6 @@ M.defaults = function()
     mason_lspconfig.setup_handlers(handlers)
 end
 
-M.lspSignatureDefaults = function()
-    local lsp_signature = require("lsp_signature")
-    lsp_signature.setup({
-        bind = true,
-        floating_window = true,
-        hint_enable = true,
-        handler_opts = { border = "rounded" },
-        max_width = 50,
-        floating_window_off_x = 20, -- adjust float windows x position.
-        keymaps = {
-            ['<CR>']  = false,
-            ['<TAB>'] = false,
-            ['<A-d>'] = false,
-            ['<A-u>'] = false,
-        }
-    })
-
-    lsp_signature.on_attach()
-    vim.b.lsp_signature_enabled = true
-
-    Snacks.toggle({
-        name = "lsp_signature",
-        get = function()
-            return vim.b.lsp_signature_enabled == true
-        end,
-        set = function(state)
-            if state then
-                lsp_signature.on_attach()
-                vim.b.lsp_signature_enabled = true
-            else
-                lsp_signature.detach()
-                vim.b.lsp_signature_enabled = false
-            end
-        end,
-    }):map("<leader>ue")
-end
-
 local lspkind_nerd_icons = {
     Array         = "󰅪",
     Boolean       = "⊨",

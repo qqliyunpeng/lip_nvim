@@ -260,14 +260,6 @@ return {
         -- event = "User FilePost",
     },
     {
-        -- lsp 输入的同时提示参数
-        "https://gitee.com/yunduozhai/lsp_signature.nvim.git",
-        event = "InsertEnter",
-        config = function()
-            return require("configs.lspconfig").lspSignatureDefaults()
-        end
-    },
-    {
             "https://gitee.com/yunduozhai/friendly-snippets.git",
             branch = 'main',
     },
