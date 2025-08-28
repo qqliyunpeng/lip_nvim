@@ -17,6 +17,7 @@ M.config = function ()
 
     map('n', ']g', ':Gitsigns next_hunk<CR>', { desc = "next git changes", noremap = true, silent = true })
     map('n', '[g', ':Gitsigns prev_hunk<CR>', { desc = "prev git changes", noremap = true, silent = true })
+    map('n', '<leader>gp', ':Gitsigns preview_hunk<CR>', { desc = "preview git change", noremap = true, silent = true })
 end
 
 return M
