@@ -98,19 +98,41 @@ M.defaults = function()
     mason_lspconfig.setup_handlers(handlers)
 end
 
-local lsp_sig_defaults = {
-    log_path = vim.fn.expand("$HOME") .. "/tmp/sig.log",
-    debug = false,
-    hint_enable = true,
-    handler_opts = { border = "rounded" },
-    max_width = 50,
-    floating_window_off_x = 20, -- adjust float windows x position.
-}
-
 M.lspSignatureDefaults = function()
-    require('lsp_signature').setup(lsp_sig_defaults)
-    vim.keymap.set({ 'i' }, '<C-e>', function() require('lsp_signature').toggle_float_win()
-        end, { silent = true, noremap = true, desc = 'toggle signature' })
+    local lsp_signature = require("lsp_signature")
+    lsp_signature.setup({
+        bind = true,
+        floating_window = true,
+        hint_enable = true,
+        handler_opts = { border = "rounded" },
+        max_width = 50,
+        floating_window_off_x = 20, -- adjust float windows x position.
+        keymaps = {
+            ['<CR>']  = false,
+            ['<TAB>'] = false,
+            ['<A-d>'] = false,
+            ['<A-u>'] = false,
+        }
+    })
+
+    lsp_signature.on_attach()
+    vim.b.lsp_signature_enabled = true
+
+    Snacks.toggle({
+        name = "lsp_signature",
+        get = function()
+            return vim.b.lsp_signature_enabled == true
+        end,
+        set = function(state)
+            if state then
+                lsp_signature.on_attach()
+                vim.b.lsp_signature_enabled = true
+            else
+                lsp_signature.detach()
+                vim.b.lsp_signature_enabled = false
+            end
+        end,
+    }):map("<leader>ue")
 end
 
 local lspkind_nerd_icons = {

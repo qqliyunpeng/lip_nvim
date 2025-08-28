@@ -187,10 +187,10 @@ M.tg_format_array = function ()
         end
     end
 
-    vim.keymap.set("n", "<leader>ucf", function()
+    vim.keymap.set("n", "<leader>uf", function()
         vim.o.operatorfunc = "v:lua.op_format_array"
         return "g@l"
-    end, {expr = true, noremap = true, desc = "Format {array} with max N items per line"})
+    end, {expr = true, noremap = true, desc = "Format {} 16 items"})
 end
 
 return M

@@ -260,22 +260,9 @@ return {
         -- event = "User FilePost",
     },
     {
-        "https://gitee.com/nvim_lip/lspkind.nvim.git",
-        lazy = true,
-        enabled = true,
-        mode = 'symbol_text',
-        ellipsis_char = '...',
-        show_labelDetails = true,
-        preset = 'codicons',
-
-        config = function()
-            return require('configs.lspconfig').lspkindInit()
-        end
-    },
-    {
         -- lsp 输入的同时提示参数
         "https://gitee.com/yunduozhai/lsp_signature.nvim.git",
-        event = "VeryLazy",
+        event = "InsertEnter",
         config = function()
             return require("configs.lspconfig").lspSignatureDefaults()
         end
