@@ -90,7 +90,7 @@ return {
             height = 0.60,
             horizontal = {
                 prompt_position = "top",
-                preview_cutoff = 145, -- 宽度太窄，变成 vertical
+                preview_cutoff = 180, -- 宽度太窄，变成 vertical
                 preview_width = 0.55,
             },
             vertical = {
