@@ -21,10 +21,11 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | <leader>ua   | n    | 切换开启和关闭 autopairs 的功能                  |
 | alt-h        | n    | 简短的hover形式的说明                            |
 | alt-l        | n    | 打开一个小窗口，相当于进入了一个中，并显示上下文 |
+| alt-f        | i    | 在插入模式下打开函数的帮助信息一下               |
 | ctrl-h/j/k/l | n    | 在窗口间移动                                     |
 | ctrl-h/j/k/l | i    | 相当于在不退出插入模式的情况下上下左右           |
 | <leader>tm   | n    | 开启/关闭markdown里边的表格的自动化              |
-| <leader>tr   | n    | markdown里边的表格的自动化              |
+| <leader>tr   | n    | markdown里边的表格的自动化                       |
 | <leader>mm   | n    | create/del a bookmark                            |
 | <leader>mc   | n    | del a bookmark                                   |
 | <leader>fm   | n    | open telescope  show all bookmark                |
