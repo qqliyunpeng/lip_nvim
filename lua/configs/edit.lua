@@ -234,5 +234,46 @@ M.operatorsConfig = function ()
     })
 end
 
+M.miniFileConfig = function ()
+    require('mini.files').setup({})
+
+    local function get_hl_bg(name)
+        local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name })
+        if not ok or not hl then
+            return nil
+        end
+        return hl.bg or hl.background
+    end
+
+    local original_normalfloat_bg = get_hl_bg("NormalFloat")
+
+    local function open_mini_files()
+        require("mini.files").open()
+        vim.api.nvim_set_hl(0, "NormalFloat", { bg = 0x000000 }) -- 黑色
+    end
+
+    local function restore_color()
+        if original_normalfloat_bg then
+            vim.api.nvim_set_hl(0, "NormalFloat", { bg = original_normalfloat_bg })
+        else
+            -- 如果原来没有定义，清除掉即可
+            vim.api.nvim_set_hl(0, "NormalFloat", {})
+        end
+    end
+
+    vim.keymap.set("n", "-", open_mini_files)
+
+    -- 监听 mini.files buffer 关闭，恢复背景
+    vim.api.nvim_create_autocmd("BufWipeout", {
+        callback = function(args)
+            local bufname = vim.api.nvim_buf_get_name(args.buf)
+            vim.notify(bufname)
+            if bufname:match("^minifiles://") then
+                restore_color()
+            end
+        end,
+    })
+end
+
 return M
 

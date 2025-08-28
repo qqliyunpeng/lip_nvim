@@ -488,6 +488,14 @@ return {
             require('configs.overseer').overseerConfig()
         end
     },
+    {
+        'echasnovski/mini.files',
+        version = '*',
+        event = { "BufReadPost", "BufNewFile" },
+        config = function ()
+            require('configs.edit').miniFileConfig()
+        end
+    }
 }
 
 

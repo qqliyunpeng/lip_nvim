@@ -150,3 +150,13 @@ Alt-/
 rm ~/.local/state/nvim/swap/*
 ```
 
+# 8. mini.files
+| 按键 | 功能                   |
+| --   | --                     |
+| L    | go_in_plus             |
+| H    | go_out_plus            |
+| @    | reveal_cwd             |
+| <bs> | reset                  |
+| <    | 将当前窗口移动到最左侧 |
+| >    | 窗口向右移动           |
+
