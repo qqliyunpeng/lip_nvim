@@ -473,6 +473,14 @@ return {
         end
     },
     {
+        'echasnovski/mini.files',
+        version = '*',
+        event = { "BufReadPost", "BufNewFile" },
+        config = function ()
+            require('configs.edit').miniFileConfig()
+        end
+    },
+    {
         "https://gitee.com/nvim_lip/blink.cmp.git",
         branch = "main",
         event = "VeryLazy",
@@ -489,11 +497,19 @@ return {
         end
     },
     {
-        'echasnovski/mini.files',
-        version = '*',
+        "https://gitee.com/nvim_lip/sniprun.git",
+        build = "sh install.sh",
         event = { "BufReadPost", "BufNewFile" },
         config = function ()
-            require('configs.edit').miniFileConfig()
+            require("sniprun").setup({
+                display = {
+                    "VirtualTextOk",   -- 在代码行右边显示结果
+                    "VirtualTextErr",  -- 错误也显示
+                    -- 还可以用 "Classic", "Terminal", "TempFloatingWindow"
+                },
+                inline_messages = 0,   -- 设置为1时，结果会以内联消息的形式显示
+                borders = "rounded",   -- 浮窗边框样式
+            })
         end
     }
 }
