@@ -19,40 +19,26 @@ M.overseerConfig = function()
             "OverseerTaskAction",
             "OverseerClearCache",
         },
-        opts = {
-            dap = false,
-            templates = { "make", "cargo", "shell", "user.run_python", "user.run_script" },
-            task_list = {
-                direction = "left",
-                bindings = {
-                    ["<C-u>"] = false,
-                    ["<C-d>"] = false,
-                    ["<C-h>"] = false,
-                    ["<C-j>"] = false,
-                    ["<C-k>"] = false,
-                    ["<C-l>"] = false,
-                },
+        templates = {
+            "user.c_build", "user.cpp_build",
+            "cargo", "user.run_python", "user.run_script",
+            "user.make_clean", "user.make_run", "user.make_or160_pc", "user.make_or160_machine",
+        },
+        dap = false,
+        task_list = {
+            bindings = {
+                ["<C-u>"] = false,
+                ["<C-d>"] = false,
+                ["<C-h>"] = false,
+                ["<C-j>"] = false,
+                ["<C-k>"] = false,
+                ["<C-l>"] = false,
             },
-            -- form = {
-            --     win_opts = {
-            --         winblend = 0,
-            --     },
-            -- },
-            -- confirm = {
-            --     win_opts = {
-            --         winblend = 0,
-            --     },
-            -- },
-            -- task_win = {
-            --     win_opts = {
-            --         winblend = 0,
-            --     },
-            -- },
         },
     })
 
     overseer.add_template_hook({
-        module = "^make$",
+        module = "make",
     }, function (task_defn, util)
         util.add_component(task_defn, { "on_output_quickfix", open_on_exit = "failure" })
         util.add_component(task_defn, "on_complete_notify")
