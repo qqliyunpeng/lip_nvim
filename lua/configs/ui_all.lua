@@ -296,8 +296,18 @@ M.whichKeyConfig = function()
                 {"<leader>c" , desc = "Code action, rename, comment" },
             }
         },
+        icons = {
+            mappings = not use_ascii_icons, -- 在不支持nerd的里边不启用图标
+            colors = true,
+        }
     }
     wk.setup(opts)
+end
+
+M.miniIconsConfig = function ()
+    require("mini.icons").setup({
+        style = use_ascii_icons and "ascii" or "nerd",
+    })
 end
 
 M.todoConfig = function()

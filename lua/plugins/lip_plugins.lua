@@ -455,7 +455,7 @@ return {
         event = "VeryLazy",
         config = function ()
             require("mini.ai").setup()
-            require("mini.icons").setup()
+            require('configs.ui_all').miniIconsConfig()
             require('configs.edit').miniFileConfig()
             require("configs.edit").operatorsConfig()
             require("configs.indent").miniIndentInit()

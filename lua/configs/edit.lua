@@ -234,8 +234,14 @@ M.operatorsConfig = function ()
     })
 end
 
-M.miniFileConfig = function ()
-    require('mini.files').setup({})
+function M.miniFileConfig()
+    require('mini.files').setup({
+        windows = {
+            preview = true,
+            width_focus = 30,
+            width_preview = 80,
+        }
+    })
 
     local function get_hl_bg(name)
         local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name })
@@ -248,6 +254,23 @@ M.miniFileConfig = function ()
     local original_normalfloat_bg = get_hl_bg("NormalFloat")
 
     local function open_mini_files()
+        local minifiles = require("mini.files")
+
+        -- 如果 close() 返回 true，说明已经打开过，执行关闭
+        if minifiles.close() then return end
+
+        local buf_path = vim.api.nvim_buf_get_name(0)
+
+        if buf_path == "" then
+            -- 如果是无名 buffer，就退回工作目录
+            buf_path = vim.loop.cwd() or ""
+        end
+
+        require("mini.files").open(buf_path)
+        vim.api.nvim_set_hl(0, "NormalFloat", { bg = 0x000000 }) -- 黑色
+    end
+
+    local function open_mini_files_root()
         require("mini.files").open()
         vim.api.nvim_set_hl(0, "NormalFloat", { bg = 0x000000 }) -- 黑色
     end
@@ -261,7 +284,8 @@ M.miniFileConfig = function ()
         end
     end
 
-    vim.keymap.set("n", "-", open_mini_files)
+    vim.keymap.set("n", "-"        , open_mini_files)
+    vim.keymap.set("n", "<leader>-", open_mini_files_root)
 
     -- 监听 mini.files buffer 关闭，恢复背景
     vim.api.nvim_create_autocmd("BufWipeout", {
