@@ -45,15 +45,6 @@ return {
         end
     },
     {
-        -- indent 的动画效果
-        -- text object ii ai [i ]i
-        "https://gitee.com/yunduozhai/mini.indentscope.git",
-        version = false,
-        init = function()
-            return require("configs.indent").miniIndentInit()
-        end,
-    },
-    {
         "https://gitee.com/nvim_lip/snacks.nvim.git",
         branch = 'main',
         priority = 1000,
@@ -113,9 +104,6 @@ return {
     {
         "https://gitee.com/yunduozhai/which-key.nvim.git", branch = "main",
         event = "VeryLazy",
-        dependencies = {
-            "https://gitee.com/yunduozhai/mini.icons.git",
-        },
         opts_extend = { "spec" },
         keys = {
             {

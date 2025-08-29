@@ -403,13 +403,6 @@ return {
         end
     },
     {
-        "https://gitee.com/yunduozhai/mini.surround.git",
-        event = 'VeryLazy',
-        config = function ()
-            require('configs.edit').miniSurroundConfig()
-        end,
-    },
-    {
         "https://gitee.com/yunduozhai/ts-comments.nvim.git",
         event = "VeryLazy",
         opts = {},
@@ -457,27 +450,16 @@ return {
         end,
     },
     {
-        "https://github.com/echasnovski/mini.ai.git",
-        version = '*',
+        "https://gitee.com/nvim_lip/mini.nvim.git",
+        branch = "stable",
         event = "VeryLazy",
         config = function ()
             require("mini.ai").setup()
-        end
-    },
-    {
-        "https://github.com/echasnovski/mini.operators.git",
-        version = '*',
-        event = "VeryLazy",
-        config = function ()
-            return require("configs.edit").operatorsConfig()
-        end
-    },
-    {
-        'echasnovski/mini.files',
-        version = '*',
-        event = { "BufReadPost", "BufNewFile" },
-        config = function ()
+            require("mini.icons").setup()
             require('configs.edit').miniFileConfig()
+            require("configs.edit").operatorsConfig()
+            require("configs.indent").miniIndentInit()
+            require('configs.edit').miniSurroundConfig()
         end
     },
     {
