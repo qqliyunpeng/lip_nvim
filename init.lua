@@ -29,7 +29,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-    local repo = "https://gitee.com/dinary/lazy.nvim.git"
+    local repo = "https://gitee.com/yunduozhai/lazy.nvim.git"
     local out = vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
     if vim.v.shell_error ~= 0 then
         vim.api.nvim_echo({
