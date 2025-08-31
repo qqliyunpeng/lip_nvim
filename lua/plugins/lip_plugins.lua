@@ -218,6 +218,9 @@ return {
     {
         "https://gitee.com/nvim_lip/nvim-autopairs.git",
         event = "InsertEnter",
+        dependencies = {
+            "https://gitee.com/suyelu/LuaSnip",
+        },
         opts = {
             map_bs = true,
             fast_wrap = {},
@@ -264,8 +267,10 @@ return {
             branch = 'main',
     },
     {
-        string.format('%s/LuaSnip', 'https://gitee.com/suyelu'),
+        "https://gitee.com/suyelu/LuaSnip",
+        branch = "master",
         build = 'make install_jsregexp',
+        event = { "BufReadPost", "BufNewFile" },
         dependencies = {
             "friendly-snippets",
         },
