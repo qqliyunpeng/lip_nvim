@@ -120,7 +120,7 @@ local function insert_line_relative(direction, line_content)
     end
 end
 
-M.create_declare = function ()
+function M.create_declare()
     -- 记录跳转前的 buffer 和光标位置
     local origin_buf = vim.api.nvim_get_current_buf()
     local origin_pos = vim.api.nvim_win_get_cursor(0)

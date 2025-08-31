@@ -1,7 +1,7 @@
 local M = {}
 local map = vim.keymap.set
 
-M.overseerConfig = function()
+function M.overseerConfig()
     local overseer = require("overseer")
     overseer.setup({
         cmd = {

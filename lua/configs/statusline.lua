@@ -4,7 +4,7 @@ local mason_registry = require("mason-registry")
 
 local M = {}
 
-M.get_statusline = function()
+function M.get_statusline()
     local funcs = require("core.funcs")
     local heirline_conditions = require("heirline.conditions")
     local heirline_utils = require("heirline.utils")

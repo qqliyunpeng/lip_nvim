@@ -1,7 +1,7 @@
 local M = {}
 
 -- 实现 十进制 十六进制 和 二进制 数的格式的转换
-M.tg_format = function ()
+function M.tg_format()
     local function dec_to_bin(n)
         if n == 0 then return "0" end
         local t = {}
@@ -118,7 +118,7 @@ M.tg_format = function ()
 end
 
 -- 将数组按最多一行16个逗号为一行进行整理
-M.tg_format_array = function ()
+function M.tg_format_array()
     -- 配置
     local max_items = 15                -- 每行最多元素数
     local supported_separators = {',', ':', ';'} -- 支持的分隔符

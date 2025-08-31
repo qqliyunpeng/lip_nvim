@@ -1,6 +1,6 @@
 local M = {}
 
-M.miniIndentInit = function()
+function M.miniIndentInit()
     require('mini.indentscope').setup({
         symbol = '▎',
         options = { try_as_border = true },
@@ -41,7 +41,7 @@ M.miniIndentInit = function()
     })
 end
 
-M.blanklineConfig = function()
+function M.blanklineConfig()
     Snacks.toggle({
         -- name = "Indention Guides",
         name = "|",

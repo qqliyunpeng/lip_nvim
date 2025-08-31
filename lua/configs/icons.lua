@@ -1,6 +1,6 @@
 local M = {}
 
-M.detect_terminal = function ()
+function M.detect_terminal()
     local term = vim.env.TERM or ""
     if term == "xterm-256color" then
         return "nerd"
@@ -9,7 +9,7 @@ M.detect_terminal = function ()
     end
 end
 
-M.use_ascii_icons = function ()
+function M.use_ascii_icons()
     local term = M.detect_terminal()
     if term == "ascii" then
         return true
@@ -18,7 +18,7 @@ M.use_ascii_icons = function ()
 end
 
 
-M.componentsIcons = function()
+function M.componentsIcons()
     local nerd_icons = {
         ActiveLSP = "",
         ActiveTS = "",
@@ -180,7 +180,7 @@ local snacks_asci_icons = {
 }
 
 
-M.snacksIcons = function ()
+function M.snacksIcons()
     local icons = M.use_ascii_icons() and snacks_asci_icons or snacks_nerd_icons
     return icons
 end

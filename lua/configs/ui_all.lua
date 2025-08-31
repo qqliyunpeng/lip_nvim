@@ -3,11 +3,11 @@ local use_ascii_icons = require("configs.icons").use_ascii_icons()
 
 local map = vim.keymap.set
 
-M.componentsConfig = function()
+function M.componentsConfig()
     return {icons = require("configs.icons").componentsIcons() }
 end
 
-M.noiceConfig = function()
+function M.noiceConfig()
     local enable_conceal = false          -- Hide command text if true
     require('noice').setup({
         presets = {
@@ -63,7 +63,7 @@ M.noiceConfig = function()
     map("i", "<A-f>", function() vim.lsp.buf.signature_help() end)
 end
 
-M.whitespaceConfig = function()
+function M.whitespaceConfig()
     require("whitespace-nvim").setup({
         highlight = 'DiffDelete',
         ignored_filetypes = {
@@ -91,7 +91,7 @@ M.whitespaceConfig = function()
     vim.keymap.set('n', '<leader><Space>', require('whitespace-nvim').trim)
 end
 
-M.lspsagaConfig = function()
+function M.lspsagaConfig()
     require('lspsaga').setup({
         ui = {
             code_action = use_ascii_icons and " A" or '󱠀',
@@ -179,7 +179,7 @@ M.snacksKeys = {
     { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
 }
 
-M.snacksInit = function ()
+function M.snacksInit()
     -- print("123")
     vim.api.nvim_create_autocmd("User", {
         pattern = "VeryLazy",
@@ -204,7 +204,7 @@ M.snacksInit = function ()
     })
 end
 
-M.snacksConfig = function()
+function M.snacksConfig()
     local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
         indent    = { enabled = false },
@@ -255,7 +255,7 @@ M.snacksConfig = function()
     })
 end
 
-M.visualWhitespaceConfig = function()
+function M.visualWhitespaceConfig()
     local opts = {
         enabled = true,
         nl_char = '',
@@ -267,7 +267,7 @@ M.visualWhitespaceConfig = function()
     require('visual-whitespace').setup(opts)
 end
 
-M.whichKeyConfig = function()
+function M.whichKeyConfig()
     local wk = require('which-key')
     local opts = {
         preset = "helix",
@@ -304,13 +304,13 @@ M.whichKeyConfig = function()
     wk.setup(opts)
 end
 
-M.miniIconsConfig = function ()
+function M.miniIconsConfig()
     require("mini.icons").setup({
         style = use_ascii_icons and "ascii" or "nerd",
     })
 end
 
-M.todoConfig = function()
+function M.todoConfig()
     local todo = require('todo-comments')
 
     todo.setup()
@@ -328,7 +328,7 @@ M.todoConfig = function()
 end
 
 -- TODO: need relize session open with fold
-M.ufoConfig = function()
+function M.ufoConfig()
     -- vim.o.foldcolumn = '1' -- '0' is not bad
     vim.o.foldlevel = 99
     vim.o.foldlevelstart = 99
@@ -373,7 +373,7 @@ M.ufoConfig = function()
     })
 end
 
-M.colorizerConfig = function ()
+function M.colorizerConfig()
     local colorizer = require("colorizer")
     -- Exclude some filetypes from highlighting by using `!`
     colorizer.setup {
@@ -445,7 +445,7 @@ local ascii_icons = {
     }
 }
 
-M.markdownConfig = function ()
+function M.markdownConfig()
     local mk = require('render-markdown')
 
     local opts = {

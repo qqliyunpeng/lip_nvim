@@ -52,7 +52,7 @@ M.treesitterConfig = {
     },
 }
 
-M.textobjectsConfig = function()
+function M.textobjectsConfig()
     -- If treesitter is already loaded, we need to run config again for textobjects
     -- When in diff mode, we want to use the default, 在 diff窗口中仍然使用默认的vim的配置，比如 ]c
     -- vim text objects c & C instead of the treesitter ones.

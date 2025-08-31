@@ -7,7 +7,7 @@ local nerd_signs = {
     changedelete = { text = "󱕖" },
 }
 
-M.config = function ()
+function M.config()
     local opts = {
         current_line_blame = true, -- 默认启用当前行 blame
         signs = use_ascii_icons and {} or nerd_signs,

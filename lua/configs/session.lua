@@ -13,7 +13,7 @@ local allowed_dirs = {
     "/home/lip/wor_/test/aq160/others_or160/libIPCProtocol",
 }
 
-M.setDefault = function ()
+function M.setDefault()
     persisted.branch = function()
         local branch = vim.fn.systemlist("git branch --show-current")[1]
         return vim.v.shell_error == 0 and branch

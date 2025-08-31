@@ -35,7 +35,7 @@ local ascii_icons = {
     TypeParameter = "[Ty]",
 }
 
-M.blinkConfig = function()
+function M.blinkConfig()
     local cmp = require("blink.cmp")
 
     cmp.setup({

@@ -253,7 +253,7 @@ local StatusLine = {
     lib.component.nav(),
 }
 
-M.config = function()
+function M.config()
     -- show one statusline in bottom
     vim.cmd("set laststatus=3")
     heirline.setup({

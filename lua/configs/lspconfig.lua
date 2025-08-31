@@ -89,7 +89,7 @@ M.on_attach = function(client, bufnr)
     map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action")
 end
 
-M.defaults = function()
+function M.defaults()
     local mason_lspconfig = require 'mason-lspconfig'
     mason_lspconfig.setup({
         ensure_installed = vim.tbl_keys(servers),
@@ -136,7 +136,7 @@ local lspkind_ascii_icons = {
     Unit          = "U",
 }
 
-M.lspkindInit = function ()
+function M.lspkindInit()
     local opts = {
         mode = "symbol",
         symbol_map = use_ascii_icons and lspkind_ascii_icons or lspkind_nerd_icons,

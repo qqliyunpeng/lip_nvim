@@ -1,7 +1,7 @@
 
 local M = {}
 
-M.miniSurroundConfig = function ()
+function M.miniSurroundConfig()
     require'mini.surround'.setup({
         mappings = {
             add = '<leader>sa',
@@ -40,7 +40,7 @@ M.yankKeys = {
     { "=P", "<Plug>(YankyPutBeforeFilter)", desc = "Put before applying a filter" },
 }
 
-M.yankConfig = function ()
+function M.yankConfig()
     local utils = require("yanky.utils")
     local mapping = require("yanky.telescope.mapping")
 
@@ -90,7 +90,7 @@ M.yankConfig = function ()
     end, { silent = true, desc = "Yank history in insert mode" })
 end
 
-M.nvimToggleConfig = function ()
+function M.nvimToggleConfig()
     require('nvim-toggler').setup({
         inverses = {
             ['YES']    = 'NO',
@@ -117,7 +117,7 @@ M.nvimToggleConfig = function ()
                                                     { desc = "True <-> False" })
 end
 
-M.visualMulConfig = function ()
+function M.visualMulConfig()
     local npairs = require("nvim-autopairs")
 
     -- 单独禁用/启用 BS
@@ -155,7 +155,7 @@ M.visualMulConfig = function ()
     })
 end
 
-M.pasteSmart = function ()
+function M.pasteSmart()
     local clipboard_content = vim.fn.getreg('"')
     local ends_with_newline = clipboard_content:sub(-1) == '\n'
 
@@ -169,7 +169,7 @@ M.pasteSmart = function ()
     end
 end
 
-M.PasteSmart = function ()
+function M.PasteSmart()
     local clipboard_content = vim.fn.getreg('"')
     local ends_with_newline = clipboard_content:sub(-1) == '\n'
 
@@ -208,7 +208,7 @@ local function evaluate_func(mode)
     end
 end
 
-M.operatorsConfig = function ()
+function M.operatorsConfig()
     require("mini.operators").setup({
         -- 计算
         evaluate = {
