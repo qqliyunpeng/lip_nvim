@@ -94,6 +94,7 @@ end
 function M.lspsagaConfig()
     require('lspsaga').setup({
         ui = {
+            use_nerd = not use_ascii_icons,
             code_action = use_ascii_icons and " A" or '󱠀',
         },
         finder = {
