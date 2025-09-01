@@ -73,6 +73,61 @@ local draw_lspkind_nerd = {
     }
 }
 
+function M.blinkBuild()
+    local libpath = vim.fn.expand("~/.local/share/nvim/lazy/blink.cmp/target/release/libblink_cmp_fuzzy.so")
+    local version_file = vim.fn.expand("~/.local/share/nvim/lazy/blink.cmp/target/release/version")
+
+    if vim.fn.filereadable(libpath) == 1 then
+        return
+    end
+
+    local release_dir = vim.fn.expand("~/.local/share/nvim/lazy/blink.cmp/target/release/")
+    vim.fn.mkdir(release_dir, "p")
+
+    local base = "https://gitee.com/nvim_lip/blink.cmp.releases/raw/v1.6.0/x86_64-unknown-linux-gnu.so"
+
+    -- 这里加提示
+    -- vim.schedule(function()
+    --     vim.notify("Downloading blink.cmp binary (v1.6.0)...", vim.log.levels.INFO)
+    -- end)
+
+    -- 启动后台下载
+    vim.fn.jobstart({
+        "curl", "-L", base, "-o", libpath
+    }, {
+        stdout_buffered = true,
+        on_exit = function(_, code)
+            if code == 0 then
+                vim.fn.jobstart({
+                    "curl", "-L", base .. ".sha256", "-o", libpath .. ".sha256"
+                }, {
+                    on_exit = function(_, code2)
+                        if code2 == 0 then
+                            -- 写 version 文件
+                            local f = io.open(version_file, "w")
+                            if f then
+                                f:write("v1.6.0")
+                                f:close()
+                            end
+                            vim.schedule(function()
+                                vim.notify("blink.cmp binary downloaded successfully (v1.6.0)", vim.log.levels.INFO)
+                            end)
+                        else
+                            vim.schedule(function()
+                                vim.notify("Failed to download .sha256 file", vim.log.levels.ERROR)
+                            end)
+                        end
+                    end,
+                })
+            else
+                vim.schedule(function()
+                    vim.notify("Failed to download libblink_cmp_fuzzy.so", vim.log.levels.ERROR)
+                end)
+            end
+        end,
+    })
+end
+
 function M.blinkConfig()
     local cmp = require("blink.cmp")
 
@@ -152,6 +207,7 @@ function M.blinkConfig()
             default = { 'lsp', 'path', 'snippets', 'buffer' },
         },
         fuzzy = {
+            implementation = "prefer_rust",
             prebuilt_binaries = {
                 force_version = "v1.6.0",
             },

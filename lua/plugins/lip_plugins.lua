@@ -475,6 +475,7 @@ return {
         "https://gitee.com/nvim_lip/blink.cmp.git",
         branch = "main",
         event = "VeryLazy",
+        build = require("configs.blink_cmp").blinkBuild(),
         config = function()
             require("configs.blink_cmp").blinkConfig()
         end
