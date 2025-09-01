@@ -468,6 +468,10 @@ return {
         end
     },
     {
+        "https://gitee.com/nvim_lip/lspkind.nvim.git",
+        opts = {},
+    },
+    {
         "https://gitee.com/nvim_lip/blink.cmp.git",
         branch = "main",
         event = "VeryLazy",
