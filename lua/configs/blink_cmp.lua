@@ -74,8 +74,8 @@ local draw_lspkind_nerd = {
 }
 
 function M.blinkBuild()
-    local libpath = vim.fn.expand("~/.local/share/nvim/lazy/blink.cmp/target/release/libblink_cmp_fuzzy.so")
     local version_file = vim.fn.expand("~/.local/share/nvim/lazy/blink.cmp/target/release/version")
+    local libpath = vim.fn.expand("~/.local/share/nvim/lazy/blink.cmp/target/release/libblink_cmp_fuzzy.so")
 
     if vim.fn.filereadable(libpath) == 1 then
         return
@@ -85,11 +85,6 @@ function M.blinkBuild()
     vim.fn.mkdir(release_dir, "p")
 
     local base = "https://gitee.com/nvim_lip/blink.cmp.releases/raw/v1.6.0/x86_64-unknown-linux-gnu.so"
-
-    -- 这里加提示
-    -- vim.schedule(function()
-    --     vim.notify("Downloading blink.cmp binary (v1.6.0)...", vim.log.levels.INFO)
-    -- end)
 
     -- 启动后台下载
     vim.fn.jobstart({
