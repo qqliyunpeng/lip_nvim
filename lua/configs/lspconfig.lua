@@ -84,8 +84,6 @@ M.on_attach = function(client, bufnr)
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, opts "List workspace folders")
 
-    map("n", "<leader>d", vim.lsp.buf.type_definition, opts "Go to type definition")
-
     map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action")
 end
 
