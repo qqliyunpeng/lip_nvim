@@ -213,9 +213,12 @@ function M.snacksConfig()
         bigfile   = { enabled = true },
         words     = { enabled = true },
         scope     = { enabled = false },
-        notifier  = { enabled = true },
         quickfile = { enabled = true },
         statuscolumn = { enabled = true },
+        notifier  = {
+            enabled = true,
+            width = { min = 40, max = 0.7 },
+        },
         dashboard = {
             enabled = true,
             width = 50,
