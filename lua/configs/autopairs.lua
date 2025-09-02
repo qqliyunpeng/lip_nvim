@@ -39,27 +39,6 @@ function M.setup(opts)
         end)
     })
 
-    -- LuaSnip 占位符联动, 从括号中跳到括号闭合的地方
-    luasnip.setup({ store_selection_keys = "<Tab>" })
-    npairs.add_rules({
-        Rule("(", ")")
-        :with_pair(cond.not_inside_quote())
-        :with_move(function()
-            local inside_snip = luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
-            return inside_snip ~= nil
-        end),
-        Rule("[", "]")
-        :with_move(function()
-            local inside_snip = luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
-            return inside_snip ~= nil
-        end),
-        Rule("{", "}")
-        :with_move(function()
-            local inside_snip = luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
-            return inside_snip ~= nil
-        end),
-    })
-
     -- Treesitter 高级支持: 字符串和注释中禁止自动配对
     for _, p in ipairs(pairs) do
         npairs.add_rule(
