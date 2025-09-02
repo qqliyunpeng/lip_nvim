@@ -217,6 +217,7 @@ function M.snacksConfig()
         statuscolumn = { enabled = true },
         notifier  = {
             enabled = true,
+            timeout = 4000,
             width = { min = 40, max = 0.7 },
         },
         dashboard = {
