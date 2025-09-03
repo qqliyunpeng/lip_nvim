@@ -65,15 +65,9 @@ hi! link IlluminatedWordWrite  HlSearchLens
 "hi Normal guibg=NONE ctermbg=NONE
 hi Normal guibg=black ctermbg=black
 "hi NormalNC guibg=black ctermbg=black
-hi TelescopeNormal guibg=black ctermbg=black
-hi! link TelescopeTitle  TelescopeNormal
-hi! link TelescopeBorder TelescopeNormal
-hi! link TelescopeResultsNumber TelescopeNormal
-hi! link TelescopePreviewTile TelescopeNormal
-"hi TelescopeNormal guibg=NONE ctermbg=NONE
 hi LineNr guibg=NONE ctermbg=NONE
 " 当前行
-hi CursorLine guibg=#3e4451 ctermbg=235
+hi CursorLine guibg=#2a2b3c ctermbg=235
 " 当前行号
 hi CursorLineNr cterm = bold gui = bold guifg=#ff966c
 " 搜索的结果中当前的块的背景颜色
@@ -108,7 +102,29 @@ hi! link SagaNormal  Normal
 hi! link SagaBorder  Normal
 hi! link WhichKeyBorder  Normal
 hi! link WhichKeyNormal  Normal
-hi FloatBorder guibg=Black
+hi FloatBorder   guibg=Black
+hi FlashBackdrop guifg=#6c7086
+hi FlashCurrent  guifg=#fab387 guibg=#1e1e2e
+hi FlashMatch    guifg=#b4befe guibg=#1e1e2e
+hi FlashLabel    cterm=bold gui=bold guifg=#a6e3a1 guibg=#1e1e2e
+hi! link FlashPrompt NormalFloat
+
+hi LspReferenceRead  guibg=#45475a
+hi LspReferenceText  guibg=#45475a
+hi LspReferenceWrite guibg=#45475a
+
+hi TelescopeNormal        guibg=black ctermbg=black
+hi TelescopePromptNormal  guibg=Black
+hi TelescopePreviewLine   guibg=Black
+hi TelescopePreviewBorder guibg=Black
+hi TelescopePromptBorder  guifg=#ff966c guibg=Black
+hi TelescopeBorder        guifg=#589ed7 guibg=Black
+hi TelescopePromptTitle   guifg=#ff966c guibg=Black
+hi TelescopeResultsTitle  guibg=Black
+hi TelescopePromptCounter guifg=#5C636C guibg=Black
+hi! link TelescopeTitle        TelescopeNormal
+hi! link TelescopePreviewLine  CursorLine
+hi! link TelescopePromptPrefix TelescopePromptTitle
 ]])
 
 vim.lsp.set_log_level("off")
