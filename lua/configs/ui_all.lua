@@ -491,68 +491,80 @@ function M.markdownConfig()
 end
 
 function M.deviconsConfig()
+    local scripts_color = '#cbcb41'
+    local scripts_ccolor = '185'
+    local vs_color = '#63E7FF'
+    local vs_ccolor = '74'
+    local mk_color = '#89e051'
+    local mk_ccolor = '113'
     require("nvim-web-devicons").setup {
         override = {
             mk = {
                 icon = use_ascii_icons and "M" or "",
-                color = '#89e051',
-                cterm_color = '113',
+                color = mk_color,
+                cterm_color = mk_ccolor,
                 name = "CMake2",
             },
             yml = {
                 icon = use_ascii_icons and "Y" or "",
-                color = '#cbcb41',
-                cterm_color = '185',
+                color = scripts_color,
+                cterm_color = scripts_ccolor,
                 name = "yaml2",
             },
             sh = {
                 icon = use_ascii_icons and "#" or "󱆃",
-                color = '#cbcb41',
-                cterm_color = '185',
+                color = scripts_color,
+                cterm_color = scripts_ccolor,
                 name = "sh",
             },
         },
         override_by_filename = {
             ["CMakelists.txt"] = {
                 icon = use_ascii_icons and "M" or "",
-                color = '#89e051',
-                cterm_color = '113',
+                color = mk_color,
+                cterm_color = mk_ccolor,
                 name = "CMake2",
             },
             ["Makefile"] = {
                 icon = use_ascii_icons and "M" or "",
-                color = '#89e051',
-                cterm_color = '113',
+                color = mk_color,
+                cterm_color = mk_ccolor,
                 name = "Makefile2",
             },
             ["Kconfig"] = {
                 icon = use_ascii_icons and "K" or "",
-                color = '#cbcb41',
-                cterm_color = '185',
+                color = scripts_color,
+                cterm_color = scripts_ccolor,
                 name = "Kconfig2",
             },
             ["code-workspace"] = {
                 icon = use_ascii_icons and "V" or "",
-                color = '#63E7FF',
-                cterm_color = '74',
+                color = vs_color,
+                cterm_color = vs_ccolor,
                 name = "vscodeSpace",
             },
             ["readme"] = {
                 icon = use_ascii_icons and "D" or "",
-                color = '#63E7FF',
-                cterm_color = '74',
+                color = vs_color,
+                cterm_color = vs_ccolor,
                 name = "markdown2",
             },
             ["README"] = {
                 icon = use_ascii_icons and "D" or "",
-                color = '#63E7FF',
-                cterm_color = '74',
+                color = vs_color,
+                cterm_color = vs_ccolor,
                 name = "markdown3",
             },
             ["README.md"] = {
                 icon = use_ascii_icons and "D" or "",
-                color = '#63E7FF',
-                cterm_color = '74',
+                color = vs_color,
+                cterm_color = vs_ccolor,
+                name = "markdown3",
+            },
+            [""] = {
+                icon = use_ascii_icons and "B" or "",
+                color = vs_color,
+                cterm_color = vs_ccolor,
                 name = "markdown3",
             },
         }

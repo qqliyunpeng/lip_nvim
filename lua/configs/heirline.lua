@@ -114,9 +114,9 @@ local FileNameBlock = {
 
 local FileIcon = {
     init = function(self)
-        local filename = self.filename
-        local extension = vim.fn.fnamemodify(filename, ":e")
-        self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+        local filename = vim.fn.fnamemodify(self.filename, ":t")
+        self.icon, self.icon_color =
+            require("nvim-web-devicons").get_icon_color(filename, nil, { default = true })
     end,
     provider = function(self)
         return self.icon and (self.icon .. " ")
@@ -175,13 +175,11 @@ local FileNameModifer = {
 }
 
 -- let's add the children to our FileNameBlock component
-FileNameBlock = utils.insert(FileNameBlock,
---FileNameBlock = utils.insert(FileName,
-FileIcon,
-utils.insert(FileNameModifer, FileName), -- a new table where FileName is a child of FileNameModifier
-FileFlags,
-{ provider = '%<'} -- this means that the statusline is cut here when there's not enough space
-)
+FileNameBlock = utils.insert(FileNameBlock, FileIcon,
+        utils.insert(FileNameModifer, FileName), -- a new table where FileName is a child of FileNameModifier
+        FileFlags,
+        { provider = '%<'} -- this means that the statusline is cut here when there's not enough space
+    )
 
 -- lip 3 --
 local FileType = {
@@ -190,6 +188,7 @@ local FileType = {
     end,
     hl = { fg = "blue", bg = "black" },
 }
+
 local FileEncoding = {
     provider = function()
         local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc -- :h 'enc'
