@@ -1,7 +1,9 @@
 return {
     {
-        "https://gitee.com/yunduozhai/nvim-web-devicons.git",
-        config = true,
+        "https://gitee.com/nvim_lip/nvim-web-devicons.git",
+        config = function ()
+            require("configs.ui_all").deviconsConfig()
+        end
     },
     {
         "https://gitee.com/nvim_lip/heirline-components.nvim.git",

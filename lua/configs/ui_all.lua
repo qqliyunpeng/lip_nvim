@@ -490,5 +490,74 @@ function M.markdownConfig()
     mk.setup(opts)
 end
 
+function M.deviconsConfig()
+    require("nvim-web-devicons").setup {
+        override = {
+            mk = {
+                icon = use_ascii_icons and "M" or "",
+                color = '#89e051',
+                cterm_color = '113',
+                name = "CMake2",
+            },
+            yml = {
+                icon = use_ascii_icons and "Y" or "",
+                color = '#cbcb41',
+                cterm_color = '185',
+                name = "yaml2",
+            },
+            sh = {
+                icon = use_ascii_icons and "#" or "󱆃",
+                color = '#cbcb41',
+                cterm_color = '185',
+                name = "sh",
+            },
+        },
+        override_by_filename = {
+            ["CMakelists.txt"] = {
+                icon = use_ascii_icons and "M" or "",
+                color = '#89e051',
+                cterm_color = '113',
+                name = "CMake2",
+            },
+            ["Makefile"] = {
+                icon = use_ascii_icons and "M" or "",
+                color = '#89e051',
+                cterm_color = '113',
+                name = "Makefile2",
+            },
+            ["Kconfig"] = {
+                icon = use_ascii_icons and "K" or "",
+                color = '#cbcb41',
+                cterm_color = '185',
+                name = "Kconfig2",
+            },
+            ["code-workspace"] = {
+                icon = use_ascii_icons and "V" or "",
+                color = '#63E7FF',
+                cterm_color = '74',
+                name = "vscodeSpace",
+            },
+            ["readme"] = {
+                icon = use_ascii_icons and "D" or "",
+                color = '#63E7FF',
+                cterm_color = '74',
+                name = "markdown2",
+            },
+            ["README"] = {
+                icon = use_ascii_icons and "D" or "",
+                color = '#63E7FF',
+                cterm_color = '74',
+                name = "markdown3",
+            },
+            ["README.md"] = {
+                icon = use_ascii_icons and "D" or "",
+                color = '#63E7FF',
+                cterm_color = '74',
+                name = "markdown3",
+            },
+        }
+    }
+end
+
 return M
 
