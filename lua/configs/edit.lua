@@ -285,7 +285,7 @@ function M.miniFileConfig()
     end
 
     vim.keymap.set("n", "-"        , open_mini_files)
-    vim.keymap.set("n", "<leader>-", open_mini_files_root)
+    vim.keymap.set("n", "<leader>-", open_mini_files_root, { desc = "Mini files dir show" })
 
     -- 监听 mini.files buffer 关闭，恢复背景
     vim.api.nvim_create_autocmd("BufWipeout", {
