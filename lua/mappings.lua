@@ -8,6 +8,8 @@ opt.cursorline = true
 -- 大小的L和H映射
 map({ "x", "n", "o" }, "L", "g_",  { noremap = true, silent = true, desc = "To end of line" })
 map({ "x", "n", "o" }, "H", "^" ,  { noremap = true, silent = true, desc = "To begin of line" })
+map({ "x", "n", "o" }, "J", "5j", { desc = "line down 5" })
+map({ "x", "n", "o" }, "K", "5k", { desc = "line up 5" })
 
 map("i", "<C-h>", "<Left>", { desc = "move left" })
 map("i", "<C-l>", "<Right>", { desc = "move right" })
@@ -28,8 +30,6 @@ map("n", "<C-S-right>", "<cmd>vertical resize+5<CR>", { desc = "Increase rightwa
 
 -- nvim中在ssh的终端中C-h表示backspace
 map("n", "<BS>", "<C-w>h", { desc = "switch window left" })
-map("n", "J", "5j", { desc = "line down 5" })
-map("n", "K", "5k", { desc = "line up 5" })
 
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
