@@ -81,11 +81,12 @@ map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 -- Make 'c' key not copy to clipboard when changing a character.
 map("n", "c", '"_c', { desc = "Change without yanking" })
 map("n", "C", '"_C', { desc = "Change without yanking" })
-map("n", "c", '"_c', { desc = "Change without yanking" })
-map("n", "C", '"_C', { desc = "Change without yanking" })
-
-map("x", "x", '"_x', { desc = "Delete all characters in line" })
-map("x", "X", '"_X', { desc = "Delete all characters in line" })
+map("n", "d", '"_d', { desc = "Delete without yanking" })
+map("n", "D", '"_D', { desc = "Delete without yanking" })
+map({ "n", "x" }, "x", '"_x', { desc = "Delete without yanking" })
+map({ "n", "x" }, "X", '"_X', { desc = "Delete without yanking" })
+map("x", "p", [["_dP]], { desc = "Paste without yanking replaced text" })
+map("x", "P", [["_dP]], { desc = "Paste without yanking replaced text" })
 
 
 map("n", "<leader>n", "<cmd> Noice<CR>", { desc = "Notification History" })
