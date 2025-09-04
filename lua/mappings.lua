@@ -78,13 +78,15 @@ map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 -- from normalnvim
 map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 
--- Make 'c' key not copy to clipboard when changing a character.
+-- c and d 删除操作不复制到剪切板
+-- x 在 normal 模式下，不复制内容到剪切板
+-- x 在 visual 模式下，复制内容到剪切板，我们可以当他是 + 来记忆
 map("n", "c", '"_c', { desc = "Change without yanking" })
 map("n", "C", '"_C', { desc = "Change without yanking" })
 map("n", "d", '"_d', { desc = "Delete without yanking" })
 map("n", "D", '"_D', { desc = "Delete without yanking" })
-map({ "n", "x" }, "x", '"_x', { desc = "Delete without yanking" })
-map({ "n", "x" }, "X", '"_X', { desc = "Delete without yanking" })
+map("n", "x", '"_x', { desc = "Delete without yanking" })
+map("n", "X", '"_X', { desc = "Delete without yanking" })
 map("x", "p", [["_dP]], { desc = "Paste without yanking replaced text" })
 map("x", "P", [["_dP]], { desc = "Paste without yanking replaced text" })
 
