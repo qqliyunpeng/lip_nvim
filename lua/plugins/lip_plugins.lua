@@ -465,6 +465,7 @@ return {
             require("configs.edit").operatorsConfig()
             require("configs.indent").miniIndentInit()
             require('configs.edit').miniSurroundConfig()
+            require('configs.edit').miniMoveConfig()
         end
     },
     {
