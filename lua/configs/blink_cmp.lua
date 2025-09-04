@@ -49,7 +49,7 @@ local draw_lspkind_nerd = {
                     icon = require("lspkind").symbolic(ctx.kind, {
                         mode = "symbol",
                         -- symbol_map = require("configs.lspconfig").lspkindSymbolMap()
-                        symbol_map = lspkind_ascii_icons
+                        -- symbol_map = lspkind_ascii_icons
                     })
                 end
 
