@@ -460,6 +460,7 @@ return {
         event = "VeryLazy",
         config = function ()
             require("mini.ai").setup()
+            require("mini.align").setup()
             require('configs.ui_all').miniIconsConfig()
             require('configs.edit').miniFileConfig()
             require("configs.edit").operatorsConfig()
