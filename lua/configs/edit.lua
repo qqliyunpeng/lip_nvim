@@ -28,10 +28,10 @@ function M.miniMoveConfig()
             up = '<A-k>',
 
             -- Move current line in Normal mode
-            line_left = nil,
-            line_right = nil,
-            line_down = nil,
-            line_up = nil,
+            line_left = '',
+            line_right = '',
+            line_down = '',
+            line_up = '',
         },
     })
 end
