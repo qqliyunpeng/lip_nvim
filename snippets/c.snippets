@@ -3,11 +3,11 @@ snippet hdr
 	/**
 	 * ${1:`expand('%:t')`} - ${2}
 	 *
-	 * (c) Copyright `strftime("%Y")` ${3:`g:snips_copyright`}. All Rights Reserved.
+	 * Copyright (c) `strftime("%Y")`-`strftime("%Y")`, ${3:`g:snips_copyright`}
+	 * Change Logs:
+	 * Date           Author        Notes
+	 * `strftime("%Y-%m-%d")`     ${4:`g:snips_author`}     ${5:first version `strftime("%Y%m%d")`.1.1}
 	 *
-	 * Maintainer: ${4:`g:snips_author`} <${5:`g:snips_email`}>
-	 *    Created: `strftime("%Y-%m-%d")`
-	 * LastChange: `strftime("%Y-%m-%d")`
 	 */
 	${6}
 # comments
