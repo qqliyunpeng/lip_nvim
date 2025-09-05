@@ -80,25 +80,17 @@ return {
         },
     },
     {
-        "https://gitee.com/yunduozhai/vim-illuminate.git",
+        "https://gitee.com/nvim_lip/vim-illuminate.git",
         event = "VeryLazy",
         config = function()
             require('illuminate').configure({
-                providers = {
-                    'lsp',
-                    'treesitter',
-                    'regex',
-                },
-                delay = 800,
+                providers = { 'lsp', 'treesitter', 'regex' },
+                delay = 100,
                 -- disable in below
-                filetypes_denylist = {
-                    'dirbuf',
-                    'dirvish',
-                    'fugitive',
-                    'NvimTree',
-                },
+                filetypes_denylist = { 'dirbuf', 'dirvish', 'fugitive', 'NvimTree' },
                 filetypes_allowlist = {'python', 'lua', 'c', 'cpp'},
                 large_file_cutoff = 10000,
+                disable_keymaps = true,
             })
 
             vim.keymap.set('n', '<a-j>', require('illuminate').goto_next_reference, { desc = "Move to next reference" })
