@@ -85,10 +85,6 @@ hi! link VM_Cursor GrugFarResultsMatch
 hi! link VM_Extend GrugFarResultsMatchAdded
 hi! link VM_Mono   GrugFarResultsMatchAdded
 hi! link VM_Insert GrugFarResultsMatch
-hi LspReferenceText guifg=NONE guibg=NONE
-hi! link IlluminatedWordText  CursorLine
-hi! link IlluminatedWordWrite CursorLine
-hi! link IlluminatedWordRead  CursorLine
 hi! link BlinkCmpMenu       Normal
 hi! link BlinkCmpMenuBorder Normal
 hi! link BlinkCmpDoc        Normal
@@ -109,9 +105,14 @@ hi FlashMatch    guifg=#b4befe guibg=#1e1e2e
 hi FlashLabel    cterm=bold gui=bold guifg=#a6e3a1 guibg=#1e1e2e
 hi! link FlashPrompt NormalFloat
 
-hi LspReferenceRead  guibg=#45475a
-hi LspReferenceText  guibg=#45475a
-hi LspReferenceWrite guibg=#45475a
+" hi LspReferenceRead  guibg=#45475a
+" hi LspReferenceText  guibg=#45475a
+" hi LspReferenceWrite guibg=#45475a
+hi LspReferenceText guifg=NONE guibg=NONE
+
+hi IlluminatedWordText  guibg=#45475a
+hi IlluminatedWordWrite guibg=#45475a
+hi IlluminatedWordRead  guibg=#45475a
 
 hi TelescopeNormal        guibg=black ctermbg=black
 hi TelescopePromptNormal  guibg=Black
