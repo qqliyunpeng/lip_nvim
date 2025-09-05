@@ -26,6 +26,38 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+-- force *.h files to use c filetype
+-- force *.hpp files to use cpp filetype
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = "*.h",
+    callback = function()
+        local fname = vim.fn.expand("%:p")
+        local dir = vim.fn.fnamemodify(fname, ":h")
+
+        -- 向上查找工程根目录
+        local function find_root(path)
+            local markers = { "CMakeLists.txt", "meson.build", ".git" }
+            for _, m in ipairs(markers) do
+                if vim.fn.filereadable(path .. "/" .. m) == 1 or vim.fn.isdirectory(path .. "/" .. m) == 1 then
+                    return path
+                end
+            end
+            local parent = vim.fn.fnamemodify(path, ":h")
+            if parent == path then return nil end
+            return find_root(parent)
+        end
+
+        local root = find_root(dir) or dir
+        local has_cpp = vim.fn.glob(root .. "/*.cpp") ~= ""
+
+        if has_cpp then
+            vim.bo.filetype = "cpp"
+        else
+            vim.bo.filetype = "c"
+        end
+    end,
+})
+
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
