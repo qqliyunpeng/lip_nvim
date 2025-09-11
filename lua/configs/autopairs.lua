@@ -5,7 +5,6 @@ function M.setup(opts)
     local Rule = require("nvim-autopairs.rule")
     local cond = require("nvim-autopairs.conds")
     local ts_conds = require("nvim-autopairs.ts-conds")
-    local luasnip = require("luasnip")
 
     -- 默认配置
     local defaults = {

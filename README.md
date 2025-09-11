@@ -1,4 +1,12 @@
 
+# 0. 正在使用的nvim版本
+```sh
+NVIM v0.10.4
+Build type: Release
+LuaJIT 2.1.1713484068
+Run "nvim -V1 -v" for more info
+```
+
 # 1. LSP
 clangd 需要在文件夹下生成 compile_commands.json 文件，辅助 clangd 理解代码结构
 ```c
