@@ -22,7 +22,9 @@ function M.overseerConfig()
         templates = {
             "user.c_build", "user.cpp_build",
             "cargo", "user.run_python", "user.run_script",
-            "user.make_clean", "user.make_run", "user.make_or160_pc", "user.make_or160_machine",
+            "user.make_clean", "user.make_run",
+            "user.make_or160_pc", "user.make_or160_machine",
+            "user.make_aq300_pc", "user.make_aq300_machine",
         },
         dap = false,
         task_list = {

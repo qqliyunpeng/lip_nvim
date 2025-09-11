@@ -1,5 +1,5 @@
 return {
-    name = "make clean",
+    name = "00. make clean",
     builder = function()
         return {
             cmd = { "make" },
