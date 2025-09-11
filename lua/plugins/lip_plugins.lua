@@ -252,7 +252,7 @@ return {
         -- event = "User FilePost",
     },
     {
-        "https://gitee.com/suyelu/LuaSnip",
+        "https://gitee.com/nvim_lip/LuaSnip",
         version = "v2.*",
         build = 'make install_jsregexp',
         event = { "BufReadPost", "BufNewFile" },
