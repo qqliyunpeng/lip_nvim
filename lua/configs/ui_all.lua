@@ -409,6 +409,9 @@ local ascii_icons = {
             },
         },
     },
+    link = {
+        wiki = { icon = '', highlight = 'RenderMarkdownWikiLink', scope_highlight = 'RenderMarkdownWikiLink' },
+    },
     heading  = {
         icons = { "", "", "", "", "", "" },
         signs = { '>' }
@@ -460,7 +463,11 @@ function M.markdownConfig()
             sign = false,
             width = 'block',
             min_width = 0,
+            border = true,
+            render_modes = false, -- not keep rendering while inserting
             border_virtual = true,
+            icons = { ' 󰼏 ', ' 󰎨 ', ' 󰼑 ', ' 󰎲 ', ' 󰼓 ', ' 󰎴 ' },
+            signs = { '>' }
         },
         code = {
             sign = false,
@@ -480,7 +487,21 @@ function M.markdownConfig()
                 },
             },
         },
-        quote = { repeat_linebreak = false },
+        quote = { repeat_linebreak = true },
+        pipe_table = {
+            alignment_indicator = '─',
+            border = { '╭', '┬', '╮', '├', '┼', '┤', '╰', '┴', '╯', '│', '─' },
+        },
+        link = {
+            wiki = { icon = ' ', highlight = 'RenderMarkdownWikiLink', scope_highlight = 'RenderMarkdownWikiLink' },
+            image = ' ',
+            custom = {
+                github = { pattern = 'github', icon = '' },
+                gitlab = { pattern = 'gitlab', icon = '' },
+                youtube = { pattern = 'youtube', icon = ' ' },
+            },
+            hyperlink = ' ',
+        },
     }
 
     if use_ascii_icons then
