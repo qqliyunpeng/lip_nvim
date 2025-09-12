@@ -518,6 +518,8 @@ function M.deviconsConfig()
     local vs_ccolor = '74'
     local mk_color = '#89e051'
     local mk_ccolor = '113'
+    local keyword_color = '#A074C4'
+    local keyword_ccolor = '100' -- TODO: need to confirm
     require("nvim-web-devicons").setup {
         override = {
             mk = {
@@ -538,6 +540,12 @@ function M.deviconsConfig()
                 cterm_color = scripts_ccolor,
                 name = "sh",
             },
+            png = {
+                icon = "",
+                color = keyword_color,
+                cterm_color = keyword_ccolor,
+                name = "png",
+            }
         },
         override_by_filename = {
             ["CMakelists.txt"] = {
