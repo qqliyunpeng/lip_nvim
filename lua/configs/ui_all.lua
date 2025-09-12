@@ -496,8 +496,8 @@ function M.markdownConfig()
             wiki = { icon = ' ', highlight = 'RenderMarkdownWikiLink', scope_highlight = 'RenderMarkdownWikiLink' },
             image = ' ',
             custom = {
-                github = { pattern = 'github', icon = '' },
-                gitlab = { pattern = 'gitlab', icon = '' },
+                github = { pattern = 'github', icon = ' ' },
+                gitlab = { pattern = 'gitlab', icon = ' ' },
                 youtube = { pattern = 'youtube', icon = ' ' },
             },
             hyperlink = ' ',
