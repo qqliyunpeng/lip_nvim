@@ -25,6 +25,7 @@ function M.overseerConfig()
             "user.make_clean", "user.make_run",
             "user.make_or160_pc", "user.make_or160_machine",
             "user.make_aq300_pc", "user.make_aq300_machine",
+            "user.make_aq300_r5",
         },
         dap = false,
         task_list = {

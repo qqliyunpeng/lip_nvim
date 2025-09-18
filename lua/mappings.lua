@@ -21,6 +21,8 @@ map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
 -- map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
 -- map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
 
+map("n", "<C-s>", "<cmd>w<CR>", { desc = "Save current files" })
+
 -- Resize splits with arrow keys
 map("n", "<C-S-up>", "<cmd>res +5<CR>", { desc = "Increase upwards" })
 map("n", "<C-S-down>", "<cmd>res -5<CR>", { desc ="Increase downwards" })
@@ -35,7 +37,8 @@ map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
 -- telescope
 map("n", "<leader>r", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
-map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
+map("n", "<leader>p", "<cmd>Telescope find_files<CR>", { desc = "telescope find files" })
+map("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "telescope find files" })
 map("n", "<leader><tab>", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })

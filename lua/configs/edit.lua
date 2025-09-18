@@ -37,7 +37,7 @@ function M.miniMoveConfig()
 end
 
 M.yankKeys = {
-    { "<C-p>", function() require('telescope').extensions.yank_history.yank_history({}) end, desc = "Open Yank History" },
+    { "<leader>y", function() require('telescope').extensions.yank_history.yank_history({}) end, desc = "Open Yank History" },
     { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Yank text" },
     { ">p", "<Plug>(YankyPutIndentAfterShiftRight)", desc = "Put and indent right" },
     { "<p", "<Plug>(YankyPutIndentAfterShiftLeft)", desc = "Put and indent left" },
@@ -92,9 +92,9 @@ function M.yankConfig()
     hi! link YankyYanked Cursearch
     ]])
 
-    vim.keymap.set("i", "<C-p>", function()
-        require("telescope").extensions.yank_history.yank_history({})
-    end, { silent = true, desc = "Yank history in insert mode" })
+    -- vim.keymap.set("i", "<C-p>", function()
+    --     require("telescope").extensions.yank_history.yank_history({})
+    -- end, { silent = true, desc = "Yank history in insert mode" })
     vim.keymap.set({ "o", "x" }, "iy", function()
         require("yanky.textobj").last_put()
     end, { desc = "yanky last put" })
