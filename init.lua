@@ -10,7 +10,7 @@ map("i", "kj", "<ESC>")
 map("v", "q", "<Esc>")
 map("n", "<a-q>", "<Esc><cmd>noh<CR>")
 map("x", "<a-q>", "<Esc>")
-map("n", "<leader>q", "<cmd>q<CR>", { desc = "CMD quit" })
+map("n", "<leader>q", "<cmd>q<CR>",  { desc = "CMD quit" })
 map("n", "<leader>x", "<cmd>qa<CR>", { desc = "CMD quit all" })
 
 require('options')

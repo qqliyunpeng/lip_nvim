@@ -8,25 +8,25 @@ opt.cursorline = true
 -- 大小的L和H映射
 map({ "x", "n", "o" }, "L", "g_",  { noremap = true, silent = true, desc = "To end of line" })
 map({ "x", "n", "o" }, "H", "^" ,  { noremap = true, silent = true, desc = "To begin of line" })
-map({ "x", "n", "o" }, "J", "5j", { desc = "line down 5" })
-map({ "x", "n", "o" }, "K", "5k", { desc = "line up 5" })
+map({ "x", "n", "o" }, "J", "5j",  { desc = "line down 5" })
+map({ "x", "n", "o" }, "K", "5k",  { desc = "line up 5" })
 
-map("i", "<C-h>", "<Left>", { desc = "move left" })
-map("i", "<C-l>", "<Right>", { desc = "move right" })
-map("i", "<C-j>", "<Down>", { desc = "move down" })
-map("i", "<C-k>", "<Up>", { desc = "move up" })
+map("i", "<C-h>", "<Left>",     { desc = "move left" })
+map("i", "<C-l>", "<Right>",    { desc = "move right" })
+map("i", "<C-j>", "<Down>",     { desc = "move down" })
+map("i", "<C-k>", "<Up>",       { desc = "move up" })
 
-map("n", "<C-h>", "<C-w>h", { desc = "switch window left" })
-map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
--- map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
--- map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
+map("n", "<C-h>", "<C-w>h",     { desc = "switch window left" })
+map("n", "<C-l>", "<C-w>l",     { desc = "switch window right" })
+-- map("n", "<C-j>", "<C-w>j",  { desc = "switch window down" })
+-- map("n", "<C-k>", "<C-w>k",  { desc = "switch window up" })
 
 map("n", "<C-s>", "<cmd>w<CR>", { desc = "Save current files" })
 
 -- Resize splits with arrow keys
-map("n", "<C-S-up>", "<cmd>res +5<CR>", { desc = "Increase upwards" })
+map("n", "<C-S-up>", "<cmd>res +5<CR>",   { desc = "Increase upwards" })
 map("n", "<C-S-down>", "<cmd>res -5<CR>", { desc ="Increase downwards" })
-map("n", "<C-S-left>", "<cmd>vertical resize-5<CR>", { desc = "Increase leftwards" })
+map("n", "<C-S-left>", "<cmd>vertical resize-5<CR>",  { desc = "Increase leftwards" })
 map("n", "<C-S-right>", "<cmd>vertical resize+5<CR>", { desc = "Increase rightwards" })
 
 
@@ -36,16 +36,16 @@ map("n", "<BS>", "<C-w>h", { desc = "switch window left" })
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
 -- telescope
-map("n", "<leader>r", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
-map("n", "<leader>p", "<cmd>Telescope find_files<CR>", { desc = "telescope find files" })
+map("n", "<leader>r", "<cmd>Telescope oldfiles<CR>",    { desc = "telescope find oldfiles" })
+map("n", "<leader>p", "<cmd>Telescope find_files<CR>",  { desc = "telescope find files" })
 map("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "telescope find files" })
 map("n", "<leader><tab>", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
-map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
-map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
-map("n", "<leader>ma", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
+map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>",  { desc = "telescope live grep" })
+map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>",  { desc = "telescope help page" })
+map("n", "<leader>ma", "<cmd>Telescope marks<CR>",      { desc = "telescope find marks" })
 map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
 map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
+map("n", "<leader>gt", "<cmd>Telescope git_status<CR>",  { desc = "telescope git status" })
 
 map(
   "n",
@@ -69,7 +69,7 @@ map("n", "<leader>`", "<cmd>e #<CR>"      , { desc = "Switch to Other Buffer" })
 
 -- Comment 注释
 map("n", "<leader>cc", "gcc", { desc = "toggle comment", remap = true })
-map("v", "<leader>cc", "gc", { desc = "toggle comment", remap = true })
+map("v", "<leader>cc", "gc",  { desc = "toggle comment", remap = true })
 map("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below"})
 map("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above"})
 
@@ -99,10 +99,10 @@ map("n", "<leader>n", "<cmd> Noice<CR>", { desc = "Notification History" })
 -- snacks
 -- map("n", "<leader>n", function() Snacks.notifier.show_history() end, { desc = "Notification History" })
 map("n", "<leader>un", function() Snacks.notifier.hide() end, { desc = "Dismiss All Notifications" })
-map("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete Buffers" })
+map("n", "<leader>bd", function() Snacks.bufdelete() end,     { desc = "Delete Buffers" })
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
 map("n", "<A-b>", function() Snacks.terminal() end, { desc = "Terminal Open" })
-map("t", "<A-b>", "<cmd>close<CR>", { desc = "Terminal Hide" })
+map("t", "<A-b>", "<cmd>close<CR>",                 { desc = "Terminal Hide" })
 map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc =  "Go to Upper Window" })
 map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc =  "Go to Lower Window" })
 map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc =  "Go to Left Window"  })
