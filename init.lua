@@ -168,6 +168,10 @@ require('nvim-lastplace').setup{}
 
 -- Project.nvim
 vim.api.nvim_create_user_command('Root', 'ProjectRoot', {})  -- 将 :Root 映射到 :ProjectRoot
+vim.api.nvim_create_user_command("A",    "Other",       {})
+vim.api.nvim_create_user_command("AS",   "OtherSplit",  {})
+vim.api.nvim_create_user_command("AV",   "OtherVSplit", {})
+vim.api.nvim_create_user_command("AT",   "OtherTabNew", {})
 
 
 require('mason').setup({

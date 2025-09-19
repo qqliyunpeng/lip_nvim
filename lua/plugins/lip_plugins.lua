@@ -490,6 +490,18 @@ return {
                 borders = "rounded",   -- 浮窗边框样式
             })
         end
+    },
+    {
+        "https://gitee.com/nvim_lip/other.nvim.git",
+        branch = "main",
+        cmd = { "Other", "OtherSplit", "OtherVSplit", "OtherTabNew" }, -- 懒加载：只在调用这些命令时加载
+        config = function ()
+            require('other-nvim').setup({
+                mappings = {
+                    "c", "python",
+                }
+            })
+        end
     }
 }
 
