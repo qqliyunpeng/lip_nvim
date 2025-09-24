@@ -131,6 +131,9 @@ Alt-/
 1. telescope persisted open the workspace select ui, C-c don't close the window,
     but to copy a session. we need to close.
 
+2. CRLF 类型的大文件在打开的时候会因为加载 treesitter 而启动的时间加长，比如一个
+    .c 文件 5000 行，启动时间 7s
+
 # 5. 生成注释
 : neogen
 
