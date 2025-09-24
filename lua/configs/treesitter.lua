@@ -1,56 +1,58 @@
 
 local M = {}
 
-M.treesitterConfig = {
-    ensure_installed = { "c", "make", "lua", "luadoc", "printf", "vim", "vimdoc" },
+function M.treesitterConfig()
+    require("nvim-treesitter.configs").setup {
+        ensure_installed = { "c", "make", "lua", "luadoc", "printf", "vim", "vimdoc" },
 
-    highlight = {
-        enable = true,
-        use_languagetree = true,
-    },
-
-    indent = { enable = false },
-
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = "<nop>",
-            node_incremental = "v",
-            scope_incremental = false,
-            node_decremental = "<bs>", -- backspace 键
-        },
-    },
-
-    textobjects = {
-        select = {
+        highlight = {
             enable = true,
-            lookahead = true,
+            use_languagetree = true,
+        },
 
+        indent = { enable = false },
+
+        incremental_selection = {
+            enable = true,
             keymaps = {
-                ["af"] = "@function.outer",
-                ["if"] = "@function.inner",
-                -- 这里和vim-textobj-comment冲突，先临时使用vim-textobj-comment
-                -- ["ac"] = "@class.outer",
-                -- ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
-                ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
+                init_selection = "<nop>",
+                node_incremental = "v",
+                scope_incremental = false,
+                node_decremental = "<bs>", -- backspace 键
             },
-
-            include_surrounding_whitespace = true,
         },
-        move = {
-            enable = true,
-            set_jumps = true,
-            goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
-            goto_next_end   = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
-            goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer", ["[a"] = "@parameter.inner" },
-            goto_previous_end   = { ["[F"] = "@function.outer", ["[C"] = "@class.outer", ["[A"] = "@parameter.inner" },
+
+        textobjects = {
+            select = {
+                enable = true,
+                lookahead = true,
+
+                keymaps = {
+                    ["af"] = "@function.outer",
+                    ["if"] = "@function.inner",
+                    -- 这里和vim-textobj-comment冲突，先临时使用vim-textobj-comment
+                    -- ["ac"] = "@class.outer",
+                    -- ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
+                    ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
+                },
+
+                include_surrounding_whitespace = true,
+            },
+            move = {
+                enable = true,
+                set_jumps = true,
+                goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
+                goto_next_end   = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
+                goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer", ["[a"] = "@parameter.inner" },
+                goto_previous_end   = { ["[F"] = "@function.outer", ["[C"] = "@class.outer", ["[A"] = "@parameter.inner" },
 
 
-            goto_next     = { ["]d"] = "@conditional.outer", },
-            goto_previous = { ["[d"] = "@conditional.outer", },
-        }
-    },
-}
+                goto_next     = { ["]d"] = "@conditional.outer", },
+                goto_previous = { ["[d"] = "@conditional.outer", },
+            }
+        },
+    }
+end
 
 function M.textobjectsConfig()
     -- If treesitter is already loaded, we need to run config again for textobjects

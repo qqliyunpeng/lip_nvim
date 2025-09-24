@@ -114,23 +114,20 @@ return {
         event = { "BufReadPost", "BufNewFile" },
         cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
         build = ":TSUpdate",
-        opts = function()
-            return require("configs.treesitter").treesitterConfig
-        end,
-        config = function(_, opts)
-            require("nvim-treesitter.configs").setup(opts)
+        config = function()
+            require("configs.treesitter").treesitterConfig()
         end,
     },
     {
         "https://gitee.com/yunduozhai/nvim-treesitter-textobjects.git",
         event = { "BufReadPost", "BufNewFile" },
-        dependencies = {
-            "nvim-treesitter",
-        },
-        config = function()
-            return require("configs.treesitter").textobjectsConfig()
-        end
-    },
+    --     dependencies = {
+    --         "nvim-treesitter",
+    --     },
+    config = function()
+        return require("configs.treesitter").textobjectsConfig()
+    end
+     },
     {
         -- vaq/viq 选中单引号或者双引号等各种引号之间的内容
         "https://gitee.com/nvim_lip/vim-textobj-quotes.git",
