@@ -88,7 +88,7 @@ return {
         layout_config = {
             width = 0.85,
             height = function(_, _, max_lines)
-                vim.notify(max_lines)
+                -- vim.notify(max_lines)
                 if max_lines < 45 then
                     return math.floor(max_lines * 0.9)
                 elseif max_lines < 62 then
