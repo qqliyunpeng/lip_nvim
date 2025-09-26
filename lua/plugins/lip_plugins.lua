@@ -111,7 +111,8 @@ return {
     {
         -- 语法高亮
         "https://gitee.com/zgpio/nvim-treesitter.git",
-        event = { "BufReadPost", "BufNewFile" },
+        event = "VeryLazy",
+        dependencies = { { "https://gitee.com/yunduozhai/nvim-treesitter-textobjects.git" } },
         cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
         build = ":TSUpdate",
         config = function()
@@ -120,7 +121,7 @@ return {
     },
     {
         "https://gitee.com/yunduozhai/nvim-treesitter-textobjects.git",
-        event = { "BufReadPost", "BufNewFile" },
+        event = "VeryLazy",
         config = function()
             return require("configs.treesitter").textobjectsConfig()
         end

@@ -1,6 +1,48 @@
 
 local M = {}
 
+function M.textobjectsConfig()
+    -- If treesitter is already loaded, we need to run config again for textobjects
+    -- When in diff mode, we want to use the default, 在 diff窗口中仍然使用默认的vim的配置，比如 ]c
+    -- vim text objects c & C instead of the treesitter ones.
+    local move = require("nvim-treesitter.textobjects.move") ---@type table<string,fun(...)>
+    local configs = require("nvim-treesitter.configs")
+    for name, fn in pairs(move) do
+        if name:find("goto") == 1 then
+            move[name] = function(q, ...)
+                if vim.wo.diff then
+                    local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
+                    for key, query in pairs(config or {}) do
+                        if q == query and key:find("[%]%[][cC]") then
+                            vim.cmd("normal! " .. key)
+                            return
+                        end
+                    end
+                end
+                return fn(q, ...)
+            end
+        end
+    end
+
+    -- treesitter
+    local ts_move = require("nvim-treesitter.textobjects.move")
+    local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+
+    local has_last_move = false
+
+    local function smart_repeat_next()
+        if has_last_move then
+            ts_repeat_move.repeat_last_move_next()
+        else
+            ts_move.goto_next_start("@function.outer")
+            has_last_move = true
+        end
+    end
+
+    vim.keymap.set({ "n", "x", "o" }, ";", smart_repeat_next)
+    vim.keymap.set({ "n", "x", "o" }, "<a-;>", ts_repeat_move.repeat_last_move_previous)
+end
+
 function M.treesitterConfig()
     require("nvim-treesitter.configs").setup {
         ensure_installed = { "c", "make", "lua", "luadoc", "printf", "vim", "vimdoc" },
@@ -52,42 +94,7 @@ function M.treesitterConfig()
             }
         },
     }
-end
-
-function M.textobjectsConfig()
-    -- If treesitter is already loaded, we need to run config again for textobjects
-    -- When in diff mode, we want to use the default, 在 diff窗口中仍然使用默认的vim的配置，比如 ]c
-    -- vim text objects c & C instead of the treesitter ones.
-    local move = require("nvim-treesitter.textobjects.move") ---@type table<string,fun(...)>
-    local configs = require("nvim-treesitter.configs")
-    for name, fn in pairs(move) do
-        if name:find("goto") == 1 then
-            move[name] = function(q, ...)
-                if vim.wo.diff then
-                    local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
-                    for key, query in pairs(config or {}) do
-                        if q == query and key:find("[%]%[][cC]") then
-                            vim.cmd("normal! " .. key)
-                            return
-                        end
-                    end
-                end
-                return fn(q, ...)
-            end
-        end
-    end
-
-    -- treesitter
-    local ts_move = require("nvim-treesitter.textobjects.move")
-    local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
-    vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
-    vim.keymap.set({ "n", "x", "o" }, "<a-;>", ts_repeat_move.repeat_last_move_previous)
-
-    -- 启动时设定默认为“下一个函数”
-    -- 执行一次跳到下一个函数定义的动作，记录到 repeat move
-    ts_move.goto_next_start("@function.outer")
-    -- 再跳回原位置，这样不影响初始光标位置
-    vim.cmd("normal! ``")
+    M.textobjectsConfig();
 end
 
 return M
