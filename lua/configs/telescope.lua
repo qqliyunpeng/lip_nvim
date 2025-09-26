@@ -87,7 +87,16 @@ return {
         sort_lastused = false,
         layout_config = {
             width = 0.85,
-            height = 0.60,
+            height = function(_, _, max_lines)
+                vim.notify(max_lines)
+                if max_lines < 45 then
+                    return math.floor(max_lines * 0.9)
+                elseif max_lines < 62 then
+                    return math.floor(max_lines * 0.75)
+                else
+                    return math.floor(max_lines * 0.6)
+                end
+            end,
             horizontal = {
                 prompt_position = "top",
                 preview_cutoff = 180, -- 宽度太窄，变成 vertical
@@ -96,7 +105,7 @@ return {
             vertical = {
                 prompt_position = "top",
                 preview_cutoff = 35, -- 窗口太低的时候，去掉预览窗口
-                preview_height = 0.4,
+                preview_height = 0.6,
                 mirror = true,
             },
         },
