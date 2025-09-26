@@ -127,3 +127,21 @@ map("n", "<leader>h", function() require("configs.gendeclare").create_declare() 
 -- 命令个行退出
 map("c", "<A-q>", "<C-c>", { desc = "Exit cmdline" })
 
+-- LSP
+local function opts(desc)
+    return { desc = "LSP " .. desc }
+end
+map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
+map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
+-- map("n", "gi", vim.lsp.buf.implementation, opts "Go to implementation")
+map("n", "gr", "<cmd>Telescope lsp_references<CR>", opts "Show references")
+map("n", "<leader>sh", vim.lsp.buf.signature_help, opts "Show signature help")
+map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
+map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")
+
+map("n", "<leader>wl", function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+end, opts "List workspace folders")
+
+map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action")
+

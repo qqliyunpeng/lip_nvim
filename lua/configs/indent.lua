@@ -51,7 +51,7 @@ function M.blanklineConfig()
         set = function(state)
             require("ibl").setup_buffer(0, { enabled = state })
         end,
-    }):map("<leader>ug")
+    }):map("<leader>ub")
 
     return {
         indent = {
