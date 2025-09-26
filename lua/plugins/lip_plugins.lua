@@ -156,7 +156,7 @@ return {
         end,
     },
     {
-        "https://gitee.com/nvim_lip/gitsigns.nvim.git", tag = 'v0.9.0',
+        "https://gitee.com/nvim_lip/gitsigns.nvim.git", tag = 'v1.0.2',
         event = "VeryLazy",
         opts = function()
             require("configs.gitsigns").config()

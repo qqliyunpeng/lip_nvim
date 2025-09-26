@@ -168,16 +168,17 @@ M.snacksKeys = {
     -- { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
     -- { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
     -- { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
-    { "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
-    { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
+    { "<leader>gb", function() Snacks.git.blame_line() end, desc = "View Git blame" },
+    { "<leader>gl", function() Snacks.lazygit.log_file() end, desc = "View Git log(current)" },
     { "<leader>gg", function() open_lazygit_with_refresh() end, desc = "Lazygit" },
-    { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
+    { "<leader>gL", function() Snacks.lazygit.log() end, desc = "View Git log" },
     { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
     { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
     { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
     { "<leader>.",  function() Snacks.scratch() end, desc = "Open Scratch Buffer" },
     { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
     { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
+    { "<leader>fu", function() Snacks.picker.undo() end, desc = "Find undo history" },
 }
 
 function M.snacksInit()

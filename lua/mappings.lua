@@ -45,7 +45,7 @@ map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>",  { desc = "telescope help
 map("n", "<leader>ma", "<cmd>Telescope marks<CR>",      { desc = "telescope find marks" })
 map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
 map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-map("n", "<leader>gt", "<cmd>Telescope git_status<CR>",  { desc = "telescope git status" })
+map("n", "<leader>gt", "<cmd>Telescope git_status<CR>",  { desc = "Git status" })
 
 map(
   "n",
