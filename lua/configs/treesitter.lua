@@ -39,8 +39,17 @@ function M.textobjectsConfig()
         end
     end
 
+    local function smart_repeat_prev()
+        if has_last_move then
+            ts_repeat_move.repeat_last_move_previous()
+        else
+            ts_move.goto_previous_start("@function.outer")
+            has_last_move = true
+        end
+    end
+
     vim.keymap.set({ "n", "x", "o" }, ";", smart_repeat_next)
-    vim.keymap.set({ "n", "x", "o" }, "<a-;>", ts_repeat_move.repeat_last_move_previous)
+    vim.keymap.set({ "n", "x", "o" }, "<a-;>", smart_repeat_prev)
 end
 
 function M.treesitterConfig()
