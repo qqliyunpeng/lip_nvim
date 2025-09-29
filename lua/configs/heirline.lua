@@ -181,14 +181,6 @@ FileNameBlock = utils.insert(FileNameBlock, FileIcon,
         { provider = '%<'} -- this means that the statusline is cut here when there's not enough space
     )
 
--- lip 3 --
-local FileType = {
-    provider = function()
-        return string.upper(vim.bo.filetype)
-    end,
-    hl = { fg = "blue", bg = "black" },
-}
-
 local FileEncoding = {
     provider = function()
         local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc -- :h 'enc'
@@ -211,21 +203,23 @@ local FileFormat = {
     end
 }
 
--- lip 4 --
--- I take no credits for this! 🦁
-local ScrollBar ={
-    static = {
-        sbar = { '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█' }
-        -- Another variant, because the more choice the better.
-        -- sbar = { '🭶', '🭷', '🭸', '🭹', '🭺', '🭻' }
-    },
-    provider = function(self)
-        local curr_line = vim.api.nvim_win_get_cursor(0)[1]
-        local lines = vim.api.nvim_buf_line_count(0)
-        local i = math.floor((curr_line - 1) / lines * #self.sbar) + 1
-        return string.rep(self.sbar[i], 2)
+local VisualSelection = {
+    provider = function()
+        local mode = vim.fn.mode()
+        if not mode:match("[vV]") then
+            return ""
+        end
+        local wc = vim.fn.wordcount()
+        local count = wc.visual_chars or 0
+        if count > 999 then
+            return ""
+        end
+        return string.format("[v:%d]", count)
     end,
-    hl = { fg = "#c678dd", bg = "#1e222a" },
+    hl = { fg = "#00FFFF", bold = true },
+    condition = function()
+        return vim.fn.mode():match("[vV]") ~= nil
+    end,
 }
 
 local StatusLine = {
@@ -245,10 +239,9 @@ local StatusLine = {
     lib.component.diagnostics(),
     -- lib.component.virtual_env(),
     Space, Space,
-    -- { FileType }, Space, Space,
     { FileEncoding }, Space, Space,
-    { FileFormat },
-    -- { ScrollBar },
+    { FileFormat }, Space, Space,
+    VisualSelection,
     lib.component.nav(),
 }
 
