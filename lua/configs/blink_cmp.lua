@@ -152,6 +152,8 @@ function M.blinkConfig()
                 preset = 'cmdline',
                 ['<C-j>'] = { 'select_next', 'fallback' },
                 ['<C-k>'] = { 'select_prev', 'fallback' },
+                ['<Left>'] = false;
+                ['<Right>'] = false;
                 -- ['<CR>']  = { 'show_and_insert', 'fallback' },
             },
             completion = {
