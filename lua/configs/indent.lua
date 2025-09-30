@@ -1,9 +1,9 @@
 local M = {}
+local use_ascii_icons = require("configs.icons").use_ascii_icons()
 
 function M.miniIndentInit()
     require('mini.indentscope').setup({
-        symbol = '▎',
-        -- symbol = "▏",
+        symbol = use_ascii_icons and "▎" or"▏",
         options = { try_as_border = true },
         draw = { animation = require("mini.indentscope").gen_animation.none() },
     })
@@ -56,10 +56,8 @@ function M.blanklineConfig()
 
     return {
         indent = {
-            char = "▎",
-            tab_char = "▎",
-            -- char = "▏",
-            -- tab_char = "▏",
+            char = use_ascii_icons and "▎" or"▏",
+            tab_char = use_ascii_icons and "▎" or"▏",
         },
         scope = { enabled = false, show_start = false, show_end = false },
     }
