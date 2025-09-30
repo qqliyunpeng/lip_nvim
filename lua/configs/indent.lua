@@ -5,7 +5,10 @@ function M.miniIndentInit()
     require('mini.indentscope').setup({
         symbol = use_ascii_icons and "▎" or"▏",
         options = { try_as_border = true },
-        draw = { animation = require("mini.indentscope").gen_animation.none() },
+        draw = {
+            delay = 50,
+            animation = require("mini.indentscope").gen_animation.none()
+        },
     })
 
     vim.api.nvim_create_autocmd("FileType", {
