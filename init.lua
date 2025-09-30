@@ -178,8 +178,6 @@ require('mason').setup({
     registry = "https://gitcode.com/gh_mirrors/mason-registry",
 })
 
--- indent-blankline
-
 require('noice')
 
 require("configs.num_change").tg_format()

@@ -3,6 +3,7 @@ local M = {}
 function M.miniIndentInit()
     require('mini.indentscope').setup({
         symbol = '▎',
+        -- symbol = "▏",
         options = { try_as_border = true },
         draw = { animation = require("mini.indentscope").gen_animation.none() },
     })
@@ -57,6 +58,8 @@ function M.blanklineConfig()
         indent = {
             char = "▎",
             tab_char = "▎",
+            -- char = "▏",
+            -- tab_char = "▏",
         },
         scope = { enabled = false, show_start = false, show_end = false },
     }
