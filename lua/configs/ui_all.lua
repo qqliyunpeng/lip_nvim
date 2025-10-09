@@ -275,7 +275,6 @@ function M.snacksConfig()
     vim.api.nvim_create_autocmd("User", {
         pattern = "TelescopeFindPre",
         callback = function()
-            vim.notify("lip enter telescope")
             Snacks.scroll.enable()
         end,
     })
