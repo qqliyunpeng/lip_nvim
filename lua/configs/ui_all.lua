@@ -216,6 +216,18 @@ function M.snacksConfig()
         scope     = { enabled = false },
         quickfile = { enabled = true },
         statuscolumn = { enabled = true },
+        scroll = {
+            enabled = false,
+            animate = {
+                duration = { step = 20, total = 200 },
+                easing = "linear",
+            },
+            animate_repeat = {
+                delay = 50,
+                duration = { step = 3, total = 20 },
+                easing = "linear",
+            },
+        },
         notifier  = {
             enabled = true,
             timeout = 4000,
@@ -258,6 +270,28 @@ function M.snacksConfig()
                 ]],
             },
         },
+    })
+
+    vim.api.nvim_create_autocmd("User", {
+        pattern = "TelescopeFindPre",
+        callback = function()
+            vim.notify("lip enter telescope")
+            Snacks.scroll.enable()
+        end,
+    })
+
+    vim.api.nvim_create_autocmd({ "BufWinLeave", "WinClosed" }, {
+        callback = function()
+            vim.schedule(function()
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                    local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
+                    if ft:match("^Telescope") then
+                        return -- 仍有 telescope 窗口，跳出
+                    end
+                end
+                Snacks.scroll.disable()
+            end)
+        end,
     })
 end
 
