@@ -449,7 +449,8 @@ return {
     {
         "https://gitee.com/nvim_lip/blink.cmp.git",
         branch = "main",
-        event = "VeryLazy",
+        -- event = "VeryLazy",
+        event = { "BufReadPost", "BufNewFile" },
         build = require("configs.blink_cmp").blinkBuild(),
         config = function()
             require("configs.blink_cmp").blinkConfig()
