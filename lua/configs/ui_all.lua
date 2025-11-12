@@ -569,7 +569,7 @@ function M.deviconsConfig()
                 name = "yaml2",
             },
             sh = {
-                icon = use_ascii_icons and "#" or "󱆃",
+                icon = use_ascii_icons and "$" or "",
                 color = scripts_color,
                 cterm_color = scripts_ccolor,
                 name = "sh",
