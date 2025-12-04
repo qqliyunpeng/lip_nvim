@@ -89,6 +89,30 @@ function M.whitespaceConfig()
         return_cursor = true,
     })
     vim.keymap.set('n', '<leader><Space>', require('whitespace-nvim').trim)
+
+    Snacks.toggle({
+        -- name = "Indention Guides",
+        name = "Trim 󱁐 on save",
+        get = function()
+            return vim.g.trim_whitespace_on_save == true
+        end,
+        set = function(state)
+            vim.g.trim_whitespace_on_save = state
+
+            if state then
+                -- 开启自动去除行尾空格
+                vim.api.nvim_create_autocmd("BufWritePre", {
+                    group = vim.api.nvim_create_augroup("TrimWhitespaceOnSave", { clear = true }),
+                    callback = function()
+                        require("whitespace-nvim").trim()
+                    end,
+                })
+            else
+                -- 关闭自动去除
+                pcall(vim.api.nvim_del_augroup_by_name, "TrimWhitespaceOnSave")
+            end
+        end,
+    }):map("<leader>u<space>")
 end
 
 function M.lspsagaConfig()
