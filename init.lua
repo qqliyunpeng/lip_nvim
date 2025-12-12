@@ -182,4 +182,5 @@ require('noice')
 
 require("configs.num_change").tg_format()
 require("configs.num_change").tg_format_array()
+require("configs.gencompiledb")
 
