@@ -43,7 +43,6 @@ function M.setup(opts)
         npairs.add_rule(
         Rule(p[1], p[2])
         :with_pair(ts_conds.is_not_ts_node({'string','comment'}))
-        :with_move(ts_conds.is_not_ts_node({'string','comment'}))
         )
     end
 
