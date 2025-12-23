@@ -14,7 +14,21 @@ function M.miniSurroundConfig()
 
             suffix_last = 'F',
             suffix_next = 'f',
-        }
+        },
+        custom_surroundings = {
+            ["("] = {
+                input = { "%b()", "^%(%s*().-()%s*%)$" },
+                output = { left = "(", right = ")" },
+            },
+            ["["] = {
+                input = { "%b[]", "^%[%s*().-()%s*%]$" },
+                output = { left = "[", right = "]" },
+            },
+            ["{"] = {
+                input = { "%b{}", "^%{%s*().-()%s*%}$" },
+                output = { left = "{", right = "}" },
+            },
+        },
     })
 end
 
