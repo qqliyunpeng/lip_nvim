@@ -54,7 +54,7 @@ end
 
 function M.treesitterConfig()
     require("nvim-treesitter.configs").setup {
-        ensure_installed = { "c", "make", "lua", "luadoc", "printf", "vim", "vimdoc" },
+        ensure_installed = { "c", "make", "lua", "luadoc", "printf", "vim", "vimdoc", "bash" },
 
         highlight = {
             enable = true,
