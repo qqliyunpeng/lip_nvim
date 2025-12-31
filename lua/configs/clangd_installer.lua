@@ -43,30 +43,31 @@ local function get_latest_tag()
 end
 
 -- 安装 clangd
-local function install_custom_clangd_async(tag, on_done)
-    local version = tag:sub(2)
-    local version_dir = base_dir .. "/" .. version
-    local clangd_bin = version_dir .. "/bin/clangd"
+local function install_custom_clangd(tag)
+  local version = tag:sub(2) -- 去掉前缀 V
+  local version_dir = base_dir .. "/" .. version
+  local clangd_bin = version_dir .. "/bin/clangd"
 
-    if exists(clangd_bin) then
-        if on_done then on_done(clangd_bin) end
-        return
-    end
+  if exists(clangd_bin) then
+    return clangd_bin
+  end
 
-    vim.notify("Installing clangd " .. version .. " asynchronously...", vim.log.levels.WARN)
-    local zip_file = string.format("%s/clangd-linux-%s.zip", tmp_dir, version)
-    local cmds = {
-        "mkdir -p " .. version_dir,
-        "unzip -o " .. zip_file .. " -d " .. version_dir,
-        "ln -sfn " .. version_dir .. " " .. current_link
-    }
+  vim.notify("Installing clangd " .. version, vim.log.levels.WARN)
+  run("mkdir -p " .. version_dir)
 
-    async_run(cmds, function()
-        if on_done then on_done(clangd_bin) end
-        vim.notify("clangd " .. version .. " installed!", vim.log.levels.INFO)
-    end)
-end-- 主函数：确保 clangd 可用
+  local zip_file = string.format("%s/clangd-linux-%s.zip", tmp_dir, version)
+  if not exists(zip_file) then
+    vim.notify("clangd zip not found: " .. zip_file, vim.log.levels.ERROR)
+    return nil
+  end
 
+  run("unzip -o " .. zip_file .. " -d " .. version_dir)
+  run("ln -sfn " .. version_dir .. " " .. current_link)
+
+  return clangd_bin
+end
+
+-- 主函数：确保 clangd 可用
 function M.ensure_clangd()
   local clangd_bin = current_link .. "/bin/clangd"
   if exists(clangd_bin) then
