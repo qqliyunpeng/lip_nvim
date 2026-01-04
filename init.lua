@@ -3,6 +3,10 @@ local map = vim.keymap.set
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
+-- clangd 要不要使用国内源
+local use_custom_clangd = false
+_G.use_custom_clangd = use_custom_clangd
+
 -- system
 map("n", " ", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
@@ -85,7 +89,6 @@ require("lazy").setup({
 }, lazy_config)
 
 require('mappings')
-
 
 -- ui or color
 vim.cmd.colorscheme "onedark"
@@ -172,11 +175,6 @@ vim.api.nvim_create_user_command("A",    "Other",       {})
 vim.api.nvim_create_user_command("AS",   "OtherSplit",  {})
 vim.api.nvim_create_user_command("AV",   "OtherVSplit", {})
 vim.api.nvim_create_user_command("AT",   "OtherTabNew", {})
-
-
-require('mason').setup({
-    registry = "https://gitcode.com/gh_mirrors/mason-registry",
-})
 
 require('noice')
 

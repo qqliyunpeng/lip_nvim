@@ -214,6 +214,13 @@ return {
         opts = function()
             return require "configs.mason"
         end,
+        -- config = function()
+        --     require('mason').setup({
+        --         registries = {
+        --             "https://gitee.com/nvim_lip/mason-registry.git",
+        --         },
+        --     })
+        -- end
     },
     {
         'https://gitee.com/suyelu/mason-lspconfig.nvim',
