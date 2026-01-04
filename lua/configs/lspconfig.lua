@@ -62,8 +62,8 @@ local handlers = {
                         })
                     end)
                 end)
+                return
             end
-            return
         end
         require('lspconfig')[server_name].setup({
             on_attach = M.on_attach,
