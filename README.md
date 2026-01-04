@@ -200,3 +200,10 @@ rm ~/.local/state/nvim/swap/*
 ```
 分别对应将当前窗口放到左侧，下侧，上侧，右侧
 
+# 11. clangd 下载
+clangd 比较大，当在能使用外网的情况下，默认配置就行，默认 mason 进行管理
+当外网不能使用的情况下，使用 gitee mirror 仓库替代，更改 init.lua 代码
+```bash
+local use_custom_clangd = true
+```
+
