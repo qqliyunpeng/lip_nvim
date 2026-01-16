@@ -90,9 +90,8 @@ map("n", "d", '"_d', { desc = "Delete without yanking" })
 map("n", "D", '"_D', { desc = "Delete without yanking" })
 map("n", "x", '"_x', { desc = "Delete without yanking" })
 map("n", "X", '"_X', { desc = "Delete without yanking" })
-map("x", "p", [["_dP]], { desc = "Paste without yanking replaced text" })
-map("x", "P", [["_dP]], { desc = "Paste without yanking replaced text" })
-
+map("x", "p", [["_c<c-r>"<esc>]], { desc = "Paste without yanking replaced text" })
+map("x", "P", [["_C<c-r>"<esc>]], { desc = "Paste without yanking replaced text" })
 
 map("n", "<leader>n", "<cmd> Noice<CR>", { desc = "Notification History" })
 
