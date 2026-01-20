@@ -429,6 +429,8 @@ return {
             vim.keymap.set("n", "<a-1>", function() harpoon:list():select(1) end)
             vim.keymap.set("n", "<a-2>", function() harpoon:list():select(2) end)
             vim.keymap.set("n", "<a-3>", function() harpoon:list():select(3) end)
+            vim.keymap.set("n", "<a-4>", function() harpoon:list():select(4) end)
+            vim.keymap.set("n", "<a-5>", function() harpoon:list():select(5) end)
 
             local harpoon_extensions = require("harpoon.extensions")
             harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
