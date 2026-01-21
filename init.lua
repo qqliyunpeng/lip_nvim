@@ -162,6 +162,15 @@ hi TelescopePromptCounter guifg=#5C636C guibg=Black
 hi! link TelescopeTitle        TelescopeNormal
 hi! link TelescopePreviewLine  CursorLine
 hi! link TelescopePromptPrefix TelescopePromptTitle
+
+hi! link SnacksPicker                  TelescopeNormal
+hi! link SnacksPickerBorder            TelescopeBorder
+hi! link SnacksPickerTotals            TelescopePromptCounter
+hi! link SnacksPickerInputBorder       TelescopePromptTitle
+hi! link SnacksPickerListCursorLine    CursorLine
+hi! link SnacksPickerPreviewCursorLine CursorLine
+hi! link SnacksPickerPreviewTitle      TelescopeBorder
+hi! link SnacksPickerBoxTitle          TelescopePromptTitle
 ]])
 
 vim.lsp.set_log_level("off")
