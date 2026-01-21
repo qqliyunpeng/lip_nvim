@@ -230,16 +230,67 @@ function M.snacksInit()
     })
 end
 
+local function smart_layout()
+    if vim.o.columns >= 180 then
+        return "wide_85"
+    else
+        return "vertical_85"
+    end
+end
+
+local picker_layouts = {
+    wide_85 = {
+        layout = {
+            box = "horizontal", -- 左右布局
+            width = 0.85,       -- 整体宽度 85%
+            height = 0.74,      -- 整体高度
+            min_width = 120,
+            {
+                box = "vertical",
+                border = "rounded",
+                title = "{title} {live} {flags}",
+                { win = "input", height = 1, border = "bottom" },
+                { win = "list", border = "none" },
+            },
+            { win = "preview", title = "{preview}", border = "rounded", width = 0.57 },
+        },
+    },
+    vertical_85 = {
+        layout = {
+            box = "vertical",
+            width = 0.85,      -- 整体宽度 85%
+            height = 0.74,     -- 整体高度
+            min_height = 30,
+            border = "rounded",
+            title = "{title} {live} {flags}",
+            title_pos = "center",
+            { win = "input", height = 1, border = "bottom" },
+            { win = "list", border = "none" },
+            { win = "preview", title = "{preview}", height = 0.68, border = "top"},
+        },
+    }
+}
+
 function M.snacksConfig()
     local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
         indent    = { enabled = false },
-        picker    = { enabled = false },
         bigfile   = { enabled = true },
         words     = { enabled = true },
         scope     = { enabled = false },
         quickfile = { enabled = true },
         statuscolumn = { enabled = true },
+        picker    = {
+            enabled = true,
+
+            -- layout = "vertical",
+            -- matcher = {
+            --     highlight = true,
+            -- },
+            layout = smart_layout,
+            -- 自定义 layouts
+            layouts = picker_layouts,
+        },
         scroll = {
             enabled = false,
             animate = {
@@ -285,12 +336,12 @@ function M.snacksConfig()
                     { icon = icons.quit       , key = "q", desc = "Quit",            action = ":qa" },
                 },
                 header = [[
-██╗     ██╗██████╗ ██╗   ██╗██╗███╗   ███╗               
-██║     ██║██╔══██╗██║   ██║██║████╗ ████║   /\_/\       
-██║     ██║██████╔╝██║   ██║██║██╔████╔██║  ( o.o )      
-██║     ██║██╔═══╝ ╚██╗ ██╔╝██║██║╚██╔╝██║  (  -  )っ    
+██╗     ██╗██████╗ ██╗   ██╗██╗███╗   ███╗
+██║     ██║██╔══██╗██║   ██║██║████╗ ████║   /\_/\
+██║     ██║██████╔╝██║   ██║██║██╔████╔██║  ( o.o )
+██║     ██║██╔═══╝ ╚██╗ ██╔╝██║██║╚██╔╝██║  (  -  )っ
 ███████╗██║██║      ╚████╔╝ ██║██║ ╚═╝ ██║   > ^ <   ~~~~
-╚══════╝╚═╝╚═╝       ╚═══╝  ╚═╝╚═╝     ╚═╝               
+╚══════╝╚═╝╚═╝       ╚═══╝  ╚═╝╚═╝     ╚═╝
                 ]],
             },
         },
