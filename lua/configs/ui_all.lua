@@ -282,13 +282,7 @@ function M.snacksConfig()
         statuscolumn = { enabled = true },
         picker    = {
             enabled = true,
-
-            -- layout = "vertical",
-            -- matcher = {
-            --     highlight = true,
-            -- },
-            layout = smart_layout,
-            -- 自定义 layouts
+            layout  = smart_layout,
             layouts = picker_layouts,
         },
         scroll = {
