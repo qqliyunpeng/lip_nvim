@@ -36,6 +36,10 @@ local ascii_icons = {
 }
 
 local draw_lspkind_nerd = {
+    -- nvim-cmp style menu
+    -- columns = {
+    --     { "kind_icon" }, { "label", "label_description", gap = 1 }, { "kind" }
+    -- },
     components = {
         kind_icon = {
             text = function(ctx)
