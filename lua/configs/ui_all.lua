@@ -230,6 +230,8 @@ function M.snacksInit()
     })
 end
 
+local db_path = os.getenv('HOME') .. '/.local/share/nvim/databases'
+
 local function smart_layout()
     if vim.o.columns >= 180 then
         return "wide_85"
@@ -271,6 +273,27 @@ local picker_layouts = {
     }
 }
 
+local snacksKeys = {
+    input = {
+        keys = {
+            ["<Down>"] = { "history_forward", mode = { "i", "n" } },
+            ["<Up>"] = { "history_back", mode = { "i", "n" } },
+            ["<C-c>"] = { "close", mode = { "i", "n" } },
+
+        }
+    },
+    list = {
+        keys = {
+            ["<C-c>"] = { "close", mode = { "i", "n" } },
+        }
+    },
+    preview = {
+        keys = {
+            ["<C-c>"] = { "close", mode = { "i", "n" } },
+        }
+    },
+}
+
 function M.snacksConfig()
     local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
@@ -284,6 +307,12 @@ function M.snacksConfig()
             enabled = true,
             layout  = smart_layout,
             layouts = picker_layouts,
+            prompt  = "   ",
+            matcher = { file_pos = false, },
+            ui_select = false,
+            formatters = { file = { filename_first = true, truncate = 40 } },
+            win = snacksKeys,
+            db  = { sqlite3_path = db_path .. '/snacks_history.sqlite3', }
         },
         scroll = {
             enabled = false,
