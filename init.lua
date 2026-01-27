@@ -171,6 +171,8 @@ hi! link SnacksPickerListCursorLine    CursorLine
 hi! link SnacksPickerPreviewCursorLine CursorLine
 hi! link SnacksPickerPreviewTitle      TelescopeBorder
 hi! link SnacksPickerBoxTitle          TelescopePromptTitle
+hi! link SnacksPickerMatch             FlashMatch
+hi! link SnacksPickerDir               TelescopePromptCounter
 ]])
 
 vim.lsp.set_log_level("off")
