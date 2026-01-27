@@ -308,7 +308,6 @@ function M.snacksConfig()
             layout  = smart_layout,
             layouts = picker_layouts,
             prompt  = "   ",
-            matcher = { file_pos = false, },
             ui_select = false,
             formatters = { file = { filename_first = true, truncate = 40 } },
             win = snacksKeys,

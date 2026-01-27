@@ -175,6 +175,7 @@ hi! link SnacksPickerMatch             FlashMatch
 hi! link SnacksPickerDir               TelescopePromptCounter
 hi! link SnacksPickerCol               TelescopePromptCounter
 hi! link SnacksPickerRow               TelescopePromptCounter
+hi! link SnacksPickerDelim             TelescopePromptCounter
 ]])
 
 vim.lsp.set_log_level("off")
