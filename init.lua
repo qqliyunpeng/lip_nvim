@@ -136,8 +136,8 @@ hi! link WhichKeyBorder  Normal
 hi! link WhichKeyNormal  Normal
 hi FloatBorder   guibg=Black
 hi FlashBackdrop guifg=#6c7086
-hi FlashCurrent  guifg=#fab387 guibg=#1e1e2e
-hi FlashMatch    guifg=#b4befe guibg=#1e1e2e
+hi FlashCurrent  guifg=#fab387
+hi FlashMatch    guifg=#b4befe
 hi FlashLabel    cterm=bold gui=bold guifg=#a6e3a1 guibg=#1e1e2e
 hi! link FlashPrompt NormalFloat
 
@@ -158,7 +158,7 @@ hi TelescopePromptBorder  guifg=#ff966c guibg=Black
 hi TelescopeBorder        guifg=#589ed7 guibg=Black
 hi TelescopePromptTitle   guifg=#ff966c guibg=Black
 hi TelescopeResultsTitle  guibg=Black
-hi TelescopePromptCounter guifg=#5C636C guibg=Black
+hi TelescopePromptCounter guifg=#5C636C
 hi! link TelescopeTitle        TelescopeNormal
 hi! link TelescopePreviewLine  CursorLine
 hi! link TelescopePromptPrefix TelescopePromptTitle
@@ -173,6 +173,8 @@ hi! link SnacksPickerPreviewTitle      TelescopeBorder
 hi! link SnacksPickerBoxTitle          TelescopePromptTitle
 hi! link SnacksPickerMatch             FlashMatch
 hi! link SnacksPickerDir               TelescopePromptCounter
+hi! link SnacksPickerCol               TelescopePromptCounter
+hi! link SnacksPickerRow               TelescopePromptCounter
 ]])
 
 vim.lsp.set_log_level("off")
