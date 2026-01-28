@@ -306,7 +306,7 @@ function M.snacksConfig()
             db  = { sqlite3_path = db_path .. '/snacks_history.sqlite3', }
         },
         scroll = {
-            enabled = false,
+            enabled = true,
             animate = {
                 duration = { step = 20, total = 200 },
                 easing = "linear",
@@ -316,6 +316,10 @@ function M.snacksConfig()
                 duration = { step = 3, total = 20 },
                 easing = "linear",
             },
+            filter = function(buf)
+                local ft = vim.bo[buf].filetype
+                return ft ~= nil and ft == "snacks_picker_preview"
+            end,
         },
         notifier  = {
             enabled = true,
@@ -369,22 +373,14 @@ function M.snacksConfig()
             Snacks.scroll.enable()
         end,
     })
-    vim.api.nvim_create_autocmd("BufWinEnter", {
-        callback = function(args)
-            local buf = args.buf
-            if vim.bo[buf].filetype:match("^snacks_picker_preview") then
-                Snacks.scroll.enable()
-            end
-        end,
-    })
 
     vim.api.nvim_create_autocmd({ "BufWinLeave", "WinClosed" }, {
         callback = function()
             vim.schedule(function()
                 for _, win in ipairs(vim.api.nvim_list_wins()) do
                     local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
-                    if ft:match("^Telescope") or ft:match("^snacks_picker_preview") then
-                        return -- 仍有 telescope/snacks picker 窗口，跳出
+                    if ft:match("^Telescope") then
+                        return -- 仍有 telescope picker 窗口，跳出
                     end
                 end
                 Snacks.scroll.disable()
