@@ -184,14 +184,6 @@ local open_lazygit_with_refresh = function ()
 end
 
 M.snacksKeys = {
-    -- { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
-    -- { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
-    -- { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
-    -- { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
-    -- { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
-    -- { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
-    -- { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
-    -- { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
     { "<leader>gb", function() Snacks.git.blame_line() end, desc = "View Git blame" },
     { "<leader>gl", function() Snacks.lazygit.log_file() end, desc = "View Git log(current)" },
     { "<leader>gg", function() open_lazygit_with_refresh() end, desc = "Lazygit" },
@@ -203,6 +195,7 @@ M.snacksKeys = {
     { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
     { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
     { "<leader>fu", function() Snacks.picker.undo() end, desc = "Find undo history" },
+    { "<leader>fc", function() Snacks.picker.grep_word() end, desc = "Search cur word", mode = { "n", "x" } },
 }
 
 function M.snacksInit()
@@ -279,7 +272,6 @@ local snacksKeys = {
             ["<Down>"] = { "history_forward", mode = { "i", "n" } },
             ["<Up>"] = { "history_back", mode = { "i", "n" } },
             ["<C-c>"] = { "close", mode = { "i", "n" } },
-
         }
     },
     list = {
@@ -432,7 +424,7 @@ function M.whichKeyConfig()
                 {"<leader>ma", desc = "Bookmark picker" },
                 {"<leader>mm", desc = "Bookmark Toggle" },
                 {"<leader>mc", desc = "Bookmark Delete" },
-                {"<leader>fc", desc = "Search with parameter" },
+                {"<leader>fs", desc = "Search with parameter" },
                 {"<leader>fm", desc = "Mark list" },
                 {"<leader>fe", desc = "Harpoon list" },
                 {"<leader>a" , desc = "Harpoon add current file" },

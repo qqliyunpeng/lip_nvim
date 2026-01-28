@@ -36,16 +36,27 @@ map("n", "<BS>", "<C-w>h", { desc = "switch window left" })
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
 -- telescope
-map("n", "<leader>r", "<cmd>Telescope oldfiles<CR>",    { desc = "telescope find oldfiles" })
-map("n", "<leader>p", "<cmd>Telescope find_files<CR>",  { desc = "telescope find files" })
-map("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "telescope find files" })
-map("n", "<leader><tab>", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
-map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>",  { desc = "telescope live grep" })
-map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>",  { desc = "telescope help page" })
-map("n", "<leader>ma", "<cmd>Telescope marks<CR>",      { desc = "telescope find marks" })
+-- map("n", "<leader>r", "<cmd>Telescope oldfiles<CR>",    { desc = "telescope find oldfiles" })
+-- map("n", "<leader>p", "<cmd>Telescope find_files<CR>",  { desc = "telescope find files" })
+-- map("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "telescope find files" })
+-- map("n", "<leader><tab>", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
+-- map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>",  { desc = "telescope live grep" })
+-- map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>",  { desc = "telescope help page" })
+-- map("n", "<leader>ma", "<cmd>Telescope marks<CR>",      { desc = "telescope find marks" })
+-- map("n", "<leader>gt", "<cmd>Telescope git_status<CR>",  { desc = "Git status" })
 map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
-map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-map("n", "<leader>gt", "<cmd>Telescope git_status<CR>",  { desc = "Git status" })
+map("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
+
+map("n", "<leader>r",  function() Snacks.picker.recent() end,     { desc = "Snacks find oldfiles" })
+map("n", "<leader>p",  function() Snacks.picker.files() end,      { desc = "Snacks find files" })
+map("n", "<leader>n",  function() Snacks.picker.notifications() end,      { desc = "Notification" })
+map("n", "<leader>ff", function() Snacks.picker.files() end,      { desc = "Snacks find files" })
+map("n", "<leader><tab>", function() Snacks.picker.buffers() end, { desc = "Buffers" })
+map("n", "<leader>fw", function() Snacks.picker.grep() end,       { desc = "Snacks live grep" })
+map("n", "<leader>fh", function() Snacks.picker.help() end,  { desc = "telescope help page" })
+map("n", "<leader>fm", function() Snacks.picker.marks() end,      { desc = "Snacks find marks" })
+map("n", "<leader>gt", function() Snacks.picker.git_status() end, { desc = "Git status" })
+map("n", "<leader>fM", function() Snacks.picker.man() end, { desc = "Man Pages" })
 
 map(
   "n",
@@ -58,6 +69,7 @@ map(
 map("n", "[b"       , "<cmd>bprevious<CR>", { desc = "Prev Buffer" })
 map("n", "]b"       , "<cmd>bnext<CR>"    , { desc = "Next Buffer" })
 map("n", "<leader>`", "<cmd>e #<CR>"      , { desc = "Switch to Other Buffer" })
+map("n", "<a-`>"    , "<cmd>e #<CR>"      , { desc = "Switch to Other Buffer" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 -- map("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
@@ -93,7 +105,7 @@ map("n", "X", '"_X', { desc = "Delete without yanking" })
 map("x", "p", [["_c<c-r>"<esc>]], { desc = "Paste without yanking replaced text" })
 map("x", "P", [["_C<c-r>"<esc>]], { desc = "Paste without yanking replaced text" })
 
-map("n", "<leader>n", "<cmd> Noice<CR>", { desc = "Notification History" })
+-- map("n", "<leader>n", "<cmd> Noice<CR>", { desc = "Notification History" })
 
 -- snacks
 -- map("n", "<leader>n", function() Snacks.notifier.show_history() end, { desc = "Notification History" })
@@ -133,7 +145,8 @@ end
 map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
 map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
 -- map("n", "gi", vim.lsp.buf.implementation, opts "Go to implementation")
-map("n", "gr", "<cmd>Telescope lsp_references<CR>", opts "Show references")
+-- map("n", "gr", "<cmd>Telescope lsp_references<CR>", opts "Show references")
+map("n", "gr", function() Snacks.picker.lsp_references() end, opts "Show references")
 map("n", "<leader>sh", vim.lsp.buf.signature_help, opts "Show signature help")
 map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
 map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")

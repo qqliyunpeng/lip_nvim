@@ -32,7 +32,7 @@ end
 
 local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 -- vim.keymap.set("n", "<leader>fc", live_grep_args_shortcuts.grep_word_under_cursor)
-vim.keymap.set("n", "<leader>fc", function ()
+vim.keymap.set("n", "<leader>fs", function ()
     live_grep_args_shortcuts.grep_word_under_cursor()
 
     -- simulator push left
@@ -121,6 +121,7 @@ return {
                 ["<A-q>"] = require("telescope.actions").close,
                 ["<C-j>"] = require("telescope.actions").move_selection_next,
                 ["<C-k>"] = require("telescope.actions").move_selection_previous,
+                ["<C-h>"] = function() send_key("<Left>") end,
                 ["<C-l>"] = function() send_key("<Right>") end,
                 ["<Up>"]  = require("telescope.actions").cycle_history_prev,
                 ["<Down>"]= require("telescope.actions").cycle_history_next,
