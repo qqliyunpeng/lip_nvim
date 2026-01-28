@@ -4,8 +4,12 @@ vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
 -- clangd 要不要使用国内源
-local use_custom_clangd = false
-_G.use_custom_clangd = use_custom_clangd
+local cus = os.getenv("CLANGD_USE_GITHUB")
+if cus then
+    vim.g.use_custom_clangd = false
+else
+    vim.g.use_custom_clangd = true
+end
 
 -- system
 map("n", " ", ":", { desc = "CMD enter command mode" })
