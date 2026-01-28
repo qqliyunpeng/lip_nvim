@@ -351,7 +351,7 @@ function M.snacksConfig()
                     { icon = icons.find_text  , key = "w", desc = "Find Text",       action = ":lua Snacks.dashboard.pick('live_grep')" },
                     { icon = icons.recent     , key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
                     { icon = icons.config     , key = "c", desc = "Config",          action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
-                    { icon = icons.all_session, key = "w", desc = "All Session",     action = ":Telescope persisted" },
+                    { icon = icons.all_session, key = "p", desc = "Projects",     action = ":Telescope persisted" },
                     { icon = icons.restore    , key = "s", desc = "Restore Session", action = ":SessionLoadLast" },
                     { icon = icons.extras     , key = "x", desc = "Lazy Extras",     action = ":LazyExtras" },
                     { icon = icons.lazy       , key = "l", desc = "Lazy",            action = ":Lazy" },
@@ -377,14 +377,22 @@ function M.snacksConfig()
             Snacks.scroll.enable()
         end,
     })
+    vim.api.nvim_create_autocmd("BufWinEnter", {
+        callback = function(args)
+            local buf = args.buf
+            if vim.bo[buf].filetype:match("^snacks_picker_preview") then
+                Snacks.scroll.enable()
+            end
+        end,
+    })
 
     vim.api.nvim_create_autocmd({ "BufWinLeave", "WinClosed" }, {
         callback = function()
             vim.schedule(function()
                 for _, win in ipairs(vim.api.nvim_list_wins()) do
                     local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
-                    if ft:match("^Telescope") then
-                        return -- 仍有 telescope 窗口，跳出
+                    if ft:match("^Telescope") or ft:match("^snacks_picker_preview") then
+                        return -- 仍有 telescope/snacks picker 窗口，跳出
                     end
                 end
                 Snacks.scroll.disable()
