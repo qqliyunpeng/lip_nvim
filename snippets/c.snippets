@@ -89,6 +89,12 @@ snippet printf
 snippet printf__
     printf("lip: [%s, %d]${1}\n", __FUNCTION__, __LINE__${2});${3}
 
+snippet printf__1
+    printf("lip: [%s, %d] ${1} = ${2:%d}\n", __FUNCTION__, __LINE__, ${1});
+
+snippet printf__2
+    printf("lip: [%s, %d] ${1}, ${2} = ${3:%d}, ${3:%d}\n", __FUNCTION__, __LINE__, ${1}, ${2});
+
 snippet xil_printf__
     xil_printf("lip: [%s, %d]${1}\r\n", __FUNCTION__, __LINE__${2});${3}
 
