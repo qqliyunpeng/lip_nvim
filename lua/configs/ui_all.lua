@@ -272,16 +272,19 @@ local snacksKeys = {
             ["<Down>"] = { "history_forward", mode = { "i", "n" } },
             ["<Up>"] = { "history_back", mode = { "i", "n" } },
             ["<C-c>"] = { "close", mode = { "i", "n" } },
+            ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
         }
     },
     list = {
         keys = {
             ["<C-c>"] = { "close", mode = { "i", "n" } },
+            ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
         }
     },
     preview = {
         keys = {
             ["<C-c>"] = { "close", mode = { "i", "n" } },
+            ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
         }
     },
 }
