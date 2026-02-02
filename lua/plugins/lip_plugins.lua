@@ -457,6 +457,9 @@ return {
     },
     {
         "https://gitee.com/nvim_lip/blink.cmp.git",
+        dependencies = {
+            { "https://gitee.com/nvim_lip/blink-cmp-yanky.git", },
+        },
         branch = "main",
         -- event = "VeryLazy",
         event = { "BufReadPost", "BufNewFile" },

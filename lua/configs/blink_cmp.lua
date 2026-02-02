@@ -206,7 +206,19 @@ function M.blinkConfig()
         },
         snippets = { preset = 'luasnip' },
         sources = {
-            default = { 'lsp', 'path', 'snippets', 'buffer' },
+            default = { 'lsp', 'path', 'snippets', 'buffer', "yank" },
+            providers = {
+                yank = {
+                    name = "yank",
+                    module = "blink-yanky",
+                    opts = {
+                        minLength = 5,
+                        onlyCurrentFiletype = true,
+                        trigger_characters = { '"' },
+                        kind_icon = "󰅍",
+                    },
+                }
+            }
         },
         fuzzy = {
             implementation = "prefer_rust",
