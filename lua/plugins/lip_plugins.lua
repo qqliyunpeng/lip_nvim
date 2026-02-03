@@ -22,7 +22,7 @@ return {
     },
     {
         "https://gitee.com/yunduozhai/neoscroll.nvim.git",
-        event = "VeryLazy",
+        -- event = "VeryLazy",
         config = function ()
             return require('configs.neoscroll').defaultConfig()
         end
@@ -443,6 +443,7 @@ return {
         config = function ()
             require("mini.ai").setup()
             require("mini.align").setup()
+            require('configs.ui_all').miniAnimate()
             require('configs.ui_all').miniIconsConfig()
             require('configs.edit').miniFileConfig()
             require("configs.edit").operatorsConfig()

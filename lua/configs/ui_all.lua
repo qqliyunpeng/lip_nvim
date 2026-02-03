@@ -452,6 +452,67 @@ function M.miniIconsConfig()
     })
 end
 
+function M.miniAnimate()
+    -- 2. 前置准备：定义鼠标滚动标记、映射鼠标滚轮按键、创建自动命令、注册切换快捷键
+    local mouse_scrolled = false
+    -- 映射鼠标滚轮上下键，标记鼠标滚动状态（普通模式/插入模式均生效）
+    for _, scroll in ipairs({ "Up", "Down" }) do
+        local key = "<ScrollWheel" .. scroll .. ">"
+        vim.keymap.set({ "", "i" }, key, function()
+            mouse_scrolled = true
+            return key
+        end, { expr = true })
+    end
+
+    -- 对 grug-far 文件类型，缓冲区级禁用 mini.animate 动画
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "grug-far",
+        callback = function()
+            vim.b.minianimate_disable = true
+        end,
+    })
+
+    -- 注册 <leader>ua 快捷键，切换 mini.animate 全局启用/禁用状态（延迟执行覆盖默认映射）
+    vim.schedule(function()
+        require('snacks').toggle({
+            name = "Mini Animate",
+            get = function()
+                return not vim.g.minianimate_disable
+            end,
+            set = function(state)
+                vim.g.minianimate_disable = not state
+            end,
+        }):map("<leader>uA")
+    end)
+
+    local animate = require('mini.animate')
+
+    require("mini.animate").setup({
+        -- 窗口调整动画：线性缓动 + 总时长50ms（原配置resize自定义）
+        resize = {
+            timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
+        },
+        -- 滚动动画：核心自定义（含鼠标滚动禁用逻辑）
+        scroll = {
+            enable = true,
+            timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
+            subscroll = animate.gen_subscroll.equal({
+                -- 滚动触发条件：鼠标滚动则禁用，仅滚动幅度>1时触发（与原配置predicate完全一致）
+                predicate = function(total_scroll)
+                    if mouse_scrolled then
+                        mouse_scrolled = false
+                        return false
+                    end
+                    return total_scroll > 1
+                end,
+            }),
+        },
+        -- 其他动画模块（cursor/open/close）保留 mini.animate 原生默认配置
+        -- 若需禁用，可添加：
+        cursor = { enable = false }, open = { enable = false }, close = { enable = false }
+    })
+end
+
 function M.todoConfig()
     local todo = require('todo-comments')
 
