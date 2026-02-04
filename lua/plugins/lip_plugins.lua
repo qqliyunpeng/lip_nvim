@@ -74,10 +74,10 @@ return {
     },
     {
         "https://gitee.com/hello-luiswu/accelerated-jk.git",
-        keys = {
-            {"j", "<Plug>(accelerated_jk_gj)" },
-            {"k", "<Plug>(accelerated_jk_gk)" },
-        },
+        event = 'VeryLazy',
+        config = function ()
+            require('configs.ui_all').accjkConfig()
+        end
     },
     {
         "https://gitee.com/nvim_lip/vim-illuminate.git",
@@ -443,7 +443,7 @@ return {
         config = function ()
             require("mini.ai").setup()
             require("mini.align").setup()
-            require('configs.ui_all').miniAnimate()
+            -- require('configs.ui_all').miniAnimate()
             require('configs.ui_all').miniIconsConfig()
             require('configs.edit').miniFileConfig()
             require("configs.edit").operatorsConfig()

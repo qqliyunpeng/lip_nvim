@@ -98,7 +98,6 @@ function M.whitespaceConfig()
         end,
         set = function(state)
             vim.g.trim_whitespace_on_save = state
-
             if state then
                 -- 开启自动去除行尾空格
                 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -310,16 +309,20 @@ function M.snacksConfig()
             db  = { sqlite3_path = db_path .. '/snacks_history.sqlite3', }
         },
         scroll = {
-            enabled = false,
+            enabled = true,
             animate = {
-                duration = { step = 20, total = 200 },
-                easing = "linear",
+                duration = { step = 15, total = 150 },
+                easing = "outSine",
             },
             animate_repeat = {
-                delay = 50,
-                duration = { step = 3, total = 20 },
-                easing = "linear",
+                delay = 100,
+                duration = { step = 5, total = 50 },
+                easing = "outSine",
             },
+            -- what buffers to animate
+            filter = function(buf)
+                return vim.g.snacks_scroll ~= false and vim.b[buf].snacks_scroll ~= false and vim.bo[buf].buftype ~= "terminal"
+            end,
         },
         notifier  = {
             enabled = true,
@@ -367,34 +370,6 @@ function M.snacksConfig()
         },
     })
 
-    vim.api.nvim_create_autocmd("User", {
-        pattern = "TelescopeFindPre",
-        callback = function()
-            Snacks.scroll.enable()
-        end,
-    })
-    vim.api.nvim_create_autocmd("BufWinEnter", {
-        callback = function(args)
-            local buf = args.buf
-            if vim.bo[buf].filetype:match("^snacks_picker_preview") then
-                Snacks.scroll.enable()
-            end
-        end,
-    })
-
-    vim.api.nvim_create_autocmd({ "BufWinLeave", "WinClosed" }, {
-        callback = function()
-            vim.schedule(function()
-                for _, win in ipairs(vim.api.nvim_list_wins()) do
-                    local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
-                    if ft:match("^Telescope") or ft:match("^snacks_picker_preview") then
-                        return -- 仍有 telescope/snacks picker 窗口，跳出
-                    end
-                end
-                Snacks.scroll.disable()
-            end)
-        end,
-    })
 end
 
 function M.visualWhitespaceConfig()
@@ -796,6 +771,31 @@ function M.deviconsConfig()
             },
         }
     }
+end
+
+function M.accjkConfig()
+    local function smart_(key, plug)
+        return function()
+            local count = vim.v.count
+
+            if count > 0 then
+                vim.cmd(("normal! %d%s"):format(count, key)) return
+            end
+
+            vim.b.snacks_scroll = false
+
+            vim.api.nvim_feedkeys(
+                vim.api.nvim_replace_termcodes(plug,
+                true, false, true), "n", false)
+
+            vim.defer_fn(function()
+                vim.b.snacks_scroll = nil
+            end, 0)
+        end
+    end
+
+    vim.keymap.set("n", "j", smart_("j", "<Plug>(accelerated_jk_gj)"), { silent = true })
+    vim.keymap.set("n", "k", smart_("k", "<Plug>(accelerated_jk_gk)"), { silent = true })
 end
 
 return M
