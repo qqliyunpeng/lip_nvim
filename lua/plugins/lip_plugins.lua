@@ -22,7 +22,7 @@ return {
     },
     {
         "https://gitee.com/yunduozhai/neoscroll.nvim.git",
-        -- event = "VeryLazy",
+        event = "VeryLazy",
         config = function ()
             return require('configs.neoscroll').defaultConfig()
         end
