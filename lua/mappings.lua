@@ -4,12 +4,11 @@ local opt = vim.opt
 opt.clipboard = "unnamedplus"
 opt.cursorline = true
 
-
 -- 大小的L和H映射
 map({ "x", "n", "o" }, "L", "g_",  { noremap = true, silent = true, desc = "To end of line" })
 map({ "x", "n", "o" }, "H", "^" ,  { noremap = true, silent = true, desc = "To begin of line" })
-map({ "x", "n", "o" }, "J", "5j",  { desc = "line down 5" })
-map({ "x", "n", "o" }, "K", "5k",  { desc = "line up 5" })
+map({ "x", "n", "o" }, "J", "<cmd>normal!5j<cr>",  { desc = "line down 5" })
+map({ "x", "n", "o" }, "K", "<cmd>normal!5k<cr>",  { desc = "line up 5" })
 
 map("i", "<C-h>", "<Left>",     { desc = "move left" })
 map("i", "<C-l>", "<Right>",    { desc = "move right" })
