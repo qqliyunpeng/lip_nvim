@@ -273,6 +273,8 @@ local snacksKeys = {
             ["<Up>"] = { "history_back", mode = { "i", "n" } },
             ["<C-c>"] = { "close", mode = { "i", "n" } },
             ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
+            -- ["<C-j>"] = { "list_cycle_down", mode = { "i", "n" } },
+            -- ["<C-k>"] = { "list_cycle_up", mode = { "i", "n" } },
         }
     },
     list = {
@@ -290,6 +292,18 @@ local snacksKeys = {
 }
 
 function M.snacksConfig()
+    Snacks.picker.actions.list_cycle_down = function(picker)
+        local line_cur = picker:selected({ fallback = true })
+        vim.print("down" .. #line_cur)
+        -- vim.print("down" .. picker:list.count())
+        picker.list:move(vim.v.count1)
+    end
+    Snacks.picker.actions.list_cycle_up = function(picker)
+        local line_cur = picker:selected({ fallback = true })
+        vim.print("up" .. #line_cur)
+        picker.list:move(-vim.v.count1)
+    end
+
     local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
         indent    = { enabled = false },
