@@ -273,14 +273,16 @@ local snacksKeys = {
             ["<Up>"] = { "history_back", mode = { "i", "n" } },
             ["<C-c>"] = { "close", mode = { "i", "n" } },
             ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
-            -- ["<C-j>"] = { "list_cycle_down", mode = { "i", "n" } },
-            -- ["<C-k>"] = { "list_cycle_up", mode = { "i", "n" } },
+            ["<C-j>"] = { "list_cycle_down", mode = { "i", "n" } },
+            ["<C-k>"] = { "list_cycle_up", mode = { "i", "n" } },
         }
     },
     list = {
         keys = {
             ["<C-c>"] = { "close", mode = { "i", "n" } },
             ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
+            ["<c-j>"] = "list_cycle_down",
+            ["<c-k>"] = "list_cycle_up",
         }
     },
     preview = {
@@ -293,15 +295,19 @@ local snacksKeys = {
 
 function M.snacksConfig()
     Snacks.picker.actions.list_cycle_down = function(picker)
-        local line_cur = picker:selected({ fallback = true })
-        vim.print("down" .. #line_cur)
-        -- vim.print("down" .. picker:list.count())
-        picker.list:move(vim.v.count1)
+        -- local row = picker.list.cursor or 0
+        if picker.list.cursor == picker.list:count() then
+            picker.list:move(1, true)
+        else
+            picker.list:move(vim.v.count1)
+        end
     end
     Snacks.picker.actions.list_cycle_up = function(picker)
-        local line_cur = picker:selected({ fallback = true })
-        vim.print("up" .. #line_cur)
-        picker.list:move(-vim.v.count1)
+        if picker.list.cursor == 1 then
+            picker.list:move(picker.list:count(), true)
+        else
+            picker.list:move(-vim.v.count1)
+        end
     end
 
     local icons = require('configs.icons').snacksIcons()
