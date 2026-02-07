@@ -230,15 +230,44 @@ function M.snacksConfig()
                 header = [[
 
 
-                ██╗     ██╗██████╗ ██╗   ██╗██╗███╗   ███╗
-                ██║     ██║██╔══██╗██║   ██║██║████╗ ████║   /\_/\
-                ██║     ██║██████╔╝██║   ██║██║██╔████╔██║  ( o.o )
-                ██║     ██║██╔═══╝ ╚██╗ ██╔╝██║██║╚██╔╝██║  (  -  )っ
-                ███████╗██║██║      ╚████╔╝ ██║██║ ╚═╝ ██║   > ^ <   ~~~~
-                ╚══════╝╚═╝╚═╝       ╚═══╝  ╚═╝╚═╝     ╚═╝
-                ]],
+██╗     ██╗██████╗ ██╗   ██╗██╗███╗   ███╗
+       ██║     ██║██╔══██╗██║   ██║██║████╗ ████║   /\_/\
+        ██║     ██║██████╔╝██║   ██║██║██╔████╔██║  ( o.o )
+          ██║     ██║██╔═══╝ ╚██╗ ██╔╝██║██║╚██╔╝██║  (  -  )っ
+              ███████╗██║██║      ╚████╔╝ ██║██║ ╚═╝ ██║   > ^ <   ~~~~
+ ╚══════╝╚═╝╚═╝       ╚═══╝  ╚═╝╚═╝     ╚═╝
+]],
             },
         },
+    })
+
+    vim.api.nvim_create_autocmd("User", {
+        pattern = "TelescopeFindPre",
+        callback = function()
+            Snacks.scroll.enable()
+        end,
+    })
+    vim.api.nvim_create_autocmd("BufWinEnter", {
+        callback = function(args)
+            local buf = args.buf
+            if vim.bo[buf].filetype:match("^snacks_picker_preview") then
+                Snacks.scroll.enable()
+            end
+        end,
+    })
+
+    vim.api.nvim_create_autocmd({ "BufWinLeave", "WinClosed" }, {
+        callback = function()
+            vim.schedule(function()
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                    local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
+                    if ft:match("^Telescope") or ft:match("^snacks_picker_preview") then
+                        return -- 仍有 telescope/snacks picker 窗口，跳出
+                    end
+                end
+                Snacks.scroll.disable()
+            end)
+        end,
     })
 end
 
