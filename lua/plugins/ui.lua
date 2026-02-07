@@ -52,13 +52,13 @@ return {
         priority = 1000,
         lazy = false,
         keys = function ()
-            return require("configs.ui_all").snacksKeys
+            return require("configs.snacks").snacksKeys
         end,
         init = function ()
-            return require("configs.ui_all").snacksInit()
+            return require("configs.snacks").snacksInit()
         end,
         config = function()
-            return require("configs.ui_all").snacksConfig()
+            return require("configs.snacks").snacksConfig()
         end,
     },
     {
