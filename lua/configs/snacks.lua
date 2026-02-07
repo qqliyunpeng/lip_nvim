@@ -35,19 +35,19 @@ end
 
 
 M.snacksKeys = {
-    { "<leader>gb", function() Snacks.git.blame_line() end, desc = "View Git blame" },
-    { "<leader>gl", function() Snacks.lazygit.log_file() end, desc = "View Git log(current)" },
+    { "<leader>gb", function() Snacks.git.blame_line() end,     desc = "View Git blame" },
+    { "<leader>gl", function() Snacks.lazygit.log_file() end,   desc = "View Git log(current)" },
     { "<leader>gg", function() open_lazygit_with_refresh() end, desc = "Lazygit" },
-    { "<leader>gL", function() Snacks.lazygit.log() end, desc = "View Git log" },
-    { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
-    { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
-    { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
-    { "<leader>.",  function() Snacks.scratch() end, desc = "Open Scratch Buffer" },
-    { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
+    { "<leader>gL", function() Snacks.lazygit.log() end,        desc = "View Git log" },
+    { "<leader>un", function() Snacks.notifier.hide() end,      desc = "Dismiss All Notifications" },
+    { "]]", function() Snacks.words.jump(vim.v.count1) end,  desc = "Next Reference", mode = { "n", "t" } },
+    { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
+    { "<leader>.",   function() Snacks.scratch() end,          desc = "Open Scratch Buffer" },
+    { "<leader>S",   function() Snacks.scratch.select() end,   desc = "Select Scratch Buffer" },
     { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
-    { "<leader>fu", function() Snacks.picker.undo() end, desc = "Find undo history" },
-    { "<leader>fc", function() Snacks.picker.grep_word() end, desc = "Search cur word", mode = { "n", "x" } },
-    { "<leader>fl", function() Snacks.picker.lines() end, desc = "Search Buffer linse" },
+    { "<leader>fu",  function() Snacks.picker.undo() end,      desc = "Find undo history" },
+    { "<leader>fc",  function() Snacks.picker.grep_word() end, desc = "Search cur word", mode = { "n", "x" } },
+    { "<leader>fl",  function() Snacks.picker.lines() end,     desc = "Search Buffer linse" },
 }
 
 function M.snacksInit()
