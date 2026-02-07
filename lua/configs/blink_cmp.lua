@@ -33,6 +33,8 @@ local ascii_icons = {
     Event = "[Evt]",
     Operator = "[Op]",
     TypeParameter = "[Ty]",
+
+    Yank = "󰅍",
 }
 
 local draw_lspkind_nerd = {
@@ -50,11 +52,15 @@ local draw_lspkind_nerd = {
                         icon = dev_icon
                     end
                 else
-                    icon = require("lspkind").symbolic(ctx.kind, {
-                        mode = "symbol",
-                        -- symbol_map = require("configs.lspconfig").lspkindSymbolMap()
-                        -- symbol_map = lspkind_ascii_icons
-                    })
+                    if ctx.kind == "Yank" then
+                        icon = ""
+                    else
+                        icon = require("lspkind").symbolic(ctx.kind, {
+                            mode = "symbol",
+                            -- symbol_map = require("configs.lspconfig").lspkindSymbolMap()
+                            -- symbol_map = lspkind_ascii_icons
+                        })
+                    end
                 end
 
                 return icon .. ctx.icon_gap

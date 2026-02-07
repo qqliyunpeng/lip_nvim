@@ -370,7 +370,7 @@ function M.snacksConfig()
                     { icon = icons.find_text  , key = "w", desc = "Find Text",       action = ":lua Snacks.dashboard.pick('live_grep')" },
                     { icon = icons.recent     , key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
                     { icon = icons.config     , key = "c", desc = "Config",          action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
-                    { icon = icons.all_session, key = "p", desc = "Projects",     action = ":Telescope persisted" },
+                    { icon = icons.all_session, key = "p", desc = "Projects",        action = ":Telescope persisted" },
                     { icon = icons.restore    , key = "s", desc = "Restore Session", action = ":SessionLoadLast" },
                     { icon = icons.extras     , key = "x", desc = "Lazy Extras",     action = ":LazyExtras" },
                     { icon = icons.lazy       , key = "l", desc = "Lazy",            action = ":Lazy" },
