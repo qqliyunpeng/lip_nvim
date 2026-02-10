@@ -39,37 +39,30 @@ local servers = {
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-local use_custom_clangd = _G.use_custom_clangd or false
 local clangd_installer = require("configs.clangd_installer")
 
 local handlers = {
     function(server_name)
-        local server_setting = {}
 
-        if servers[server_name] and servers[server_name].settings ~= nil then
-            server_setting = servers[server_name].settings
-        end
-
-        if server_name == "clangd" then
-            if use_custom_clangd then
-                clangd_installer.setup(function(clangd_path)
-                    vim.schedule(function()
-                        require("lspconfig")[server_name].setup({
-                            on_attach = M.on_attach,
-                            capabilities = capabilities,
-                            cmd = { clangd_path },
-                            settings = server_setting,
-                        })
-                    end)
+        if server_name == "clangd" and vim.g.use_custom_clangd then
+            clangd_installer.setup(function(clangd_path)
+                vim.schedule(function()
+                    require("lspconfig").clangd.setup({
+                        on_attach = M.on_attach,
+                        capabilities = capabilities,
+                        cmd = { clangd_path },
+                        settings = servers.clangd.settings or {},
+                    })
                 end)
-                return
-            end
+            end)
+            return
         end
+
         require('lspconfig')[server_name].setup({
             on_attach = M.on_attach,
             capabilities = capabilities,
 
-            settings = server_setting,
+            settings = servers[server_name] and servers[server_name].settings or {},
         })
     end,
 }
@@ -89,8 +82,14 @@ end
 
 function M.defaults()
     local mason_lspconfig = require 'mason-lspconfig'
+    local ensure = vim.tbl_keys(servers)
+    if vim.g.use_custom_clangd then
+        ensure = vim.tbl_filter(function(server)
+            return server ~= "clangd"
+        end, ensure)
+    end
     mason_lspconfig.setup({
-        ensure_installed = vim.tbl_keys(servers),
+        ensure_installed = ensure,
         handlers = handlers,
     })
     mason_lspconfig.setup_handlers(handlers)

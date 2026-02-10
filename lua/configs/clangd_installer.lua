@@ -1,4 +1,5 @@
 -- 安装目录: ~/.local/clangd/
+-- 如何查看当前的clangd的相关信息: LspInfo / ClangdPath
 local M = {}
 
 local home         = vim.fn.expand("~")
