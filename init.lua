@@ -154,6 +154,8 @@ hi IlluminatedWordText  guibg=#45475a
 hi IlluminatedWordWrite guibg=#45475a
 hi IlluminatedWordRead  guibg=#45475a
 
+hi BlinkCmpKindYank  guifg=#8957E5
+
 hi TelescopeNormal        guibg=black ctermbg=black
 hi TelescopePromptNormal  guibg=Black
 hi TelescopePreviewLine   guibg=Black
