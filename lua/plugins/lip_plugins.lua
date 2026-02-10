@@ -74,10 +74,10 @@ return {
     },
     {
         "https://gitee.com/hello-luiswu/accelerated-jk.git",
-        keys = {
-            {"j", "<Plug>(accelerated_jk_gj)" },
-            {"k", "<Plug>(accelerated_jk_gk)" },
-        },
+        event = "VeryLazy",
+        config = function ()
+            return require("configs.ui_all").accjkConfig()
+        end
     },
     {
         "https://gitee.com/nvim_lip/vim-illuminate.git",
