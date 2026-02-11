@@ -1,6 +1,9 @@
 
 local M = {}
 
+-- 在动作前，当前窗口是不是启动了scroll
+vim.g.neoscroll_scroll = false
+
 function M.defaultConfig()
     require('neoscroll').setup({
         mappings = {                 -- Keys to be mapped to their corresponding default scrolling animation
@@ -18,8 +21,17 @@ function M.defaultConfig()
         ignored_events = {           -- Events ignored while scrolling
             'WinScrolled', 'CursorMoved'
         },
-        pre_hook  = function() Snacks.scroll.disable() end,
-        post_hook = function() Snacks.scroll.enable()  end,
+        pre_hook  = function()
+            vim.g.neoscroll_scroll = vim.g.snacks_scroll
+            if vim.g.neoscroll_scroll then
+                Snacks.scroll.disable()
+            end
+        end,
+        post_hook = function()
+            if vim.g.neoscroll_scroll then
+                Snacks.scroll.enable()
+            end
+        end
     })
 
     -- neoscroll 滚动顺滑
