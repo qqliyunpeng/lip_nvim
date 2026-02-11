@@ -77,14 +77,12 @@ function M.defaults()
 
     local clangd_installer = require("configs.clangd_installer")
     clangd_installer.setup(function(clangd_path)
-        vim.schedule(function()
-            require("lspconfig").clangd.setup({
-                on_attach = M.on_attach,
-                capabilities = capabilities,
-                cmd = { clangd_path },
-                settings = servers.clangd.settings or {},
-            })
-        end)
+        require("lspconfig").clangd.setup({
+            on_attach = M.on_attach,
+            capabilities = capabilities,
+            cmd = { clangd_path },
+            settings = servers.clangd.settings or {},
+        })
     end)
 
     mason_lspconfig.setup({
