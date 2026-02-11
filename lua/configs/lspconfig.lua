@@ -39,24 +39,9 @@ local servers = {
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-local clangd_installer = require("configs.clangd_installer")
 
 local handlers = {
     function(server_name)
-
-        if server_name == "clangd" and vim.g.use_custom_clangd then
-            clangd_installer.setup(function(clangd_path)
-                vim.schedule(function()
-                    require("lspconfig").clangd.setup({
-                        on_attach = M.on_attach,
-                        capabilities = capabilities,
-                        cmd = { clangd_path },
-                        settings = servers.clangd.settings or {},
-                    })
-                end)
-            end)
-            return
-        end
 
         require('lspconfig')[server_name].setup({
             on_attach = M.on_attach,
@@ -83,14 +68,27 @@ end
 function M.defaults()
     local mason_lspconfig = require 'mason-lspconfig'
     local ensure = vim.tbl_keys(servers)
+
     if vim.g.use_custom_clangd then
         ensure = vim.tbl_filter(function(server)
             return server ~= "clangd"
         end, ensure)
     end
+
+    local clangd_installer = require("configs.clangd_installer")
+    clangd_installer.setup(function(clangd_path)
+        vim.schedule(function()
+            require("lspconfig").clangd.setup({
+                on_attach = M.on_attach,
+                capabilities = capabilities,
+                cmd = { clangd_path },
+                settings = servers.clangd.settings or {},
+            })
+        end)
+    end)
+
     mason_lspconfig.setup({
         ensure_installed = ensure,
-        handlers = handlers,
     })
     mason_lspconfig.setup_handlers(handlers)
 end
