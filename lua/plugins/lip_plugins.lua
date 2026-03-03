@@ -260,8 +260,9 @@ return {
         end,
     },
     {
-        string.format('%s/null-ls.nvim.git', 'https://gitee.com/suyelu'),
+        "https://gitee.com/nvim_lip/none-ls.nvim.git",
         event = { "BufReadPost", "BufNewFile" },
+
         dependencies = {
             string.format('%s/plenary.nvim', 'https://gitee.com/suyelu'),
             { "https://gitee.com/yunduozhai/mason-null-ls.nvim.git", branch = 'main' },
@@ -273,13 +274,19 @@ return {
 
             require("mason-null-ls").setup({
                 ensure_installed = tools,
-                handlers = {},
+                automatic_installation = true,
             })
 
-            require("null-ls").setup({
-                sources = {},
+            local null_ls = require("null-ls")
+
+            null_ls.setup({
+                sources = {
+                    -- 示例：
+                    -- null_ls.builtins.formatting.black,
+                    -- null_ls.builtins.diagnostics.flake8,
+                },
             })
-        end
+        end,
     },
     {
         "https://gitee.com/yunduozhai/neogen",

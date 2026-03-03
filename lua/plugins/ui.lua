@@ -132,7 +132,7 @@ return {
         event = "BufReadPost",
     },
     {
-        "https://gitee.com/yunduozhai/nvim-ufo.git",
+        "https://gitee.com/nvim_lip/nvim-ufo.git",
         event = "VeryLazy",
         dependencies = {
             "https://gitee.com/yunduozhai/promise-async.git",
