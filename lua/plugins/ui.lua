@@ -80,7 +80,7 @@ return {
     },
     {
         -- function tree in top
-        "https://gitee.com/yunduozhai/lspsaga.nvim.git",
+        "https://gitee.com/nvim_lip/lspsaga.nvim.git",
         event = "LspAttach",
         config = function()
             require('configs.ui_all').lspsagaConfig()
