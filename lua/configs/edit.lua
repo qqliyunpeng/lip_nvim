@@ -133,6 +133,8 @@ function M.nvimToggleConfig()
             ['PREV']   = 'NEXT',
             ['start']    = 'stop',
             ['START']    = 'STOP',
+            ['out']    = 'in',
+            ['OUT']    = 'IN',
         },
         -- removes the default <leader>i keymap
         remove_default_keybinds = true,
