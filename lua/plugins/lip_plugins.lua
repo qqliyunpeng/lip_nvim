@@ -450,6 +450,7 @@ return {
         "https://gitee.com/nvim_lip/blink.cmp.git",
         dependencies = {
             { "https://gitee.com/nvim_lip/blink-cmp-yanky.git", },
+            { "https://gitee.com/nvim_lip/blink-cmp-copilot.git", },
         },
         branch = "main",
         -- event = "VeryLazy",
@@ -495,6 +496,35 @@ return {
             })
         end
     },
+    {
+        "https://gitee.com/nvim_lip/copilot.lua.git", -- 用于 providers='copilot'
+        dependencies = {
+            "https://gitee.com/nvim_lip/copilot-lsp.nvim.git", -- (optional) for NES functionality
+        },
+        enabled = function ()
+            local v = vim.version()
+            return (v.major == 0 and v.minor >= 11)
+        end,
+        config = function()
+            require("configs.ai").copileConfig()
+        end
+    },
+    {
+        "https://gitee.com/nvim_lip/avante.nvim.git",
+        build = vim.fn.has("win32") ~= 0
+            and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+            or "make",
+        event = "VeryLazy",
+        version = false, -- 永远不要将此值设置为 "*"！永远不要！
+        dependencies = {
+            "https://gitee.com/suyelu/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "zbirenbaum/copilot.lua", -- 用于 providers='copilot'
+        },
+        config = function()
+            require("configs.ai").avanteConfig()
+        end
+    }
 }
 
 

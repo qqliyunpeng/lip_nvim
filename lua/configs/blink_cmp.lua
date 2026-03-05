@@ -223,7 +223,16 @@ function M.blinkConfig()
                         trigger_characters = { '"' },
                         kind_icon = "󰅍",
                     },
-                }
+                },
+                -- copilot = {
+                --     name = "copilot",
+                --     module = "blink-cmp-copilot",
+                --     score_offset = 100,
+                --     async = true,
+                --     enabled = function ()
+                --         return vim.g.blink_enable_copilot
+                --     end,
+                -- },
             }
         },
         fuzzy = {
@@ -237,6 +246,20 @@ function M.blinkConfig()
                 'label',      -- Tertiary sort: by label if still tied
             }
         },
+    })
+
+    vim.api.nvim_create_autocmd("User", {
+        pattern = "BlinkCmpMenuOpen",
+        callback = function()
+            vim.b.copilot_suggestion_hidden = true
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("User", {
+        pattern = "BlinkCmpMenuClose",
+        callback = function()
+            vim.b.copilot_suggestion_hidden = false
+        end,
     })
 end
 

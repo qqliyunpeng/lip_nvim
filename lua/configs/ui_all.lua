@@ -409,7 +409,7 @@ function M.markdownConfig()
     local mk = require('render-markdown')
 
     local opts = {
-        file_types = { 'markdown', 'vimwiki' },
+        file_types = { 'markdown', 'vimwiki', 'Avante' },
         heading = {
             position = 'inline',
             sign = false,
