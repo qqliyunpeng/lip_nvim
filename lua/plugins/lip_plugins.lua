@@ -93,8 +93,8 @@ return {
                 disable_keymaps = true,
             })
 
-            vim.keymap.set('n', '<a-j>', require('illuminate').goto_next_reference, { desc = "Move to next reference" })
-            vim.keymap.set('n', '<a-k>', require('illuminate').goto_prev_reference, { desc = "Move to previous reference" })
+            -- vim.keymap.set('n', '<a-j>', require('illuminate').goto_next_reference, { desc = "Move to next reference" })
+            -- vim.keymap.set('n', '<a-k>', require('illuminate').goto_prev_reference, { desc = "Move to previous reference" })
         end
     },
     {
@@ -168,24 +168,7 @@ return {
         'https://gitee.com/nvim_lip/interestingwords.nvim.git',
         event = "VeryLazy",
         config = function()
-            local m = require('interestingwords')
-            require('interestingwords').setup{
-                colors = { '#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF' },
-                search_count = true,
-                navigation = false,
-                scroll_center = true,
-                -- search_key = "n",
-                -- cancel_search_key = "<leader>N",
-                color_key = "<leader>e",
-                cancel_color_key = "<leader>K",
-                select_mode = "loop",  -- random or loop
-            }
-            vim.keymap.del({'n', 'x'}, '<leader>m')
-            vim.keymap.del('n', '<leader>M')
-            vim.keymap.set("n", "<a-n>", function() m.NavigateToWord(true) end,
-                { noremap = true, silent = true, desc = "InterestingWord Navigation Forward" })
-            vim.keymap.set("n", "<a-N>", m.NavigateToWord,
-                { noremap = true, silent = true, desc = "InterestingWord Navigation Backword" })
+            require("configs.ui_all").interestingwordsConfig()
         end,
     },
     {

@@ -577,5 +577,73 @@ function M.accjkConfig()
     vim.keymap.set("n", "k", smart_("k", "<Plug>(accelerated_jk_gk)"), { silent = true })
 end
 
+function M.interestingwordsConfig()
+    require('interestingwords').setup{
+        colors = { '#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF' },
+        search_count = true,
+        navigation = false,
+        scroll_center = true,
+        color_key = "<leader>e",
+        select_mode = "loop",
+    }
+
+    local iw = require("interestingwords")
+    local illuminate = require("illuminate")
+
+    local function cursor_word_is_interesting()
+        local word = vim.fn.expand("<cword>")
+
+        -- 没有单词直接返回
+        if not word or word == "" then
+            return false
+        end
+
+        local matches = vim.fn.getmatches()
+
+        for _, m in ipairs(matches) do
+            if m.group and m.group:match("^InterestingWord") then
+                if m.pattern == "\\<" .. word .. "\\>" then
+                    return true
+                end
+            end
+        end
+
+        return false
+    end
+
+    local function jump_forward()
+        local word = vim.fn.expand("<cword>")
+
+        -- 光标下没有单词
+        if not word or word == "" then
+            return
+        end
+
+        if cursor_word_is_interesting() then
+            iw.NavigateToWord(true)
+        else
+            illuminate.goto_next_reference()
+        end
+    end
+
+    local function jump_backward()
+        local word = vim.fn.expand("<cword>")
+
+        -- 光标下没有单词
+        if not word or word == "" then
+            return
+        end
+
+        if cursor_word_is_interesting() then
+            iw.NavigateToWord(false)
+        else
+            illuminate.goto_prev_reference()
+        end
+    end
+
+    vim.keymap.set("n", "<A-j>", jump_forward,  { silent = true, desc = "Next interesting/illuminate" })
+    vim.keymap.set("n", "<A-k>", jump_backward, { silent = true, desc = "Prev interesting/illuminate" })
+end
+
 return M
 
