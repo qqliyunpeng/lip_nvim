@@ -11,6 +11,8 @@ else
     vim.g.use_custom_clangd = true
 end
 
+vim.g.blink_enable_copilot = false
+
 -- system
 map("n", " ", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
