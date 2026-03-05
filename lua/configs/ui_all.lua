@@ -602,7 +602,7 @@ function M.interestingwordsConfig()
 
         for _, m in ipairs(matches) do
             if m.group and m.group:match("^InterestingWord") then
-                if m.pattern == "\\<" .. word .. "\\>" then
+                if m.pattern == "\\c\\V\\<" .. word .. "\\>" then
                     return true
                 end
             end
