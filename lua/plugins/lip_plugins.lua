@@ -519,7 +519,7 @@ return {
         dependencies = {
             "https://gitee.com/suyelu/plenary.nvim",
             "MunifTanjim/nui.nvim",
-            "zbirenbaum/copilot.lua", -- 用于 providers='copilot'
+            "https://gitee.com/nvim_lip/copilot.lua.git", -- 用于 providers='copilot'
         },
         config = function()
             require("configs.ai").avanteConfig()
