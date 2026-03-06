@@ -45,7 +45,7 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | ]g           | n    | next git changs                                  |
 | [g           | n    | prev git changs                                  |
 | <leader>fe   | n    | 打开 harpoon 的界面，里边显示所有索引了的文件    |
-| <leader>a    | n    | 当前文件加入到 harpoon 列表中                    |
+| <leader>ha    | n    | 当前文件加入到 harpoon 列表中                    |
 | <leader>.    | n    | 打开 scratch                                     |
 | <leader>S    | n    | 打开不同工作区的 scratch                         |
 

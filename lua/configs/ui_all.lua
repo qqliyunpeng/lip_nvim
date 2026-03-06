@@ -171,6 +171,7 @@ function M.whichKeyConfig()
         spec = {
             {
                 mode = { "n", "v" },
+                {"<leader>a" , desc = "Avante keymap" },
                 {"<leader>f", group = "Telescope" },
                 {"<leader>b", group = "Buffer" },
                 {"<leader>g", desc = "Git" },
@@ -185,7 +186,7 @@ function M.whichKeyConfig()
                 {"<leader>fs", desc = "Search with parameter" },
                 {"<leader>fm", desc = "Mark list" },
                 {"<leader>fe", desc = "Harpoon list" },
-                {"<leader>a" , desc = "Harpoon add current file" },
+                {"<leader>ha" , desc = "Harpoon add current file" },
                 {"<leader>t" , desc = "Table and todo" },
                 {"<leader>tm", desc = "Table mode toggle" },
                 {"<leader>s" , desc = "Surround, search, replace" },

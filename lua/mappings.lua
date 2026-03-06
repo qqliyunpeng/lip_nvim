@@ -132,7 +132,7 @@ map("n", "p", function() require("configs.edit").pasteSmart() end, { desc = "Pas
 map("n", "P", function() require("configs.edit").PasteSmart() end, { desc = "Paste smart" })
 
 -- 头文件中生成声明信息
-map("n", "<leader>h", function() require("configs.gendeclare").create_declare() end, { desc = "Create header declare" })
+map("n", "<leader>hh", function() require("configs.gendeclare").create_declare() end, { desc = "Create header declare" })
 
 -- 命令个行退出
 map("c", "<A-q>", "<C-c>", { desc = "Exit cmdline" })
