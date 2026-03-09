@@ -82,10 +82,41 @@ local avanteOpts = {
             },
         },
     },
+    input = {
+        provider = "snacks",
+        provider_opts = {
+            title = "Avante Input",
+            iconns = " ",
+        },
+    },
+    mappings = {
+        sidebar = {
+            close = { "<Esc>", "q", "<C-c>" },
+        },
+    },
 }
 
 function M.avanteConfig()
     require('avante').setup(avanteOpts)
+
+    vim.api.nvim_create_autocmd("FileType", {
+        -- pattern = { "Avante", "AvanteInput" },
+        pattern = { "AvanteInput" },
+        callback = function(ev)
+            local opts = { buffer = ev.buf, silent = true }
+
+            -- normal mode: q 退出
+            vim.keymap.set("n", "q", "<cmd>AvanteToggle<cr>", opts)
+
+            -- normal mode: Ctrl-c 退出
+            vim.keymap.set("n", "<C-c>", "<cmd>AvanteToggle<cr>", opts)
+
+            -- insert mode: Ctrl-c 退出
+            -- vim.keymap.set("i", "<C-c>", "<Esc><cmd>AvanteToggle<cr>", opts)
+        end,
+    })
+
+
 end
 
 return M
