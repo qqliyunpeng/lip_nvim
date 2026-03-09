@@ -118,18 +118,30 @@ function M.avanteConfig()
 
     vim.api.nvim_create_autocmd("QuitPre", {
         callback = function()
-            -- ---------- 关闭 quickfix ----------
+            local has_qf = false
+            local has_avante = false
+
             for _, win in ipairs(vim.api.nvim_list_wins()) do
-                local buf = vim.api.nvim_win_get_buf(win)
-                if vim.bo[buf].buftype == "quickfix" then
-                    vim.cmd("cclose")
-                    break
+                local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
+                if ok then
+                    local bt = vim.bo[buf].buftype
+                    local ft = vim.bo[buf].filetype
+
+                    if bt == "quickfix" then
+                        has_qf = true
+                    end
+
+                    if ft == "Avante" or ft == "AvanteInput" then
+                        has_avante = true
+                    end
                 end
             end
 
-            -- ---------- 关闭 avante ----------
-            local ok, avante = pcall(require, "avante")
-            if ok and avante then
+            if has_qf then
+                pcall(vim.cmd, "cclose")
+            end
+
+            if has_avante then
                 pcall(vim.cmd, "AvanteToggle")
             end
         end,
