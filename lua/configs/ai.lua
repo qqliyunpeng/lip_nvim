@@ -116,7 +116,24 @@ function M.avanteConfig()
         end,
     })
 
+    vim.api.nvim_create_autocmd("QuitPre", {
+        callback = function()
+            -- ---------- 关闭 quickfix ----------
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+                local buf = vim.api.nvim_win_get_buf(win)
+                if vim.bo[buf].buftype == "quickfix" then
+                    vim.cmd("cclose")
+                    break
+                end
+            end
 
+            -- ---------- 关闭 avante ----------
+            local ok, avante = pcall(require, "avante")
+            if ok and avante then
+                pcall(vim.cmd, "AvanteToggle")
+            end
+        end,
+    })
 end
 
 return M
