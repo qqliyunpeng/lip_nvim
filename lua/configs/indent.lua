@@ -15,6 +15,8 @@ function M.miniIndentInit()
         pattern = {
             "Trouble",
             "alpha",
+            "Avante",
+            "AvanteInput",
             "dashboard",
             "fzf",
             "help",

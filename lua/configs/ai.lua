@@ -49,7 +49,7 @@ function M.copileConfig()
 end
 
 local avanteOpts = {
-    provider = "qwen",
+    provider = "chatgpt",
     providers = {
         copilot = {},
         qwen = {
@@ -81,6 +81,19 @@ local avanteOpts = {
                 max_tokens = 32768,
             },
         },
+        chatgpt = {
+            __inherited_from = "openai",
+            endpoint = "http://172.16.9.15:8317/v1",
+            model = "gpt-5.2",
+            -- model = "qwen3.5-plus",
+            api_key_name = "CHATGPT_API_KEY",
+            timeout = 30000, -- Timeout in milliseconds
+            extra_request_body = {
+                temperature = 0.75,
+                max_tokens = 512,
+            },
+            -- tool_choice = "none",
+        }
     },
     input = {
         provider = "snacks",
@@ -120,6 +133,7 @@ local avanteOpts = {
             focus_on_apply = "ours", -- which diff to focus after applying
         },
         behaviour = {
+            enable_fastapply = false,
             auto_apply_diff = false,
             auto_suggestions = false, -- Experimental stage
             auto_set_highlight_group = true,
