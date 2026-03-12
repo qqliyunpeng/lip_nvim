@@ -59,8 +59,8 @@ local avanteOpts = {
             api_key_name = "QWEN_API_KEY",
             timeout = 30000, -- Timeout in milliseconds
             extra_request_body = {
-                temperature = 0.75,
-                max_tokens = 512,
+                temperature = 0.3,
+                max_tokens = 1024,
             },
         },
         claude = {
@@ -68,8 +68,8 @@ local avanteOpts = {
             model = "claude-sonnet-4-20250514",
             timeout = 30000, -- Timeout in milliseconds
             extra_request_body = {
-                temperature = 0.75,
-                max_tokens = 20480,
+                temperature = 0.3,
+                max_tokens = 4096,
             },
         },
         moonshot = {
@@ -89,8 +89,8 @@ local avanteOpts = {
             api_key_name = "CHATGPT_API_KEY",
             timeout = 30000, -- Timeout in milliseconds
             extra_request_body = {
-                temperature = 0.75,
-                max_tokens = 512,
+                temperature = 0.3,
+                max_tokens = 1024,
             },
             -- tool_choice = "none",
         }
@@ -111,7 +111,7 @@ local avanteOpts = {
     windows = {
         position = "left", -- the position of the sidebar
         wrap = true, -- similar to vim.o.wrap
-        width = 30, -- default % based on available width
+        width = 40, -- default % based on available width
         sidebar_header = {
             enabled = true, -- true, false to enable/disable the header
             align = "left", -- left, center, right for title
@@ -141,8 +141,8 @@ local avanteOpts = {
             auto_apply_diff_after_generation = false,
             support_paste_from_clipboard = false,
             minimize_diff = false, -- Whether to remove unchanged lines when applying a code block
-            enable_token_counting = true, -- Whether to enable token counting. Default to true.
-            auto_add_current_file = true, -- Whether to automatically add the current file when opening a new chat. Default to true.
+            enable_token_counting = false, -- Whether to enable token counting. Default to true.
+            auto_add_current_file = false, -- Whether to automatically add the current file when opening a new chat. Default to true.
             auto_approve_tool_permissions = true, -- Default: auto-approve all tools (no prompts)
             -- Examples:
             -- auto_approve_tool_permissions = false,                -- Show permission prompts for all tools
@@ -169,6 +169,16 @@ function M.avanteConfig()
 
             -- normal mode: Ctrl-c 退出
             vim.keymap.set("n", "<C-c>", "<cmd>AvanteToggle<cr>", opts)
+
+            -- Force Avante Todos window height.
+            -- AvanteTodos is usually rendered in a small split; increase it to show more items.
+            if vim.bo[ev.buf].filetype == "AvanteTodos" then
+                vim.schedule(function()
+                    for _, win in ipairs(vim.fn.win_findbuf(ev.buf)) do
+                        vim.api.nvim_win_set_height(win, 6)
+                    end
+                end)
+            end
 
             -- insert mode: Ctrl-c 退出
             -- vim.keymap.set("i", "<C-c>", "<Esc><cmd>AvanteToggle<cr>", opts)
