@@ -141,8 +141,46 @@ function M.blinkConfig()
             preset = 'default',
             ['<C-j>'] = { 'select_next', 'fallback' },
             ['<C-k>'] = { 'select_prev', 'fallback' },
-            ["<Tab>"]   = { 'select_next', 'snippet_forward' , 'fallback' },
-            ["<S-Tab>"] = { 'select_prev', 'snippet_backward', 'fallback' },
+            ["<Tab>"] = {
+                function(bcmp)
+                    local buf = vim.api.nvim_get_current_buf()
+
+                    -- 1) Copilot LSP NES: accept pending suggestion first.
+                    if vim.b[buf].nes_state then
+                        local ok, nes = pcall(require, "copilot-lsp.nes")
+                        if ok and nes then
+                            bcmp.hide()
+                            nes.apply_pending_nes()
+                            return true
+                        end
+                    end
+
+                    -- 2) When blink.cmp menu is NOT visible, accept Copilot inline suggestion
+                    -- (virtual text) with <Tab>.
+                    local menu_visible = type(bcmp.is_visible) == "function" and bcmp.is_visible() or false
+                    if not menu_visible then
+                        local ok, suggestion = pcall(require, "copilot.suggestion")
+                        if ok and suggestion and type(suggestion.is_visible) == "function" and suggestion.is_visible() then
+                            bcmp.hide()
+                            suggestion.accept()
+                            return true
+                        end
+                    end
+
+                    -- 3) Menu visible: keep blink.cmp behavior.
+                    if menu_visible then
+                        local ok, accepted = pcall(bcmp.select_and_accept)
+                        if ok and accepted then
+                            return true
+                        end
+                    end
+
+                    -- Returning nil continues to snippet_forward / fallback.
+                end,
+                'snippet_forward',
+                'fallback',
+            },
+            -- ["<S-Tab>"] = { 'select_prev', 'snippet_backward', 'fallback' },
             ['<CR>']  = { 'accept', 'fallback' },
             ['<C-e>'] = { 'cancel' }, -- or {}
             ["<C-b>"] = false,
@@ -212,7 +250,7 @@ function M.blinkConfig()
         },
         snippets = { preset = 'luasnip' },
         sources = {
-            default = { 'lsp', 'path', 'snippets', 'buffer', "yank" },
+            default = { 'lsp', 'path', 'snippets', 'buffer', "yank", "ripgrep" },
             providers = {
                 yank = {
                     name = "yank",
@@ -233,6 +271,11 @@ function M.blinkConfig()
                 --         return vim.g.blink_enable_copilot
                 --     end,
                 -- },
+                ripgrep = {
+                    name = "Ripgrep",
+                    module = "blink-ripgrep",
+                    opts = {},
+                },
             }
         },
         fuzzy = {
