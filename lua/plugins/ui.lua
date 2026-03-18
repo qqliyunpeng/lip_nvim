@@ -10,10 +10,10 @@ return {
         opts = require("configs.ui_all").componentsConfig()
     },
     {
-        "https://gitee.com/yunduozhai/heirline.nvim.git",
+        "https://gitee.com/nvim_lip/heirline.nvim.git",
         event = { "BufReadPost", "BufNewFile" },
         dependencies = {
-            "heirline-components.nvim"
+            "https://gitee.com/nvim_lip/heirline-components.nvim.git",
         },
         config = function()
             return require("configs.heirline").config()
