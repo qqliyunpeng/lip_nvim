@@ -241,6 +241,16 @@ function M.snacksConfig()
         },
     })
 
+    -- In lazygit terminal, remap <C-j>/<C-k> to j / k
+    vim.api.nvim_create_autocmd("TermOpen", {
+        pattern = "*lazygit*",
+        callback = function(args)
+            local buf = args.buf
+            vim.keymap.set("t", "<C-j>", "j", { buffer = buf, noremap = true, silent = true })
+            vim.keymap.set("t", "<C-k>", "k", { buffer = buf, noremap = true, silent = true })
+        end,
+    })
+
     vim.api.nvim_create_autocmd("User", {
         pattern = "TelescopeFindPre",
         callback = function()

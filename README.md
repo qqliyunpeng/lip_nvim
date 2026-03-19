@@ -1,7 +1,7 @@
 
 # 0. 正在使用的nvim版本
-```sh
-NVIM v0.10.4
+```md
+NVIM ~~v0.10.4~~ --> v0.11.0
 Build type: Release
 LuaJIT 2.1.1713484068
 Run "nvim -V1 -v" for more info
