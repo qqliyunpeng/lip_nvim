@@ -461,6 +461,24 @@ function M.markdownConfig()
         opts = vim.tbl_deep_extend("force", opts, ascii_icons)
     end
 
+    -- Fix quote marker overlapping first character on wrapped lines.
+    -- When `quote.repeat_linebreak = true`, render-markdown recommends configuring
+    -- `showbreak` + `breakindent` to ensure wrapped screen lines are indented.
+    local group = vim.api.nvim_create_augroup("RenderMarkdownQuoteLinebreak", { clear = true })
+    vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+        group = group,
+        callback = function(args)
+            local ft = vim.bo[args.buf].filetype
+            if ft == "markdown" or ft == "vimwiki" or ft == "Avante" then
+                -- Two spaces is the upstream recommended baseline; it provides room
+                -- for the repeated quote icon without covering text.
+                vim.opt_local.showbreak = "  "
+                vim.opt_local.breakindent = true
+                vim.opt_local.breakindentopt = ""
+            end
+        end,
+    })
+
     mk.setup(opts)
 end
 
