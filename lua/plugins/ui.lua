@@ -39,9 +39,16 @@ return {
         }
     },
     {
+        "https://gitee.com/nvim_lip/nui.nvim.git",
+        branch = 'main',
+    },
+    {
         "https://gitee.com/yunduozhai/noice.nvim.git",
         branch = 'main',
         tag = 'v4.10.0',
+        dependencies = {
+            "https://gitee.com/nvim_lip/nui.nvim.git",
+        },
         config = function()
             return require("configs.ui_all").noiceConfig()
         end

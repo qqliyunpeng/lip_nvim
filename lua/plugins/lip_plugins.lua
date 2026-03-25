@@ -184,7 +184,7 @@ return {
         opts = {
             map_bs = true,
             fast_wrap = {},
-            disable_filetype = { "TelescopePrompt", "vim"  },
+            disable_filetype = { "TelescopePrompt", "vim", "bitbake" },
         },
         config = function (_, opts)
             require("configs.autopairs").setup(opts)
@@ -451,8 +451,9 @@ return {
         dependencies = {
             { "https://gitee.com/nvim_lip/blink-cmp-yanky.git", },
             { "https://gitee.com/nvim_lip/blink-cmp-copilot.git", },
+            { "https://gitee.com/nvim_lip/blink-ripgrep.nvim", version = "*", },
         },
-        branch = "main",
+        branch = "v1",
         -- event = "VeryLazy",
         event = { "BufReadPost", "BufNewFile" },
         build = require("configs.blink_cmp").blinkBuild(),
@@ -519,7 +520,7 @@ return {
         version = false, -- 永远不要将此值设置为 "*"！永远不要！
         dependencies = {
             "https://gitee.com/suyelu/plenary.nvim",
-            "MunifTanjim/nui.nvim",
+            "https://gitee.com/nvim_lip/nui.nvim.git",
             "https://gitee.com/nvim_lip/copilot.lua.git", -- 用于 providers='copilot'
         },
         config = function()
