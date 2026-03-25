@@ -440,6 +440,7 @@ return {
             require("configs.indent").miniIndentInit()
             require('configs.edit').miniSurroundConfig()
             require('configs.edit').miniMoveConfig()
+            require('configs.edit').miniKeymapConfig()
         end
     },
     {

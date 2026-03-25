@@ -50,6 +50,16 @@ function M.miniMoveConfig()
     })
 end
 
+function M.miniKeymapConfig()
+    require'mini.keymap'.setup({})
+
+    local map_combo = require('mini.keymap').map_combo
+
+    -- Escape into Normal mode from Terminal mode
+    map_combo('t', 'jk', '<BS><BS><C-\\><C-n>')
+    map_combo('t', 'kj', '<BS><BS><C-\\><C-n>')
+end
+
 M.yankKeys = {
     { "<leader>y", function() require('telescope').extensions.yank_history.yank_history({}) end, desc = "Open Yank History" },
     { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Yank text" },
