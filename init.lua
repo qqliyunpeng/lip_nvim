@@ -72,7 +72,7 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.notify("lip: Begin to download lazy.nvim ...")
-    local repo = "https://gitee.com/yunduozhai/lazy.nvim.git"
+    local repo = "https://gitee.com/nvim_lip/lazy.nvim"
     local out = vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=main", lazypath }
     if vim.v.shell_error ~= 0 then
         vim.api.nvim_echo({
