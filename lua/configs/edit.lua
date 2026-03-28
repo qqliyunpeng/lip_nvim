@@ -53,11 +53,28 @@ end
 function M.miniKeymapConfig()
     require'mini.keymap'.setup({})
 
-    local map_combo = require('mini.keymap').map_combo
+    -- Escape into Normal mode from Terminal mode (except lazygit)
+    vim.api.nvim_create_autocmd("TermOpen", {
+        callback = function(args)
+            local bufnr = args.buf
 
-    -- Escape into Normal mode from Terminal mode
-    map_combo('t', 'jk', '<BS><BS><C-\\><C-n>')
-    map_combo('t', 'kj', '<BS><BS><C-\\><C-n>')
+            -- Defer to ensure filetype/bufname are set
+            vim.schedule(function()
+                if not vim.api.nvim_buf_is_valid(bufnr) then return end
+
+                local ft = vim.bo[bufnr].filetype
+                local name = vim.api.nvim_buf_get_name(bufnr):lower()
+
+                -- Don't override lazygit terminal navigation keys
+                if ft == "lazygit" or name:match("lazygit") then
+                    return
+                end
+
+                vim.keymap.set('t', 'jk', '<BS><BS><C-\\><C-n>', { buffer = bufnr, noremap = true, silent = true })
+                vim.keymap.set('t', 'kj', '<BS><BS><C-\\><C-n>', { buffer = bufnr, noremap = true, silent = true })
+            end)
+        end,
+    })
 end
 
 M.yankKeys = {
