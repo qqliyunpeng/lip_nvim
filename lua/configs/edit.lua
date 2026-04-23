@@ -86,6 +86,8 @@ M.yankKeys = {
     { "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)", desc = "Put before and indent left" },
     { "=p", "<Plug>(YankyPutAfterFilter)", desc = "Put after applying a filter" },
     { "=P", "<Plug>(YankyPutBeforeFilter)", desc = "Put before applying a filter" },
+    { "<C-p>", "<Plug>(YankyPutAfterFilter)", mode = "n", desc = "Put after applying a filter" },
+    -- { "<C-P>", "<Plug>(YankyPutBeforeFilter)", mode = "n", desc = "Put before applying a filter" },
 }
 
 function M.yankConfig()
