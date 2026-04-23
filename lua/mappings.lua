@@ -101,8 +101,10 @@ map("n", "d", '"_d', { desc = "Delete without yanking" })
 map("n", "D", '"_D', { desc = "Delete without yanking" })
 map("n", "x", '"_x', { desc = "Delete without yanking" })
 map("n", "X", '"_X', { desc = "Delete without yanking" })
-map("x", "p", [["_c<c-r>"<esc>]], { desc = "Paste without yanking replaced text" })
-map("x", "P", [["_C<c-r>"<esc>]], { desc = "Paste without yanking replaced text" })
+-- visual paste: replace selection without yanking, reindent pasted text, then stay in normal mode
+-- `"_dP` keeps the default register intact; `` `[v`]=`` indents the last changed text and exits visual mode
+map("x", "p", '"_dP`[v`]=', { desc = "Paste over selection and reindent" })
+map("x", "P", '"_dP`[v`]=', { desc = "Paste over selection and reindent" })
 
 -- map("n", "<leader>n", "<cmd> Noice<CR>", { desc = "Notification History" })
 
