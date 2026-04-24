@@ -201,6 +201,7 @@ vim.api.nvim_create_user_command("AT",   "OtherTabNew", {})
 require('noice')
 
 require("configs.num_change").tg_format()
+require("configs.num_change").tg_dot_array()
 require("configs.num_change").tg_format_array()
 require("configs.gencompiledb")
 

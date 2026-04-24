@@ -88,7 +88,7 @@ function M.tg_format()
     end
 
     -- 支持 dot-repeat: https://gist.github.com/kylechui/a5c1258cd2d86755f97b10fc921315c3
-    _G.toggle_number_base_op = function ()
+    _G.toggle_number_base_op = function()
         local line = vim.api.nvim_get_current_line()
         local col = vim.api.nvim_win_get_cursor(0)[2] + 1
 
@@ -120,11 +120,11 @@ end
 -- 将数组按最多一行16个逗号为一行进行整理
 function M.tg_format_array()
     -- 配置
-    local max_items = 15                -- 每行最多元素数
-    local supported_separators = {',', ':', ';'} -- 支持的分隔符
+    local max_items = 16 -- 每行最多元素数
+    local supported_separators = { ",", ":", ";" } -- 支持的分隔符
 
     local function do_format_array(buf, line_nr)
-        local line = vim.api.nvim_buf_get_lines(buf, line_nr, line_nr+1, false)[1]
+        local line = vim.api.nvim_buf_get_lines(buf, line_nr, line_nr + 1, false)[1]
         if not line then return end
 
         local content = line:match("{(.*)}")
@@ -142,13 +142,13 @@ function M.tg_format_array()
 
         -- 拆分元素（支持任意非分隔符、非空白的 token）
         local items = {}
-        for item in content:gmatch("%s*([^"..vim.pesc(sep).." %s]+)%s*") do
+        for item in content:gmatch("%s*([^" .. vim.pesc(sep) .. " %s]+)%s*") do
             table.insert(items, item)
         end
         if #items == 0 then return end
 
         -- 组装输出行
-        local lines = {"{"}
+        local lines = { "{" }
         local line_buf = "    " -- 4-space indent
         for i, item in ipairs(items) do
             line_buf = line_buf .. item
@@ -166,11 +166,11 @@ function M.tg_format_array()
         table.insert(lines, line_buf)
         table.insert(lines, "}")
 
-        vim.api.nvim_buf_set_lines(buf, line_nr, line_nr+1, false, lines)
+        vim.api.nvim_buf_set_lines(buf, line_nr, line_nr + 1, false, lines)
     end
 
     -- operatorfunc 封装
-    _G.op_format_array = function ()
+    _G.op_format_array = function()
         local buf = vim.api.nvim_get_current_buf()
         local start_line, end_line
 
@@ -190,7 +190,206 @@ function M.tg_format_array()
     vim.keymap.set("n", "<leader>uf", function()
         vim.o.operatorfunc = "v:lua.op_format_array"
         return "g@l"
-    end, {expr = true, noremap = true, desc = "Format {} 16 items"})
+    end, { expr = true, noremap = true, desc = "Format {} 16 items" })
+end
+
+-- 检查数组，如果内容是空格隔开的，改成以逗号隔开
+function M.tg_dot_array()
+    local supported_separators = { ",", ":", ";" }
+
+    local function has_supported_separator(text)
+        -- Fast path: if user already has commas/colons/semicolons, don't touch.
+        for _, s in ipairs(supported_separators) do
+            if text:find(s, 1, true) then return true end
+        end
+        return false
+    end
+
+    -- Turn "18123 1173  -2912" into "18123, 1173,  -2912," while preserving whitespace.
+    -- When add_trailing_comma=false, the last token won't get a trailing comma.
+    local function format_space_separated_segment(segment, add_trailing_comma)
+        add_trailing_comma = not not add_trailing_comma
+
+        -- Preserve leading indentation (spaces/tabs) exactly.
+        local leading = segment:match("^(%s*)") or ""
+        segment = segment:sub(#leading + 1)
+
+        local tokens = {}
+        local spaces = {}
+        for token, space in segment:gmatch("(%S+)(%s*)") do
+            table.insert(tokens, token)
+            table.insert(spaces, space or "")
+        end
+
+        if #tokens <= 1 then
+            return leading .. segment
+        end
+
+        local out = { leading }
+        for i, token in ipairs(tokens) do
+            local is_last = i == #tokens
+            table.insert(out, token)
+
+            if not is_last then
+                table.insert(out, ",")
+                table.insert(out, spaces[i] or "")
+            else
+                if add_trailing_comma then
+                    table.insert(out, ",")
+                end
+                table.insert(out, spaces[i] or "")
+            end
+        end
+
+        return table.concat(out)
+    end
+
+    local function find_last_content_line_idx(lines)
+        -- Find the last line that contains *real* content inside the {...} block.
+        -- We treat "{" and "}" themselves as non-content.
+        for i = #lines, 1, -1 do
+            local stripped = (lines[i] or ""):gsub("[{}]", "")
+            if stripped:match("%S") then return i end
+        end
+        return nil
+    end
+
+    local function block_has_supported_separator(lines)
+        -- Check only the content inside braces, and early-exit on first hit.
+        -- This avoids building a big concatenated string.
+        local opened = false
+        for _, line in ipairs(lines) do
+            if not opened then
+                local after_open = line:match("{(.*)$")
+                if after_open ~= nil then
+                    opened = true
+                    if has_supported_separator(after_open) then return true end
+                end
+            else
+                local before_close = line:match("^(.*)}")
+                if before_close ~= nil then
+                    if has_supported_separator(before_close) then return true end
+                    break
+                end
+                if has_supported_separator(line) then return true end
+            end
+        end
+        return false
+    end
+
+    -- 处理多行 { ... } 块：当块内不存在 ,/:/; 时，把空格分隔改为逗号分隔
+    local function do_dot_array_block(buf, start_line, end_line)
+        local lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line + 1, false)
+        if #lines == 0 then return end
+
+        -- If already comma/colon/semicolon separated, do nothing.
+        if block_has_supported_separator(lines) then
+            return
+        end
+
+        local last_content_idx = find_last_content_line_idx(lines)
+
+        -- Rewrite each line in the block
+        for i, line in ipairs(lines) do
+            local new_line = line
+            local add_trailing_comma = last_content_idx and (i < last_content_idx) or false
+
+            if line:find("{", 1, true) and line:find("}", 1, true) then
+                -- Single line: pre { content } post
+                local pre, content, post = line:match("^(.-){(.*)}(.-)$")
+                if content then
+                    -- Single-line: do not add trailing comma
+                    new_line = pre .. "{" .. format_space_separated_segment(content, false) .. "}" .. post
+                end
+            elseif line:find("{", 1, true) then
+                -- Opening line: pre { rest
+                local pre, rest = line:match("^(.-){(.*)$")
+                if rest ~= nil then
+                    if rest:match("%S") then
+                        new_line = pre .. "{" .. format_space_separated_segment(rest, add_trailing_comma)
+                    else
+                        new_line = pre .. "{" .. rest
+                    end
+                end
+            elseif line:find("}", 1, true) then
+                -- Closing line: before } post
+                local before, post = line:match("^(.*)}(.-)$")
+                if before ~= nil then
+                    local formatted = before
+                    if before:match("%S") then
+                        formatted = format_space_separated_segment(before, add_trailing_comma)
+                    end
+                    new_line = formatted .. "}" .. (post or "")
+                end
+            else
+                -- Middle content line
+                if line:match("%S") then
+                    new_line = format_space_separated_segment(line, add_trailing_comma)
+                end
+            end
+
+            lines[i] = new_line
+        end
+
+        vim.api.nvim_buf_set_lines(buf, start_line, end_line + 1, false, lines)
+    end
+
+    local function find_brace_block(buf, from_line)
+        local line_count = vim.api.nvim_buf_line_count(buf)
+
+        -- Find opening '{' (1 buffer-read instead of per-line API calls)
+        local open_line
+        do
+            local up = vim.api.nvim_buf_get_lines(buf, 0, from_line + 1, false)
+            for i = #up, 1, -1 do
+                if up[i] and up[i]:find("{", 1, true) then
+                    open_line = i - 1
+                    break
+                end
+            end
+        end
+        if not open_line then return nil, nil end
+
+        -- Find closing '}' (also with a single buffer-read)
+        local close_line
+        do
+            local down = vim.api.nvim_buf_get_lines(buf, open_line, line_count, false)
+            for i, line in ipairs(down) do
+                if line and line:find("}", 1, true) then
+                    close_line = open_line + (i - 1)
+                    break
+                end
+            end
+        end
+
+        if not close_line then return nil, nil end
+        return open_line, close_line
+    end
+
+    -- operatorfunc wrapper
+    _G.op_dot_array = function(type)
+        local buf = vim.api.nvim_get_current_buf()
+        local start_line, end_line
+
+        if type == "line" then
+            start_line = vim.fn.line("'<") - 1
+            end_line = vim.fn.line("'>") - 1
+        else
+            local cur = vim.fn.line(".") - 1
+            start_line, end_line = find_brace_block(buf, cur)
+            if not start_line or not end_line then
+                start_line = cur
+                end_line = cur
+            end
+        end
+
+        do_dot_array_block(buf, start_line, end_line)
+    end
+
+    vim.keymap.set("n", "<leader>um,", function()
+        vim.o.operatorfunc = "v:lua.op_dot_array"
+        return "g@l"
+    end, { expr = true, noremap = true, desc = "Space -> Comma in {}" })
 end
 
 return M
