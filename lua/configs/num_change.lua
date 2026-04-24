@@ -117,39 +117,130 @@ function M.tg_format()
     vim.keymap.set("n", "<leader>ux", toggle_number_base_main, { expr = true, desc = "Dec <-> Hex <-> Bin" })
 end
 
--- 将数组按最多一行16个逗号为一行进行整理
+-- 将数组按最多一行16个分隔符为一行进行整理（支持单行与多行 { ... } 块）
 function M.tg_format_array()
     -- 配置
     local max_items = 16 -- 每行最多元素数
     local supported_separators = { ",", ":", ";" } -- 支持的分隔符
 
-    local function do_format_array(buf, line_nr)
-        local line = vim.api.nvim_buf_get_lines(buf, line_nr, line_nr + 1, false)[1]
-        if not line then return end
+    local function trim(s)
+        return (s:gsub("^%s+", ""):gsub("%s+$", ""))
+    end
 
-        local content = line:match("{(.*)}")
-        if not content then return end
-
-        -- 自动检测分隔符（遇到的第一个有效分隔符）
-        local sep = nil
+    local function detect_separator(text)
         for _, s in ipairs(supported_separators) do
-            if content:find(s, 1, true) then
-                sep = s
-                break
+            if text:find(s, 1, true) then
+                return s
             end
         end
-        if not sep then return end
+        return nil
+    end
 
-        -- 拆分元素（支持任意非分隔符、非空白的 token）
+    local function split_items(content, sep)
         local items = {}
-        for item in content:gmatch("%s*([^" .. vim.pesc(sep) .. " %s]+)%s*") do
-            table.insert(items, item)
+        local pat = "([^" .. vim.pesc(sep) .. "]+)"
+        for part in content:gmatch(pat) do
+            local item = trim(part)
+            if item ~= "" then
+                table.insert(items, item)
+            end
         end
-        if #items == 0 then return end
+        return items
+    end
 
-        -- 组装输出行
-        local lines = { "{" }
-        local line_buf = "    " -- 4-space indent
+    local function find_brace_block(buf, from_line)
+        local line_count = vim.api.nvim_buf_line_count(buf)
+
+        -- Find opening '{' by scanning upward (single buffer read)
+        local open_line
+        do
+            local up = vim.api.nvim_buf_get_lines(buf, 0, from_line + 1, false)
+            for i = #up, 1, -1 do
+                if up[i] and up[i]:find("{", 1, true) then
+                    open_line = i - 1
+                    break
+                end
+            end
+        end
+        if not open_line then
+            return nil, nil
+        end
+
+        -- Find closing '}' by scanning downward (single buffer read)
+        local close_line
+        do
+            local down = vim.api.nvim_buf_get_lines(buf, open_line, line_count, false)
+            for i, line in ipairs(down) do
+                if line and line:find("}", 1, true) then
+                    close_line = open_line + (i - 1)
+                    break
+                end
+            end
+        end
+
+        if not close_line then
+            return nil, nil
+        end
+        return open_line, close_line
+    end
+
+    local function do_format_array_block(buf, start_line, end_line)
+        local block = vim.api.nvim_buf_get_lines(buf, start_line, end_line + 1, false)
+        if #block == 0 then
+            return
+        end
+
+        -- Extract: pre { content } post, while supporting multi-line blocks
+        local open_pre, after_open = block[1]:match("^(.-){(.*)$")
+        if open_pre == nil then
+            return
+        end
+
+        local before_close, close_post
+        if #block == 1 then
+            after_open, before_close, close_post = block[1]:match("^(.-){(.*)}(.-)$")
+            if after_open == nil then
+                return
+            end
+            open_pre = after_open
+            after_open = before_close
+            before_close = ""
+        else
+            before_close, close_post = block[#block]:match("^(.*)}(.-)$")
+            if before_close == nil then
+                return
+            end
+        end
+
+        local parts = {}
+        table.insert(parts, after_open or "")
+        if #block > 2 then
+            for i = 2, #block - 1 do
+                table.insert(parts, block[i])
+            end
+        end
+        if #block > 1 then
+            table.insert(parts, before_close or "")
+        end
+
+        local content = table.concat(parts, " ")
+        local sep = detect_separator(content)
+        if not sep then
+            return
+        end
+
+        local items = split_items(content, sep)
+        if #items == 0 then
+            return
+        end
+
+        local base_indent = (open_pre:match("^(%s*)") or "")
+        local item_indent = base_indent .. "    "
+
+        local out = {}
+        table.insert(out, open_pre .. "{")
+
+        local line_buf = item_indent
         for i, item in ipairs(items) do
             line_buf = line_buf .. item
             if i < #items then
@@ -158,33 +249,45 @@ function M.tg_format_array()
 
             if i % max_items == 0 and i < #items then
                 line_buf = line_buf:gsub("%s+$", "")
-                table.insert(lines, line_buf)
-                line_buf = "    "
+                table.insert(out, line_buf)
+                line_buf = item_indent
             end
         end
-        line_buf = line_buf:gsub("%s+$", "")
-        table.insert(lines, line_buf)
-        table.insert(lines, "}")
 
-        vim.api.nvim_buf_set_lines(buf, line_nr, line_nr + 1, false, lines)
+        line_buf = line_buf:gsub("%s+$", "")
+        table.insert(out, line_buf)
+        table.insert(out, base_indent .. "}" .. (close_post or ""))
+
+        vim.api.nvim_buf_set_lines(buf, start_line, end_line + 1, false, out)
     end
 
     -- operatorfunc 封装
-    _G.op_format_array = function()
+    _G.op_format_array = function(type)
         local buf = vim.api.nvim_get_current_buf()
-        local start_line, end_line
 
         if type == "line" then
-            start_line = vim.fn.line("'<") - 1
-            end_line = vim.fn.line("'>")
-        else
-            start_line = vim.fn.line(".") - 1
-            end_line = start_line + 1
+            local start_line = vim.fn.line("'<") - 1
+            local end_line = vim.fn.line("'>") - 1
+
+            -- Format each distinct { ... } block intersecting the selection.
+            local visited = {}
+            for l = start_line, end_line do
+                local s, e = find_brace_block(buf, l)
+                if s and e and not visited[s] then
+                    visited[s] = true
+                    do_format_array_block(buf, s, e)
+                end
+            end
+            return
         end
 
-        for l = start_line, end_line - 1 do
-            do_format_array(buf, l)
+        local cur = vim.fn.line(".") - 1
+        local s, e = find_brace_block(buf, cur)
+        if not s or not e then
+            -- Fallback: try current line only
+            s, e = cur, cur
         end
+        do_format_array_block(buf, s, e)
     end
 
     vim.keymap.set("n", "<leader>uf", function()
@@ -393,4 +496,3 @@ function M.tg_dot_array()
 end
 
 return M
-
