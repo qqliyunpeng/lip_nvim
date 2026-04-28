@@ -64,7 +64,8 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | C-up/down   | create cursor in up and down                             |
 | `\\\`       | three \ is to create a cursor and use up/down/left/right |
 |             | to move to cursor and tree \ to select the other         |
-| C-c / alt-q | cancle VM mode                                           |
+| <C-j>/<C-k>     | 在按下 `\\\`之后，按<c-j> 或 <c-k> 分别向下或向上移动光标，创建新的光标位置。 |
+| <C-c> / alt-q | cancle VM mode |
 
 ## 3.1 pattern
 - \\w toggles whole word search

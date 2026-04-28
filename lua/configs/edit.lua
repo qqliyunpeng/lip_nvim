@@ -198,17 +198,40 @@ function M.visualMulConfig()
 
     vim.api.nvim_create_autocmd("User", {
         pattern = "visual_multi_start",
-        callback = function ()
+        callback = function()
             disable_bs_now()
+
+            -- While Visual-Multi is active, use <C-j>/<C-k> to add cursors down/up
+            -- This is buffer-local so it won't override your global <C-j>/<C-k> window navigation.
+            vim.keymap.set({ "n", "x" }, "<C-j>", "<Plug>(VM-Add-Cursor-Down)", {
+                buffer = 0,
+                remap = true,
+                silent = true,
+                desc = "VM add cursor down",
+            })
+            vim.keymap.set({ "n", "x" }, "<C-k>", "<Plug>(VM-Add-Cursor-Up)", {
+                buffer = 0,
+                remap = true,
+                silent = true,
+                desc = "VM add cursor up",
+            })
+
             vim.keymap.set("n", "<A-q>", "<cmd>call vm#reset()<CR>")
-        end
+        end,
     })
     vim.api.nvim_create_autocmd("User", {
         pattern = "visual_multi_exit",
-        callback = function ()
+        callback = function()
             restore_bs_now()
+
+            -- Remove buffer-local mappings so your original global mappings take effect again
+            pcall(vim.keymap.del, "n", "<C-j>", { buffer = 0 })
+            pcall(vim.keymap.del, "x", "<C-j>", { buffer = 0 })
+            pcall(vim.keymap.del, "n", "<C-k>", { buffer = 0 })
+            pcall(vim.keymap.del, "x", "<C-k>", { buffer = 0 })
+
             vim.keymap.set("n", "<A-q>", "<Esc><cmd>noh<CR>")
-        end
+        end,
     })
 end
 
@@ -305,7 +328,7 @@ function M.miniFileConfig()
         if not ok or not hl then
             return nil
         end
-        return hl.bg or hl.background
+        return hl.bg
     end
 
     local original_normalfloat_bg = get_hl_bg("NormalFloat")
