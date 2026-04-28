@@ -205,3 +205,7 @@ require("configs.num_change").tg_dot_array()
 require("configs.num_change").tg_format_array()
 require("configs.gencompiledb")
 
+-- avante.nvim 兼容老 nvim 版本
+vim.text = vim.text or {}
+vim.text.diff = vim.diff
+
