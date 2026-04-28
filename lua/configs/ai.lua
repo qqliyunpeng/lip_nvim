@@ -1,20 +1,21 @@
 local M = {}
 
+-- NOTE: Copilot config intentionally kept separate from llm.nvim and Avante.
 local copileOpts = {
-    suggestion = { enabled = true, auto_trigger = false },  -- 自动补全
-    panel = { enabled = true },                             -- Copilot 面板
-    filetypes = {                                           -- 启用 Copilot 的文件类型
+    suggestion = { enabled = true, auto_trigger = false }, -- 自动补全
+    panel = { enabled = true }, -- Copilot 面板
+    filetypes = { -- 启用 Copilot 的文件类型
         lua = true,
         python = true,
         javascript = false,
         typescript = false,
         markdown = true,
     },
-    keymap = {                                             -- 快捷键映射
+    keymap = { -- 快捷键映射
         accept = "<CR>",
         -- accept = "<M-j>",
-        next    = false,
-        prev    = false,
+        next = false,
+        prev = false,
         dismiss = false,
     },
 }
@@ -39,17 +40,22 @@ function M.copileConfig()
         if suggestion.is_visible() then
             suggestion.accept()
         else
-            vim.api.nvim_feedkeys(
-                vim.api.nvim_replace_termcodes("<CR>", true, false, true),
-                "n",
-                true
-            )
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", true)
         end
     end, { silent = true })
 end
 
 local avanteOpts = {
     provider = "chatgpt",
+    -- Limit stored chat history.
+    history = {
+        max_messages = 20,
+    },
+    -- Disable diff-based apply flow and diff view as much as possible.
+    -- (Keeps Avante usable for chat/ask without opening diff UIs.)
+    diff = {
+        enabled = false,
+    },
     providers = {
         copilot = {},
         qwen = {
@@ -85,15 +91,13 @@ local avanteOpts = {
             __inherited_from = "openai",
             endpoint = "http://172.16.9.15:8317/v1",
             model = "gpt-5.2",
-            -- model = "qwen3.5-plus",
             api_key_name = "CHATGPT_API_KEY",
             timeout = 30000, -- Timeout in milliseconds
             extra_request_body = {
                 temperature = 0.3,
                 max_tokens = 1024,
             },
-            -- tool_choice = "none",
-        }
+        },
     },
     input = {
         provider = "snacks",
@@ -157,7 +161,54 @@ local avanteOpts = {
 }
 
 function M.avanteConfig()
-    require('avante').setup(avanteOpts)
+    require("avante").setup(avanteOpts)
+
+    -- Keep AvanteTodos split readable.
+    -- Sometimes the layout gets recomputed (equalize, resize, re-open) and the split
+    -- can shrink to a couple of lines. We enforce a minimum height and also set
+    -- winfixheight to prevent automatic resizing from overriding it.
+    local AVANTE_TODOS_HEIGHT = 6
+
+    local function enforce_avante_todos_height(buf)
+        if not buf or not vim.api.nvim_buf_is_valid(buf) then
+            return
+        end
+
+        local function apply()
+            if not vim.api.nvim_buf_is_valid(buf) then
+                return
+            end
+            if vim.bo[buf].filetype ~= "AvanteTodos" then
+                return
+            end
+
+            for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+                pcall(function()
+                    vim.wo[win].winfixheight = true
+                    vim.api.nvim_win_set_height(win, AVANTE_TODOS_HEIGHT)
+                end)
+            end
+        end
+
+        -- Apply now and once more after the UI/layout settles.
+        vim.schedule(apply)
+        vim.defer_fn(apply, 80)
+    end
+
+    local function enforce_all_avante_todos_height()
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].filetype == "AvanteTodos" then
+                enforce_avante_todos_height(buf)
+            end
+        end
+    end
+
+    -- Re-enforce after layout changes; this effectively "locks" the AvanteTodos split height.
+    vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter", "WinResized", "VimResized" }, {
+        callback = function()
+            enforce_all_avante_todos_height()
+        end,
+    })
 
     vim.api.nvim_create_autocmd("FileType", {
         pattern = { "AvanteSelectedFiles", "AvanteTodos", "AvanteInput" },
@@ -173,11 +224,7 @@ function M.avanteConfig()
             -- Force Avante Todos window height.
             -- AvanteTodos is usually rendered in a small split; increase it to show more items.
             if vim.bo[ev.buf].filetype == "AvanteTodos" then
-                vim.schedule(function()
-                    for _, win in ipairs(vim.fn.win_findbuf(ev.buf)) do
-                        vim.api.nvim_win_set_height(win, 6)
-                    end
-                end)
+                enforce_avante_todos_height(ev.buf)
             end
 
             -- insert mode: Ctrl-c 退出
@@ -207,11 +254,15 @@ function M.avanteConfig()
             end
 
             if has_qf then
-                pcall(vim.cmd, "cclose")
+                pcall(function()
+                    vim.cmd("cclose")
+                end)
             end
 
             if has_avante then
-                pcall(vim.cmd, "AvanteToggle")
+                pcall(function()
+                    vim.cmd("AvanteToggle")
+                end)
             end
         end,
     })
