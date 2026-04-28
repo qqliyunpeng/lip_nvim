@@ -207,6 +207,7 @@ function M.llmConfig()
         vim.fn.writefile({ vim.json.encode(body) }, tmp)
 
         local acc = {}
+        local stderr_acc = {}
 
         local function handle_sse_line(line)
             if type(line) ~= "string" or line == "" then
@@ -260,7 +261,17 @@ function M.llmConfig()
                     handle_sse_line(line)
                 end
             end,
-            on_exit = function(_, _, _)
+            on_stderr = function(_, data, _)
+                if type(data) ~= "table" then
+                    return
+                end
+                for _, line in ipairs(data) do
+                    if type(line) == "string" and line ~= "" then
+                        stderr_acc[#stderr_acc + 1] = line
+                    end
+                end
+            end,
+            on_exit = function(_, code, _)
                 pcall(vim.fn.delete, tmp)
 
                 vim.schedule(function()
@@ -270,6 +281,16 @@ function M.llmConfig()
 
                     local out = table.concat(acc, "")
                     if out == "" then
+                        local msg = {
+                            "WordTranslate: empty output.",
+                            "exit=" .. tostring(code),
+                            "url=" .. tostring(url),
+                            "model=" .. tostring(model),
+                        }
+                        if #stderr_acc > 0 then
+                            msg[#msg + 1] = "\nstderr:\n" .. table.concat(stderr_acc, "\n")
+                        end
+                        vim.notify(table.concat(msg, "\n"), vim.log.levels.WARN)
                         return
                     end
 
@@ -321,13 +342,15 @@ function M.llmConfig()
 
     require("llm").setup({
         url = "http://172.16.9.15:8317/v1/chat/completions",
-        model = "gpt-5.2",
+        -- model = "gpt-5.2",
+        model = "qwen3-coder-plus",
         api_type = "openai",
         timeout = 30,
         enable_trace = false,
         log_level = 1,
         fetch_key = function()
-            return vim.env.CHATGPT_API_KEY or ""
+            -- Prefer Qwen key when using qwen models; fall back to CHATGPT_API_KEY.
+            return vim.env.QWEN_API_KEY or vim.env.CHATGPT_API_KEY or ""
         end,
         temperature = 0.3,
         max_tokens = 1024,
