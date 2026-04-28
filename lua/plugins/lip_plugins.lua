@@ -527,6 +527,25 @@ return {
         config = function()
             require("configs.ai").avanteConfig()
         end
+    },
+    {
+        "https://gitee.com/nvim_lip/llm.nvim.git",
+        dependencies = {
+            "https://gitee.com/suyelu/plenary.nvim",
+            "https://gitee.com/nvim_lip/nui.nvim.git",
+        },
+        cmd = { "LLMSessionToggle", "LLMSelectedTextHandler", "LLMAppHandler" },
+        opts = {
+            exit_on_move = true, -- 是否在光标移动时退出会话
+            enter_on_insert = false, -- 是否在进入插入模式时进入会话
+            enable_cword_context = true, -- 是否将光标下的单词作为上下文的一部分
+        },
+        config = function()
+            require("configs.llm").llmConfig()
+        end,
+        keys = function()
+            return require("configs.llm").llmKeys
+        end,
     }
 }
 
