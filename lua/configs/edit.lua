@@ -201,19 +201,71 @@ function M.visualMulConfig()
         callback = function()
             disable_bs_now()
 
-            -- While Visual-Multi is active, use <C-j>/<C-k> to add cursors down/up
+            -- While Visual-Multi is active we want a smart behavior:
+            -- - Repeating the same key keeps adding cursors in that direction.
+            -- - Pressing the opposite key undoes (removes) the last added region, until only 1 remains.
+            -- - When only 1 region is left, the opposite key switches to adding in its own direction.
+            --
             -- This is buffer-local so it won't override your global <C-j>/<C-k> window navigation.
-            vim.keymap.set({ "n", "x" }, "<C-j>", "<Plug>(VM-Add-Cursor-Down)", {
+
+            --- Get current VM regions count (falls back to 1 if VM isn't fully initialized)
+            local function vm_regions_count()
+                local ok, sel = pcall(function()
+                    return vim.b.VM_Selection
+                end)
+                if not ok or type(sel) ~= "table" then
+                    return 1
+                end
+                local regions = sel.Regions
+                if type(regions) ~= "table" then
+                    return 1
+                end
+                return #regions
+            end
+
+            --- Run a VM <Plug> mapping reliably from Lua
+            local function vm_feed_plug(plug)
+                local keys = vim.api.nvim_replace_termcodes(plug, true, false, true)
+                -- 'm' allows recursive mappings so <Plug>(...) is resolved
+                vim.api.nvim_feedkeys(keys, "m", false)
+            end
+
+            --- Direction-aware add/undo
+            --- @param dir 'down'|'up'
+            local function vm_smart(dir)
+                local last_dir = vim.b._vm_last_dir
+                local count = vm_regions_count()
+
+                -- If we have multiple regions and user pressed the opposite direction,
+                -- treat it as "undo last add".
+                if count > 1 and last_dir and last_dir ~= dir then
+                    vm_feed_plug("<Plug>(VM-Remove-Last-Region)")
+                    return
+                end
+
+                -- Otherwise keep adding in the requested direction.
+                vim.b._vm_last_dir = dir
+                if dir == "down" then
+                    vm_feed_plug("<Plug>(VM-Add-Cursor-Down)")
+                else
+                    vm_feed_plug("<Plug>(VM-Add-Cursor-Up)")
+                end
+            end
+
+            vim.keymap.set({ "n", "x" }, "<C-j>", function()
+                vm_smart("down")
+            end, {
                 buffer = 0,
-                remap = true,
                 silent = true,
-                desc = "VM add cursor down",
+                desc = "VM smart down",
             })
-            vim.keymap.set({ "n", "x" }, "<C-k>", "<Plug>(VM-Add-Cursor-Up)", {
+
+            vim.keymap.set({ "n", "x" }, "<C-k>", function()
+                vm_smart("up")
+            end, {
                 buffer = 0,
-                remap = true,
                 silent = true,
-                desc = "VM add cursor up",
+                desc = "VM smart up",
             })
 
             vim.keymap.set("n", "<A-q>", "<cmd>call vm#reset()<CR>")
