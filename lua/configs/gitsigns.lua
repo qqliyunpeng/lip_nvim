@@ -33,7 +33,14 @@ function M.config()
             if name:match("^gitsigns://") then
                 -- 找到 diff buffer -> 关闭它
                 vim.api.nvim_buf_delete(buf, { force = true })
-                vim.cmd("diffoff!")  -- 关闭 diff 模式，防止游标乱跑
+                vim.cmd("diffoff!") -- 关闭 diff 模式，防止游标乱跑
+
+                -- After leaving diff mode, Neovim may restore fold options in a way that
+                -- makes folds appear closed (and ufo can then take over the fold UI).
+                -- We explicitly restore the expected "no folding" window state here.
+                vim.wo.foldenable = false
+                vim.wo.foldlevel = 99
+
                 found = true
                 break
             end
