@@ -46,7 +46,7 @@ function M.copileConfig()
 end
 
 local avanteOpts = {
-    provider = "chatgpt",
+    provider = "codex",
     -- Limit stored chat history.
     history = {
         max_messages = 20,
@@ -55,6 +55,15 @@ local avanteOpts = {
     -- (Keeps Avante usable for chat/ask without opening diff UIs.)
     diff = {
         enabled = false,
+    },
+    acp_providers = {
+        codex = {
+            command = "npx",
+            args = { "@zed-industries/codex-acp" },
+            env = {
+                OPENAI_API_KEY = os.getenv("CHATGPT_API_KEY"),
+            },
+        },
     },
     providers = {
         copilot = {},
