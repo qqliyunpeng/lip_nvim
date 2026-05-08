@@ -172,6 +172,37 @@ local avanteOpts = {
 function M.avanteConfig()
     require("avante").setup(avanteOpts)
 
+    -- Avante auto-connects ACP providers by submitting an empty request when
+    -- the sidebar opens. With Codex ACP this can restore the previous session
+    -- and show "generating" immediately, so suppress only that empty submit.
+    local ok_sidebar, Sidebar = pcall(require, "avante.sidebar")
+    if ok_sidebar and not Sidebar._lip_skip_empty_open_submit then
+        local original_open = Sidebar.open
+        Sidebar.open = function(self, opts)
+            local had_local_handle_submit = rawget(self, "handle_submit") ~= nil
+            local original_handle_submit = self.handle_submit
+
+            self.handle_submit = function(sidebar, request, ...)
+                if request == "" then
+                    return
+                end
+                return original_handle_submit(sidebar, request, ...)
+            end
+
+            local ok_open, result = pcall(original_open, self, opts)
+            if had_local_handle_submit then
+                self.handle_submit = original_handle_submit
+            else
+                self.handle_submit = nil
+            end
+            if not ok_open then
+                error(result)
+            end
+            return result
+        end
+        Sidebar._lip_skip_empty_open_submit = true
+    end
+
     -- Keep AvanteTodos split readable.
     -- Sometimes the layout gets recomputed (equalize, resize, re-open) and the split
     -- can shrink to a couple of lines. We enforce a minimum height and also set
