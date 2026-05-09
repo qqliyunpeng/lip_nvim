@@ -255,6 +255,14 @@ return {
                 -- "black",
             }
 
+            rawset(vim, "tbl_add_reverse_lookup", function(tbl)
+                for k, v in pairs(tbl) do
+                    tbl[v] = k
+                end
+
+                return tbl
+            end)
+
             require("mason-null-ls").setup({
                 ensure_installed = tools,
                 automatic_installation = true,
