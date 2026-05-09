@@ -73,6 +73,73 @@ return {
         end
     },
     {
+        "https://github.com/djoshea/vim-autoread.git",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            vim.opt.autoread = true
+            vim.o.updatetime = 500
+
+            local function can_restore_external_change(buf)
+                return vim.api.nvim_buf_is_valid(buf)
+                    and vim.bo[buf].buftype == ""
+                    and not vim.bo[buf].modified
+            end
+
+            local group = vim.api.nvim_create_augroup("lip_checktime", { clear = true })
+            local saved_views = {}
+
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
+                group = group,
+                pattern = "*",
+                callback = function()
+                    if vim.fn.mode() ~= "c" then
+                        local buf = vim.api.nvim_get_current_buf()
+                        if can_restore_external_change(buf) then
+                            saved_views[buf] = {}
+                            for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+                                if vim.api.nvim_win_is_valid(win) then
+                                    saved_views[buf][win] = vim.api.nvim_win_call(win, vim.fn.winsaveview)
+                                end
+                            end
+                        end
+
+                        vim.cmd("checktime")
+                    end
+                end,
+            })
+
+            vim.api.nvim_create_autocmd("FileChangedShellPost", {
+                group = group,
+                pattern = "*",
+                callback = function(args)
+                    local views = saved_views[args.buf]
+                    saved_views[args.buf] = nil
+                    if not views then
+                        return
+                    end
+
+                    vim.schedule(function()
+                        if not vim.api.nvim_buf_is_valid(args.buf) then
+                            return
+                        end
+
+                        for _, win in ipairs(vim.fn.win_findbuf(args.buf)) do
+                            local view = views[win]
+                            if view and vim.api.nvim_win_is_valid(win) then
+                                pcall(vim.api.nvim_win_call, win, function()
+                                    local line_count = vim.api.nvim_buf_line_count(args.buf)
+                                    view.lnum = math.min(view.lnum, line_count)
+                                    pcall(vim.fn.winrestview, view)
+                                    vim.cmd("normal! zv")
+                                end)
+                            end
+                        end
+                    end)
+                end,
+            })
+        end,
+    },
+    {
         "https://gitee.com/hello-luiswu/accelerated-jk.git",
         event = "VeryLazy",
         config = function ()
