@@ -6,10 +6,16 @@ local dia_nerd_icons = { Error = "", Warn = "", Hint = "󰌵", Info = "�
 local dia_ascii_icons = { Error = "E", Warn = "W", Hint = "H", Info = "I" }
 local signs = use_ascii_icons and dia_ascii_icons or dia_nerd_icons
 
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-end
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = signs.Error,
+            [vim.diagnostic.severity.WARN] = signs.Warn,
+            [vim.diagnostic.severity.HINT] = signs.Hint,
+            [vim.diagnostic.severity.INFO] = signs.Info,
+        },
+    },
+})
 
 local servers = {
     clangd = {},
@@ -142,4 +148,3 @@ function M.lspkindInit()
 end
 
 return M
-
