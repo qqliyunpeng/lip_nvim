@@ -73,7 +73,7 @@ return {
         end
     },
     {
-        "https://github.com/djoshea/vim-autoread.git",
+        "https://gitee.com/nvim_lip/vim-autoread.git",
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             vim.opt.autoread = true
@@ -623,5 +623,4 @@ return {
         end,
     }
 }
-
 
