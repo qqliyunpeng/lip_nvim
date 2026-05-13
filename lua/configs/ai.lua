@@ -184,6 +184,11 @@ function M.avanteConfig()
 
             self.handle_submit = function(sidebar, request, ...)
                 if request == "" then
+                    sidebar.acp_client = nil
+                    if sidebar.chat_history then
+                        sidebar.chat_history.acp_session_id = nil
+                        sidebar:save_history()
+                    end
                     return
                 end
                 return original_handle_submit(sidebar, request, ...)
