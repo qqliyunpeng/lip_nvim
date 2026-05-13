@@ -591,7 +591,9 @@ return {
         branch = 'main',
         build = vim.fn.has("win32") ~= 0
             and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-            or "make",
+            or function(plugin)
+                require("configs.avante_build").build(plugin)
+            end,
         event = "VeryLazy",
         version = false, -- 永远不要将此值设置为 "*"！永远不要！
         dependencies = {
@@ -623,4 +625,3 @@ return {
         end,
     }
 }
-
