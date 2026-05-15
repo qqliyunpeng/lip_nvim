@@ -190,6 +190,18 @@ hi! link SnacksPickerRow               TelescopePromptCounter
 hi! link SnacksPickerDelim             TelescopePromptCounter
 ]])
 
+vim.api.nvim_set_hl(0, "@keyword.conditional", { fg = "#BB8AFF" })
+vim.api.nvim_set_hl(0, "@conditional", { fg = "#BB8AFF" })
+vim.api.nvim_set_hl(0, "Function", { fg = "#39A6FF" })
+vim.api.nvim_set_hl(0, "@function", { fg = "#39A6FF" })
+vim.api.nvim_set_hl(0, "@function.call", { fg = "#39A6FF" })
+vim.api.nvim_set_hl(0, "@function.method", { fg = "#39A6FF" })
+vim.api.nvim_set_hl(0, "@method", { fg = "#39A6FF" })
+vim.api.nvim_set_hl(0, "@method.call", { fg = "#39A6FF" })
+vim.api.nvim_set_hl(0, "@variable.member", { fg = "#FF5A4F" })
+vim.api.nvim_set_hl(0, "@field", { fg = "#FF5A4F" })
+vim.api.nvim_set_hl(0, "@property", { fg = "#FF5A4F" })
+
 vim.lsp.set_log_level("off")
 
 -- 打开文件后光标回到关闭的时候的位置
