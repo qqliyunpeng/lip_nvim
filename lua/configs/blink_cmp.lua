@@ -250,7 +250,8 @@ function M.blinkConfig()
         },
         snippets = { preset = 'luasnip' },
         sources = {
-            default = { 'lsp', 'path', 'snippets', 'buffer', "yank", "ripgrep" },
+            -- NOTE: Put ripgrep at the end so it has the lowest priority among sources.
+            default = { 'lsp', 'path', 'snippets', 'buffer', "yank", "ripgrep" , "copilot"},
             providers = {
                 yank = {
                     name = "yank",
@@ -259,22 +260,31 @@ function M.blinkConfig()
                         minLength = 5,
                         onlyCurrentFiletype = true,
                         trigger_characters = { '"' },
+                        score_offset = -1,
                         kind_icon = "󰅍",
                     },
                 },
-                -- copilot = {
-                --     name = "copilot",
-                --     module = "blink-cmp-copilot",
-                --     score_offset = 100,
-                --     async = true,
-                --     enabled = function ()
-                --         return vim.g.blink_enable_copilot
-                --     end,
-                -- },
+                copilot = {
+                    name = "copilot",
+                    module = "blink-cmp-copilot",
+                    score_offset = 100,
+                    async = true,
+                },
                 ripgrep = {
                     name = "Ripgrep",
                     module = "blink-ripgrep",
-                    opts = {},
+                    -- Keep ripgrep available, but make it less aggressive than LSP.
+                    score_offset = -20,
+                    -- Auto-trigger only for longer words; manual trigger still shows immediately.
+                    min_keyword_length = function(ctx)
+                        return ctx.trigger.initial_kind == "manual" and 0 or 5
+                    end,
+                    -- Avoid flooding the menu with grep results.
+                    max_items = 8,
+                    opts = {
+                        -- Reduce noisy matches on short prefixes.
+                        prefix_min_len = 4,
+                    },
                 },
             }
         },

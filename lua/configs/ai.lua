@@ -2,7 +2,7 @@ local M = {}
 
 -- NOTE: Copilot config intentionally kept separate from llm.nvim and Avante.
 local copileOpts = {
-    suggestion = { enabled = true, auto_trigger = false }, -- 自动补全
+    suggestion = { enabled = true, auto_trigger = vim.g.blink_enable_copilot or false }, -- 自动补全
     panel = { enabled = true }, -- Copilot 面板
     filetypes = { -- 启用 Copilot 的文件类型
         lua = true,
@@ -314,4 +314,3 @@ function M.avanteConfig()
 end
 
 return M
-

@@ -11,7 +11,11 @@ else
     vim.g.use_custom_clangd = true
 end
 
-vim.g.blink_enable_copilot = false
+local copilot_auto_trigger = (os.getenv("COPILOT_AUTO_TRIGGER") or ""):lower()
+vim.g.blink_enable_copilot = copilot_auto_trigger == "1"
+    or copilot_auto_trigger == "true"
+    or copilot_auto_trigger == "yes"
+    or copilot_auto_trigger == "on"
 
 -- system
 map("n", " ", ":", { desc = "CMD enter command mode" })
