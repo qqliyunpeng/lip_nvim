@@ -147,11 +147,49 @@ function M.llmConfig()
             return v
         end
 
-        local function compute_popup_size(lines)
+        local utf8_char_pattern = "[%z\1-\127\194-\244][\128-\191]*"
+
+        local function wrap_display_line(line, width)
+            if line == "" then
+                return { "" }
+            end
+
+            local wrapped = {}
+            local cur = ""
+            local cur_width = 0
+
+            for ch in line:gmatch(utf8_char_pattern) do
+                local ch_width = vim.fn.strdisplaywidth(ch)
+
+                if cur ~= "" and cur_width + ch_width > width then
+                    wrapped[#wrapped + 1] = cur
+                    cur = ch
+                    cur_width = ch_width
+                else
+                    cur = cur .. ch
+                    cur_width = cur_width + ch_width
+                end
+            end
+
+            wrapped[#wrapped + 1] = cur
+            return wrapped
+        end
+
+        local function wrap_display_lines(lines, width)
+            local wrapped = {}
+            for _, line in ipairs(lines) do
+                vim.list_extend(wrapped, wrap_display_line(line, width))
+            end
+            return wrapped
+        end
+
+        local function compute_popup_layout(lines)
             local min_w = 8
-            local max_w = math.max(min_w, math.floor(vim.o.columns * 0.7))
+            local ok_width, win_width = pcall(vim.api.nvim_win_get_width, 0)
+            local max_w = math.max(min_w, math.floor((ok_width and win_width or vim.o.columns) * 0.7))
             local min_h = 1
-            local max_h = math.max(min_h, math.floor(vim.o.lines * 0.3))
+            local ok_height, win_height = pcall(vim.api.nvim_win_get_height, 0)
+            local max_h = math.max(min_h, math.floor((ok_height and win_height or vim.o.lines) * 0.3))
 
             local widest = 0
             for _, l in ipairs(lines) do
@@ -164,8 +202,9 @@ function M.llmConfig()
 
             -- Add a small padding so the text doesn't touch the border.
             local width = clamp(widest + 2, min_w, max_w)
-            local height = clamp(#lines, min_h, max_h)
-            return width, height
+            local wrapped = wrap_display_lines(lines, math.max(1, width - 2))
+            local height = clamp(#wrapped, min_h, max_h)
+            return width, height, wrapped
         end
 
         local content = ""
@@ -297,8 +336,9 @@ function M.llmConfig()
                     local lines = vim.split(out, "\n", { plain = true })
 
                     if options.auto_resize ~= false and options.win_opts and options.win_opts.size == nil then
-                        local width, height = compute_popup_size(lines)
+                        local width, height, wrapped = compute_popup_layout(lines)
                         options.win_opts.size = { width = width, height = height }
+                        lines = wrapped
                     end
 
                     local ok_pop, pop = pcall(Popup, options.win_opts)
@@ -389,4 +429,3 @@ M.llmKeys = {
 }
 
 return M
-
