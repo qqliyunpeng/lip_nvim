@@ -186,7 +186,11 @@ function M.llmConfig()
         local function compute_popup_layout(lines)
             local min_w = 8
             local ok_width, win_width = pcall(vim.api.nvim_win_get_width, 0)
-            local max_w = math.max(min_w, math.floor((ok_width and win_width or vim.o.columns) * 0.7))
+            win_width = ok_width and win_width or vim.o.columns
+            local ok_virtcol, virtcol = pcall(vim.fn.virtcol, ".")
+            local cursor_col = ok_virtcol and math.max(0, virtcol - 1) or 0
+            local available_width = math.max(min_w, win_width - cursor_col - 2)
+            local max_w = math.max(min_w, math.min(available_width, math.floor(win_width * 0.7)))
             local min_h = 1
             local ok_height, win_height = pcall(vim.api.nvim_win_get_height, 0)
             local max_h = math.max(min_h, math.floor((ok_height and win_height or vim.o.lines) * 0.3))
