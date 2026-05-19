@@ -256,11 +256,11 @@ function M.blinkConfig()
                 yank = {
                     name = "yank",
                     module = "blink-yanky",
+                    score_offset = -10,
                     opts = {
                         minLength = 5,
                         onlyCurrentFiletype = true,
                         trigger_characters = { '"' },
-                        score_offset = -1,
                         kind_icon = "󰅍",
                     },
                 },
