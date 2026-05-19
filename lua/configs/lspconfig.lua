@@ -46,12 +46,18 @@ local servers = {
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
+local function clangd_capabilities()
+    local caps = vim.deepcopy(capabilities)
+    caps.textDocument.completion.completionItem.snippetSupport = false
+    return caps
+end
+
 local handlers = {
     function(server_name)
 
         require('lspconfig')[server_name].setup({
             on_attach = M.on_attach,
-            capabilities = capabilities,
+            capabilities = server_name == "clangd" and clangd_capabilities() or capabilities,
 
             settings = servers[server_name] and servers[server_name].settings or {},
         })
@@ -85,7 +91,7 @@ function M.defaults()
     clangd_installer.setup(function(clangd_path)
         require("lspconfig").clangd.setup({
             on_attach = M.on_attach,
-            capabilities = capabilities,
+            capabilities = clangd_capabilities(),
             cmd = { clangd_path },
             settings = servers.clangd.settings or {},
         })
