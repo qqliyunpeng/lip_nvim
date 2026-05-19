@@ -135,6 +135,19 @@ end
 
 function M.blinkConfig()
     local cmp = require("blink.cmp")
+    local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
+
+    -- Prefer LSP enum completions over yank history when both appear in the menu.
+    local function enum_before_yank(a, b)
+        local a_is_enum = a.kind == CompletionItemKind.Enum or a.kind == CompletionItemKind.EnumMember
+        local b_is_enum = b.kind == CompletionItemKind.Enum or b.kind == CompletionItemKind.EnumMember
+        local a_is_yank = a.kind_name == "Yank"
+        local b_is_yank = b.kind_name == "Yank"
+
+        if a_is_enum ~= b_is_enum and (a_is_yank or b_is_yank) then
+            return a_is_enum
+        end
+    end
 
     cmp.setup({
         keymap = {
@@ -294,6 +307,7 @@ function M.blinkConfig()
                 force_version = "v1.6.0",
             },
             sorts = {
+                enum_before_yank,
                 'score',      -- Primary sort: by fuzzy matching score
                 'sort_text',  -- Secondary sort: by sortText field if scores are equal
                 'label',      -- Tertiary sort: by label if still tied
@@ -317,4 +331,3 @@ function M.blinkConfig()
 end
 
 return M
-
