@@ -608,20 +608,47 @@ function M.interestingwordsConfig()
 
     local iw = require("interestingwords")
     local illuminate = require("illuminate")
+    local illuminate_ref = require("illuminate.reference")
 
-    local function cursor_word_is_interesting()
-        local word = vim.fn.expand("<cword>")
+    local function cursor_in_pattern(pattern)
+        local line = vim.api.nvim_get_current_line()
+        local col = vim.api.nvim_win_get_cursor(0)[2]
+        local start = 0
 
-        -- 没有单词直接返回
-        if not word or word == "" then
+        while start <= #line do
+            local ok, match = pcall(vim.fn.matchstrpos, line, pattern, start)
+            if not ok or match[1] == "" then
+                return false
+            end
+
+            local match_start = match[2]
+            local match_end = match[3]
+            if col >= match_start and col < match_end then
+                return true
+            end
+
+            start = math.max(match_end, start + 1)
+        end
+
+        return false
+    end
+
+    local function jump_search(forward)
+        if vim.v.hlsearch == 0 or vim.fn.getreg("/") == "" then
             return false
         end
 
+        local flags = forward and "" or "b"
+        local ok, found = pcall(vim.fn.search, vim.fn.getreg("/"), flags)
+        return ok and found ~= 0
+    end
+
+    local function cursor_word_is_interesting()
         local matches = vim.fn.getmatches()
 
         for _, m in ipairs(matches) do
             if m.group and m.group:match("^InterestingWord") then
-                if m.pattern == "\\c\\V\\<" .. word .. "\\>" then
+                if cursor_in_pattern(m.pattern) then
                     return true
                 end
             end
@@ -630,38 +657,43 @@ function M.interestingwordsConfig()
         return false
     end
 
+    local function cursor_in_illuminate_reference()
+        local cursor = vim.api.nvim_win_get_cursor(0)
+        local pos = { cursor[1] - 1, cursor[2] }
+
+        return illuminate_ref.buf_cursor_in_references(vim.api.nvim_get_current_buf(), pos)
+    end
+
+    local function cursor_in_search()
+        return vim.v.hlsearch ~= 0 and vim.fn.getreg("/") ~= "" and cursor_in_pattern(vim.fn.getreg("/"))
+    end
+
     local function jump_forward()
-        local word = vim.fn.expand("<cword>")
-
-        -- 光标下没有单词
-        if not word or word == "" then
-            return
-        end
-
         if cursor_word_is_interesting() then
             iw.NavigateToWord(true)
-        else
+        elseif cursor_in_illuminate_reference() then
             illuminate.goto_next_reference()
+        elseif cursor_in_search() then
+            jump_search(true)
+        else
+            return
         end
     end
 
     local function jump_backward()
-        local word = vim.fn.expand("<cword>")
-
-        -- 光标下没有单词
-        if not word or word == "" then
-            return
-        end
-
         if cursor_word_is_interesting() then
             iw.NavigateToWord(false)
-        else
+        elseif cursor_in_illuminate_reference() then
             illuminate.goto_prev_reference()
+        elseif cursor_in_search() then
+            jump_search(false)
+        else
+            return
         end
     end
 
-    vim.keymap.set("n", "<A-j>", jump_forward,  { silent = true, desc = "Next interesting/illuminate" })
-    vim.keymap.set("n", "<A-k>", jump_backward, { silent = true, desc = "Prev interesting/illuminate" })
+    vim.keymap.set("n", "<A-j>", jump_forward,  { silent = true, desc = "Next matching highlight" })
+    vim.keymap.set("n", "<A-k>", jump_backward, { silent = true, desc = "Prev matching highlight" })
 end
 
 return M
