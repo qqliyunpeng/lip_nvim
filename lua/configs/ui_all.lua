@@ -165,6 +165,7 @@ end
 
 function M.whichKeyConfig()
     local wk = require('which-key')
+    require("which-key.plugins.registers").registers = '0123456789*+"-:.%/#=_abcdefghijklmnopqrstuvwxyz'
     local opts = {
         preset = "helix",
         defaults = {},
