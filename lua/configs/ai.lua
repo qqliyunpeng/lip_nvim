@@ -214,6 +214,32 @@ function M.avanteConfig()
     -- winfixheight to prevent automatic resizing from overriding it.
     local AVANTE_TODOS_HEIGHT = 6
 
+    local avante_sidebar_filetypes = {
+        Avante = true,
+        AvanteInput = true,
+        AvanteSelectedFiles = true,
+        AvanteTodos = true,
+    }
+
+    local function enforce_avante_sidebar_width()
+        local sidebar_width = math.ceil(vim.o.columns * avanteOpts.windows.width / 100)
+
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+            pcall(function()
+                local buf = vim.api.nvim_win_get_buf(win)
+                if avante_sidebar_filetypes[vim.bo[buf].filetype] then
+                    vim.wo[win].winfixwidth = true
+                    vim.api.nvim_win_set_width(win, sidebar_width)
+                end
+            end)
+        end
+    end
+
+    local function schedule_enforce_avante_sidebar_width()
+        vim.schedule(enforce_avante_sidebar_width)
+        vim.defer_fn(enforce_avante_sidebar_width, 80)
+    end
+
     local function enforce_avante_todos_height(buf)
         if not buf or not vim.api.nvim_buf_is_valid(buf) then
             return
@@ -251,7 +277,23 @@ function M.avanteConfig()
     -- Re-enforce after layout changes; this effectively "locks" the AvanteTodos split height.
     vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter", "WinResized", "VimResized" }, {
         callback = function()
+            schedule_enforce_avante_sidebar_width()
             enforce_all_avante_todos_height()
+        end,
+    })
+
+    -- nvim-tree opens as another left split. When it closes, Vim may recompute
+    -- vertical split sizes; keep the Avante sidebar at its configured width.
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "NvimTree",
+        callback = schedule_enforce_avante_sidebar_width,
+    })
+
+    vim.api.nvim_create_autocmd("BufWinLeave", {
+        callback = function(ev)
+            if vim.api.nvim_buf_is_valid(ev.buf) and vim.bo[ev.buf].filetype == "NvimTree" then
+                schedule_enforce_avante_sidebar_width()
+            end
         end,
     })
 
