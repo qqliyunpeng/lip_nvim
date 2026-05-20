@@ -22,7 +22,7 @@ local function overlay_row(hunk, line_count)
     return math.min(row, math.max(line_count - 1, 0)), hunk.type ~= "delete"
 end
 
-local function show_overlay()
+local function show_overlay_diff()
     local bufnr = vim.api.nvim_get_current_buf()
 
     if vim.b[bufnr].gitsigns_full_overlay then
@@ -74,6 +74,67 @@ local function show_overlay()
     vim.b[bufnr].gitsigns_full_overlay = true
 end
 
+local function hunk_under_cursor(hunks)
+    local lnum = vim.api.nvim_win_get_cursor(0)[1]
+
+    for _, hunk in ipairs(hunks or {}) do
+        if lnum == 1 and hunk.added.start == 0 and hunk.added.count == 0 then
+            return hunk
+        end
+
+        local hunk_start = math.max(hunk.added.start, 1)
+        local hunk_end = math.max(hunk_start, hunk.added.start + hunk.added.count - 1)
+
+        if lnum >= hunk_start and lnum <= hunk_end then
+            return hunk
+        end
+    end
+end
+
+local function do_reset_hunk()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local overlay_enabled = vim.b[bufnr].gitsigns_full_overlay
+    local cursor = vim.api.nvim_win_get_cursor(0)
+
+    if vim.wo.diff then
+        local hunk = hunk_under_cursor(require("gitsigns").get_hunks(bufnr))
+        if hunk and hunk.type == "delete" then
+            require("gitsigns").reset_hunk(nil, { greedy = false })
+            return
+        end
+
+        vim.cmd("diffget")
+        return
+    end
+
+    if not overlay_enabled then
+        vim.notify("do is only available in diff or git overlay", vim.log.levels.WARN, { title = "Gitsigns" })
+        return
+    end
+
+    local hunk = hunk_under_cursor(require("gitsigns").get_hunks(bufnr))
+
+    if not hunk then
+        vim.notify("No hunk under cursor", vim.log.levels.WARN, { title = "Gitsigns" })
+        return
+    end
+
+    clear_overlay(bufnr)
+    vim.api.nvim_win_set_cursor(0, { math.max(hunk.added.start, 1), 0 })
+    require("gitsigns").reset_hunk(nil, { greedy = false })
+
+    vim.defer_fn(function()
+        if vim.api.nvim_buf_is_valid(bufnr) then
+            if vim.api.nvim_get_current_buf() == bufnr then
+                local line_count = vim.api.nvim_buf_line_count(bufnr)
+                pcall(vim.api.nvim_win_set_cursor, 0, { math.min(cursor[1], line_count), cursor[2] })
+            end
+
+            vim.api.nvim_buf_call(bufnr, show_overlay_diff)
+        end
+    end, 100)
+end
+
 function M.config()
     local opts = {
         current_line_blame = true, -- 默认启用当前行 blame
@@ -86,11 +147,12 @@ function M.config()
     map('n', ']g', ':Gitsigns next_hunk<CR>',    { desc = "Next Git changes",   noremap = true, silent = true })
     map('n', '[g', ':Gitsigns prev_hunk<CR>',    { desc = "Prev Git changes",   noremap = true, silent = true })
     map('n', 'gp', ':Gitsigns preview_hunk<CR>', { desc = "Preview Git change", noremap = true, silent = true })
-    map('n', '<leader>gp', show_overlay, { desc = "Toggle Git diff overlay", noremap = true, silent = true })
-    map('n', '<leader>gr', ':Gitsigns reset_hunk<CR>',   { desc = "Reset Git hunk"        , noremap = true, silent = true })
-    map('n', '<leader>gR', ':Gitsigns reset_buffer<CR>', { desc = "Reset Git buffer"      , noremap = true, silent = true })
-    map('n', '<leader>gs', ':Gitsigns stage_hunk<CR>',   { desc = "Stage/Un Git hunk", noremap = true, silent = true })
-    map('n', '<leader>gS', ':Gitsigns stage_buffer<CR>', { desc = "Stage Git buffer"      , noremap = true, silent = true })
+    map('n', 'do', do_reset_hunk,                { desc = "Reset Git hunk",     noremap = true, silent = true })
+    map('n', '<leader>gp', show_overlay_diff,            { desc = "Toggle Git diff overlay", noremap = true, silent = true })
+    map('n', '<leader>gr', ':Gitsigns reset_hunk<CR>',   { desc = "Reset Git hunk",          noremap = true, silent = true })
+    map('n', '<leader>gR', ':Gitsigns reset_buffer<CR>', { desc = "Reset Git buffer",        noremap = true, silent = true })
+    map('n', '<leader>gs', ':Gitsigns stage_hunk<CR>',   { desc = "Stage/Un Git hunk",       noremap = true, silent = true })
+    map('n', '<leader>gS', ':Gitsigns stage_buffer<CR>', { desc = "Stage Git buffer",        noremap = true, silent = true })
     map('n', '<leader>gd', function()
         local found = false
 
