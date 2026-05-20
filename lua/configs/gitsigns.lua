@@ -1,11 +1,78 @@
 local M = {}
 local map = vim.keymap.set
 local use_ascii_icons = require("configs.icons").use_ascii_icons()
+local overlay_ns = vim.api.nvim_create_namespace("gitsigns_full_overlay")
 
 local nerd_signs = {
     delete       = { text = "󰍵" },
     changedelete = { text = "󱕖" },
 }
+
+local function clear_overlay(bufnr)
+    vim.api.nvim_buf_clear_namespace(bufnr, overlay_ns, 0, -1)
+    vim.b[bufnr].gitsigns_full_overlay = false
+end
+
+local function overlay_row(hunk, line_count)
+    if hunk.added.start == 0 and hunk.type == "delete" then
+        return 0, true
+    end
+
+    local row = math.max(hunk.added.start - 1, 0)
+    return math.min(row, math.max(line_count - 1, 0)), hunk.type ~= "delete"
+end
+
+local function show_overlay()
+    local bufnr = vim.api.nvim_get_current_buf()
+
+    if vim.b[bufnr].gitsigns_full_overlay then
+        clear_overlay(bufnr)
+        return
+    end
+
+    local hunks = require("gitsigns").get_hunks(bufnr) or {}
+    local line_count = vim.api.nvim_buf_line_count(bufnr)
+
+    if #hunks == 0 then
+        vim.notify("No git changes", vim.log.levels.INFO, { title = "Gitsigns" })
+        return
+    end
+
+    for _, hunk in ipairs(hunks) do
+        for offset = 0, hunk.added.count - 1 do
+            local row = hunk.added.start - 1 + offset
+            if row >= 0 and row < line_count then
+                vim.api.nvim_buf_set_extmark(bufnr, overlay_ns, row, 0, {
+                    end_row = row + 1,
+                    hl_group = "GitSignsAddPreview",
+                    hl_eol = true,
+                    priority = 1000,
+                })
+            end
+        end
+
+        if hunk.removed.count > 0 then
+            local virt_lines = {}
+
+            for _, line in ipairs(hunk.removed.lines or {}) do
+                local padding = string.rep(" ", math.max(300 - #line, 0))
+                virt_lines[#virt_lines + 1] = {
+                    { line, "GitSignsDeleteVirtLn" },
+                    { padding, "GitSignsDeleteVirtLn" },
+                }
+            end
+
+            local row, above = overlay_row(hunk, line_count)
+            vim.api.nvim_buf_set_extmark(bufnr, overlay_ns, row, 0, {
+                virt_lines = virt_lines,
+                virt_lines_above = above,
+                priority = 1000,
+            })
+        end
+    end
+
+    vim.b[bufnr].gitsigns_full_overlay = true
+end
 
 function M.config()
     local opts = {
@@ -19,6 +86,7 @@ function M.config()
     map('n', ']g', ':Gitsigns next_hunk<CR>',    { desc = "Next Git changes",   noremap = true, silent = true })
     map('n', '[g', ':Gitsigns prev_hunk<CR>',    { desc = "Prev Git changes",   noremap = true, silent = true })
     map('n', 'gp', ':Gitsigns preview_hunk<CR>', { desc = "Preview Git change", noremap = true, silent = true })
+    map('n', '<leader>gp', show_overlay, { desc = "Toggle Git diff overlay", noremap = true, silent = true })
     map('n', '<leader>gr', ':Gitsigns reset_hunk<CR>',   { desc = "Reset Git hunk"        , noremap = true, silent = true })
     map('n', '<leader>gR', ':Gitsigns reset_buffer<CR>', { desc = "Reset Git buffer"      , noremap = true, silent = true })
     map('n', '<leader>gs', ':Gitsigns stage_hunk<CR>',   { desc = "Stage/Un Git hunk", noremap = true, silent = true })
