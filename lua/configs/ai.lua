@@ -208,6 +208,72 @@ function M.avanteConfig()
         Sidebar._lip_skip_empty_open_submit = true
     end
 
+    -- Avante 选择编辑会在构建提示词前创建新的 ACP 会话。
+    -- 编辑请求没有聊天历史，因此强制走普通提示词路径；
+    -- 否则 Codex ACP 会收到空提示词并拒绝请求。
+    local ok_llm, Llm = pcall(require, "avante.llm")
+    if ok_llm and not Llm._lip_acp_edit_prompt_fix then
+        local original_continue_stream_acp = Llm._continue_stream_acp
+        Llm._continue_stream_acp = function(opts, acp_client, session_id)
+            if opts and opts.mode == "editing" and opts.acp_session_id and not opts.history_messages then
+                local original_acp_session_id = opts.acp_session_id
+                opts.acp_session_id = nil
+                local ok_continue, result = pcall(original_continue_stream_acp, opts, acp_client, session_id)
+                opts.acp_session_id = original_acp_session_id
+                if not ok_continue then
+                    error(result)
+                end
+                return result
+            end
+            return original_continue_stream_acp(opts, acp_client, session_id)
+        end
+        Llm._lip_acp_edit_prompt_fix = true
+    end
+
+    -- 某些 Neovim/Avante 组合会漏掉用于清理可视选择提示的
+    -- buffer-local ModeChanged 事件。在编辑器不再处于可视模式时，
+    -- 仅清除 Avante 快捷键提示 extmark。
+    local ok_selection, Selection = pcall(require, "avante.selection")
+    if ok_selection and not Selection._lip_visual_hint_cleanup_fix then
+        local avante_selection_ns = vim.api.nvim_create_namespace("avante_selection")
+        local visual_block = vim.api.nvim_replace_termcodes("<C-v>", true, true, true)
+
+        local function is_visual_mode()
+            local mode = vim.fn.mode()
+            return mode == "v" or mode == "V" or mode == visual_block
+        end
+
+        local function clear_avante_selection_hints()
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_is_valid(buf) then
+                    pcall(vim.api.nvim_buf_clear_namespace, buf, avante_selection_ns, 0, -1)
+                end
+            end
+        end
+
+        vim.api.nvim_create_autocmd({ "ModeChanged", "BufLeave", "WinLeave", "InsertEnter" }, {
+            callback = function()
+                vim.schedule(function()
+                    if not is_visual_mode() then
+                        clear_avante_selection_hints()
+                    end
+                end)
+            end,
+        })
+
+        local original_on_exiting_visual_mode = Selection.on_exiting_visual_mode
+        Selection.on_exiting_visual_mode = function(self, ...)
+            local ok_exit, result = pcall(original_on_exiting_visual_mode, self, ...)
+            clear_avante_selection_hints()
+            if not ok_exit then
+                error(result)
+            end
+            return result
+        end
+
+        Selection._lip_visual_hint_cleanup_fix = true
+    end
+
     -- Keep AvanteTodos split readable.
     -- Sometimes the layout gets recomputed (equalize, resize, re-open) and the split
     -- can shrink to a couple of lines. We enforce a minimum height and also set
