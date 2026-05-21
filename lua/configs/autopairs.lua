@@ -22,6 +22,16 @@ function M.setup(opts)
     -- 基本配置
     npairs.setup(opts)
 
+    local function safe_ts_cond(cond)
+        return function(context)
+            local ok, result = pcall(cond, context)
+            if not ok then
+                return nil
+            end
+            return result
+        end
+    end
+
     -- 自动补全括号/引号
     local pairs = { {"(",")"}, {"[","]"}, {"{","}"}, {'"','"'},{ "'", "'" } }
     for _, p in ipairs(pairs) do
@@ -41,7 +51,7 @@ function M.setup(opts)
     for _, p in ipairs(pairs) do
         npairs.add_rule(
         Rule(p[1], p[2])
-        :with_pair(ts_conds.is_not_ts_node({'string','comment'}))
+        :with_pair(safe_ts_cond(ts_conds.is_not_ts_node({'string','comment'})))
         )
     end
 
