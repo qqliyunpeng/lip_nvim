@@ -26,28 +26,28 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | vaj/vij      | n    | 选中 {[( 这些符号间的内容                        |
 | var/vir      | n    | 选中 相同的缩进认为的段落，空格和不同的缩进结束  |
 | vau/viu      | n    | 选中 to , . : ; ! ?                              |
-| <leader>ua   | n    | 切换开启和关闭 autopairs 的功能                  |
+| `<leader>ua`   | n    | 切换开启和关闭 autopairs 的功能                  |
 | alt-h        | n    | 简短的hover形式的说明                            |
 | alt-l        | n    | 打开一个小窗口，相当于进入了一个中，并显示上下文 |
 | alt-f        | i    | 在插入模式下打开函数的帮助信息一下               |
 | ctrl-h/j/k/l | n    | 在窗口间移动                                     |
 | ctrl-h/j/k/l | i    | 相当于在不退出插入模式的情况下上下左右           |
-| <leader>tm   | n    | 开启/关闭markdown里边的表格的自动化              |
-| <leader>tr   | n    | markdown里边的表格的自动化                       |
-| <leader>mm   | n    | create/del a bookmark                            |
-| <leader>mc   | n    | del a bookmark                                   |
-| <leader>fm   | n    | open telescope  show all bookmark                |
-| <leader>sr   | n    | grug-far 查找替换                                |
-| <leader>to   | n    | todo telescope find all                          |
-| <leader>p    | n    | yank telescope picker                            |
+| `<leader>tm`   | n    | 开启/关闭markdown里边的表格的自动化              |
+| `<leader>tr`   | n    | markdown里边的表格的自动化                       |
+| `<leader>mm`   | n    | create/del a bookmark                            |
+| `<leader>mc`   | n    | del a bookmark                                   |
+| `<leader>fm`   | n    | open telescope  show all bookmark                |
+| `<leader>sr`   | n    | grug-far 查找替换                                |
+| `<leader>to`   | n    | todo telescope find all                          |
+| `<leader>p`    | n    | yank telescope picker                            |
 | C-p          | i    | yank telescope picker                            |
-| <leader>ui   | n    | True <-> False 交替变化                          |
+| `<leader>ui`   | n    | `True <-> False` 交替变化                          |
 | ]g           | n    | next git changs                                  |
 | [g           | n    | prev git changs                                  |
-| <leader>fe   | n    | 打开 harpoon 的界面，里边显示所有索引了的文件    |
-| <leader>ha    | n    | 当前文件加入到 harpoon 列表中                    |
-| <leader>.    | n    | 打开 scratch                                     |
-| <leader>S    | n    | 打开不同工作区的 scratch                         |
+| `<leader>fe`   | n    | 打开 harpoon 的界面，里边显示所有索引了的文件    |
+| `<leader>ha`    | n    | 当前文件加入到 harpoon 列表中                    |
+| `<leader>.`    | n    | 打开 scratch                                     |
+| `<leader>S`    | n    | 打开不同工作区的 scratch                         |
 
 | cmd     | 功能                                                                |
 |---------|---------------------------------------------------------------------|
@@ -64,8 +64,8 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 | C-up/down   | create cursor in up and down                             |
 | `\\\`       | three \ is to create a cursor and use up/down/left/right |
 |             | to move to cursor and tree \ to select the other         |
-| <C-j>/<C-k>     | 在按下 `\\\`之后，按<c-j> 或 <c-k> 分别向下或向上移动光标，创建新的光标位置。 |
-| <C-c> / alt-q | cancle VM mode |
+| `<C-j>`/`<C-k>`     | 在按下 `\\\`之后，按`<c-j>` 或 `<c-k>` 分别向下或向上移动光标，创建新的光标位置。 |
+| `<C-c>` / alt-q | cancle VM mode |
 
 ## 3.1 pattern
 - \\w toggles whole word search
@@ -118,13 +118,13 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 2
 3
 ```
-选中第二三行的 1 , g<c-a>, <c-a> 表示的是增加数字，添加g表示递增的加，对应的<a-x> 是减
+选中第二三行的 1 , `g<c-a>`, `<c-a>` 表示的是增加数字，添加g表示递增的加，对应的`<a-x>` 是减
 
 # 4. search
 - 非全词匹配(default):
-<leader>fc 后出现   "光标下的词" -F
+`<leader>fc` 后出现   "光标下的词" -F
 - 全词匹配:
-<leader>fc 后出现   "光标下的词" -F 后更改 -F 为 -w
+`<leader>fc` 后出现   "光标下的词" -F 后更改 -F 为 -w
 - 搜索当前光标下的单词
 Alt-/
 
@@ -145,7 +145,7 @@ Alt-/
 | p    | 粘贴 y 和 d 复制和剪切的内容        |
 | "0p  | 粘贴 y 复制的内容，d 相关的内容不算 |
 
-## yanky 组件使用 <leader>y 调出 picker
+## yanky 组件使用 `<leader>y` 调出 picker
 | 按键 | 行为                         |
 |------|------------------------------|
 | c-x  | 在 insert 模式下删除一行记录 |
@@ -169,18 +169,18 @@ rm ~/.local/state/nvim/swap/*
 | L    | go_in_plus             |
 | H    | go_out_plus            |
 | @    | reveal_cwd             |
-| <bs> | reset                  |
-| <    | 将当前窗口移动到最左侧 |
-| >    | 窗口向右移动           |
+| `<bs>` | reset                  |
+| `<`    | 将当前窗口移动到最左侧 |
+| `>`    | 窗口向右移动           |
 
 ## 8.2 mini.move
 只在选中的 visual 模式下生效
 | 按键  | 功能             |
 |-------|------------------|
-| <a-j> | 选中的块向下移动 |
-| <a-k> | 选中的块向上移动 |
-| <a-h> | 选中的块向左移动 |
-| <a-l> | 选中的块向右移动 |
+| `<a-j>` | 选中的块向下移动 |
+| `<a-k>` | 选中的块向上移动 |
+| `<a-h>` | 选中的块向左移动 |
+| `<a-l>` | 选中的块向右移动 |
 
 ## 8.3 mini.align
 选中要进行操作的块
@@ -193,7 +193,7 @@ rm ~/.local/state/nvim/swap/*
 
 # 9. 显示函数的参数的说明
 在输入的时候弹出小括号后，输入参数的时候，想要看第一个参数需要填什么，
-在插入模式下<a-f>
+在插入模式下`<a-f>`
 
 # 10. 多个窗口将其中一个窗口切换位置
 ```bash
