@@ -14,6 +14,7 @@ o.scrolloff = 5
 o.relativenumber = true
 o.number = true
 o.wrap = false
+opt.fileencodings = { "utf-8", "gb18030", "gbk", "gb2312", "latin1" }
 -- code indent and typesetting config
 o.autoindent = true
 o.smartindent = true
