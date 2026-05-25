@@ -286,6 +286,9 @@ rm ~/.local/state/nvim/swap/*
 | `<leader>bo` | n | 删除其它 buffer |
 | `<F2>` | n | 打开/关闭 nvim-tree |
 
+<details>
+<summary><strong>各个插件的快捷键介绍</strong></summary>
+
 ### Search & Replace
 
 | Key | Mode | Action |
@@ -405,9 +408,9 @@ rm ~/.local/state/nvim/swap/*
 | `<leader>ul` | n    | 开关 line number            |
 | `<leader>uh` | n    | 开关 inlay hints            |
 
-## Visual Multi
+### Visual Multi
 
-### Basic Keys
+#### Basic Keys
 
 | Key |jAction |
 |-----|--------|
@@ -417,12 +420,12 @@ rm ~/.local/state/nvim/swap/*
 | `<C-j>` / `<C-k>` | 在 `\\\` 后向下/向上扩展光标 |
 | `<C-c>` / `<A-q>` | 退出 VM mode |
 
-### Pattern
+#### Pattern
 
 - `\\w` 切换 whole word search。
 - `\\c` 在 case sensitive、ignorecase、smartcase 间切换。
 
-### Select In Scope
+#### Select In Scope
 
 1. 视觉模式选中内容。
 2. 按 `<C-n>` 进入 multi mode。
@@ -430,7 +433,7 @@ rm ~/.local/state/nvim/swap/*
 4. `8mj` 表示向下 8 行内查找相同选择。
 5. 如果没有提前选择内容，先用 `\\\` 或 `<C-Down>` 创建选择，再用 `sii`、`sai`、`saq`、`saj`。
 
-### Work With `<C-n>`
+#### Work With `<C-n>`
 
 1. `<C-n>` 选择当前光标所在词。
 2. `<C-n>` / `n` / `N` 跳到下一个或上一个相同词。
@@ -438,19 +441,19 @@ rm ~/.local/state/nvim/swap/*
 4. 重复选择和取消。
 5. 用 `<A-[>` / `<A-]>` 在已选择项之间移动。
 
-### Align
+#### Align
 
 1. 用 `<C-Down>` 创建多个光标。
 2. 用 `w` / `e` 向后移动到需要对齐的位置。
 3. `\\a` 对齐。
 
-### Numbering
+#### Numbering
 
 1. 用 `<C-Down>` 创建多个光标。
 2. `\\N` 打开编号窗口：`begin number`、`step`、`same text`。
 3. `\\N` 在光标前插入编号，`\\n` 在光标后追加编号。
 
-### Join Alternating Lines
+#### Join Alternating Lines
 
 原始内容：
 
@@ -474,7 +477,7 @@ rm ~/.local/state/nvim/swap/*
 2. 用 `\\R` 隔一行选择。
 3. 按 `J` 合并。
 
-### Increment Numbers
+#### Increment Numbers
 
 把多行数字：
 
@@ -495,9 +498,9 @@ rm ~/.local/state/nvim/swap/*
 选中第二、三行的 `1`，按 `g<C-a>`。`<C-a>` 是增加数字，加 `g` 表示按序递增。
 对应的减少操作是 `<C-x>`。
 
-## Mini.nvim
+### Mini.nvim
 
-### mini.files
+#### mini.files
 
 | Key | Action |
 |-----|--------|
@@ -508,7 +511,7 @@ rm ~/.local/state/nvim/swap/*
 | `<` | 将当前窗口移动到最左侧 |
 | `>` | 将窗口向右移动 |
 
-### mini.move
+#### mini.move
 
 只在 visual 模式下生效。
 
@@ -519,7 +522,7 @@ rm ~/.local/state/nvim/swap/*
 | `<A-h>` | 选中块向左移动 |
 | `<A-l>` | 选中块向右移动 |
 
-### mini.align
+#### mini.align
 
 选中要操作的块后：
 
@@ -530,7 +533,7 @@ rm ~/.local/state/nvim/swap/*
 | `j`                        | 进入模式后选择对齐方式，默认左对齐 |
 | `,` / `=` / `\|` / `space` | 常用分隔符                         |
 
-## Calculator
+### Calculator
 
 选中表达式后按 `gz=` 可直接计算。
 
@@ -539,6 +542,8 @@ rm ~/.local/state/nvim/swap/*
 ```c
 #define OPE() (0x123f + 1)
 ```
+
+</details>
 
 ## Known Issues
 
