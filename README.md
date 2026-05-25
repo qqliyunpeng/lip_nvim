@@ -17,6 +17,9 @@ AI 辅助、Markdown 写作、多光标和构建任务整理成一套开箱即�
 -  [GitHub Copilot](https://github.com/features/copilot) - AI pair programmer
 -  [Copilot NES](https://github.com/copilotlsp-nvim/copilot-lsp) - Next Edit Suggestions
 
+</td>
+<td valign="top" width="33%">
+
 ### 🎨 UI & Experience
 
 -  [onedarkpro.nvim](https://github.com/olimorris/onedarkpro.nvim) - theme
@@ -39,6 +42,11 @@ AI 辅助、Markdown 写作、多光标和构建任务整理成一套开箱即�
 -  [nvim-treesitter-context](https://github.com/nvim-treesitter/nvim-treesitter-context) - 顶部显示当前函数/作用域上下文
 -  [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) - Markdown 渲染增强
 -  [vim-table-mode](https://github.com/dhruvasagar/vim-table-mode) - Markdown 表格自动格式化
+
+</td>
+</tr>
+<tr>
+<td valign="top" width="33%">
 
 ### 🛠️ DevOps & Tools
 
@@ -65,6 +73,9 @@ AI 辅助、Markdown 写作、多光标和构建任务整理成一套开箱即�
 -  [vim-illuminate](https://github.com/RRethy/vim-illuminate) - 当前符号引用高亮
 -  [neogen](https://github.com/danymat/neogen) - Doxygen 风格注释生成
 -  [ts-comments.nvim](https://github.com/folke/ts-comments.nvim) - Treesitter-aware comments
+
+</td>
+<td valign="top" width="33%">
 
 ### 🔀 Git Integration
 
