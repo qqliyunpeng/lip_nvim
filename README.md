@@ -65,7 +65,7 @@ AI 辅助、Markdown 写作、多光标和构建任务整理成一套开箱即�
 
 ### 🧹 Code Quality
 
--  Native LSP via [mason.nvim](https://github.com/williamboman/mason.nvim)
+-  [mason.nvim](https://github.com/williamboman/mason.nvim) - Native LSP
 -  [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim) - Mason and lspconfig integration
 -  [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) - native LSP client configuration
 -  [lspsaga.nvim](https://github.com/nvimdev/lspsaga.nvim) - LSP 浮窗、签名、上下文 UI
@@ -80,8 +80,6 @@ AI 辅助、Markdown 写作、多光标和构建任务整理成一套开箱即�
 <td valign="top" width="33%">
 
 ### ✏️ Editing Features
-
-lip.nvim ships with editing helpers for daily C/C++, Lua and Markdown work:
 
 -  [rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim) - 彩色括号层级
 -  [mini.ai](https://github.com/echasnovski/mini.ai) - 扩展 text object
