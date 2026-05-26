@@ -73,36 +73,31 @@ AI 辅助、Markdown 写作、多光标和构建任务整理成一套开箱即�
 -  [vim-illuminate](https://github.com/RRethy/vim-illuminate) - 当前符号引用高亮
 -  [neogen](https://github.com/danymat/neogen) - Doxygen 风格注释生成
 -  [ts-comments.nvim](https://github.com/folke/ts-comments.nvim) - Treesitter-aware comments
-
-</td>
-<td valign="top" width="33%">
-
-### 🔀 Git Integration
-
 -  [Lazygit](https://github.com/jesseduffield/lazygit) terminal UI
 -  [gitsigns](https://github.com/lewis6991/gitsigns.nvim) - 行级变更标记和 hunk 跳转
 
 </td>
-</tr>
-</table>
+<td valign="top" width="33%">
 
 ### ✏️ Editing Features
 
 lip.nvim ships with editing helpers for daily C/C++, Lua and Markdown work:
 
-| Feature | Plugin | Description |
-|---------|--------|-------------|
-|  **Delimiters** | [rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim) | 彩色括号层级 |
-|  **Text objects** | [mini.ai](https://github.com/echasnovski/mini.ai) | 扩展 text object |
-|  **Alignment** | [mini.align](https://github.com/echasnovski/mini.align) | 对齐文本块 |
-|  **Surround** | [mini.surround](https://github.com/echasnovski/mini.surround) | Surround 操作 |
-|  **Move selection** | [mini.move](https://github.com/echasnovski/mini.move) | 移动 visual 选区 |
-|  **Operators** | [mini.operators](https://github.com/echasnovski/mini.operators) | 自定义 operator，包含表达式计算 |
-|  **Autopairs** | [nvim-autopairs](https://github.com/windwp/nvim-autopairs) | 自动补全括号和引号 |
-|  **Word toggles** | [nvim-toggler](https://github.com/nguyenvukhang/nvim-toggler) | `true/false`、`on/off` 等词义切换 |
-|  **Yank history** | [yanky.nvim](https://github.com/gbprod/yanky.nvim) | Yank 历史、智能粘贴和寄存器管理 |
-|  **Tasks** | [overseer.nvim](https://github.com/stevearc/overseer.nvim) | Build, run, make task templates |
-|  **Sessions** | [persisted.nvim](https://github.com/olimorris/persisted.nvim) | 工作区 session 保存和恢复 |
+-  [rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim) - 彩色括号层级
+-  [mini.ai](https://github.com/echasnovski/mini.ai) - 扩展 text object
+-  [mini.align](https://github.com/echasnovski/mini.align) - 对齐文本块
+-  [mini.surround](https://github.com/echasnovski/mini.surround) - Surround 操作
+-  [mini.move](https://github.com/echasnovski/mini.move) - 移动 visual 选区
+-  [mini.operators](https://github.com/echasnovski/mini.operators) - 自定义 operator，包含表达式计算
+-  [nvim-autopairs](https://github.com/windwp/nvim-autopairs) - 自动补全括号和引号
+-  [nvim-toggler](https://github.com/nguyenvukhang/nvim-toggler) - `true/false`、`on/off` 等词义切换
+-  [yanky.nvim](https://github.com/gbprod/yanky.nvim) - Yank 历史、智能粘贴和寄存器管理
+-  [overseer.nvim](https://github.com/stevearc/overseer.nvim) - Build, run, make task templates
+-  [persisted.nvim](https://github.com/olimorris/persisted.nvim) - 工作区 session 保存和恢复
+
+</td>
+</tr>
+</table>
 
 ### ⚡ Performance
 
