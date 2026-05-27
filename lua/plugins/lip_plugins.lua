@@ -357,7 +357,7 @@ return {
     {
         'https://gitee.com/nvim_lip/render-markdown.nvim.git',
         branch = "main",
-        event = "BufReadPost",
+        ft = { "markdown", "vimwiki", "Avante" },
         config = function ()
             require('configs.ui_all').markdownConfig()
         end,
