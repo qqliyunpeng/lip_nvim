@@ -98,10 +98,6 @@
 </tr>
 </table>
 
-### ⚡ Performance
-
-- **Lazy loaded**: All plugins via [lazy.nvim](https://github.com/folke/lazy.nvim)
-
 ## Screenshots
 
 ![First screen](assets/01.first.png)
@@ -111,6 +107,9 @@
 ![Avante and Markdown](assets/03.avante_and_markdown.png)
 
 ## Requirements
+
+<details>
+<summary>展开内容</summary>
 
 - Neovim `0.11+`
 - `git`
@@ -125,7 +124,12 @@
 部分插件或语言工具可能还需要 `cargo`、`sqlite3`、`libsqlite3-dev`、`unzip`、`curl`。
 进入 Neovim 后可用 `:checkhealth` 检查缺失项。
 
+</details>
+
 ## Installation
+
+<details>
+<summary>展开内容</summary>
 
 备份原配置后克隆到 `~/.config/nvim`：
 
@@ -140,7 +144,12 @@ nvim
 如果当前网络环境不能直接访问 GitHub，配置默认倾向使用 Gitee 镜像源。
 `clangd` 也默认走自定义下载逻辑。
 
+</details>
+
 ## Environment
+
+<details>
+<summary>展开内容</summary>
 
 | 变量 | 默认 | 作用 |
 |------|------|------|
@@ -155,7 +164,12 @@ bash ~/.bashrc
 ```
 
 
+</details>
+
 ## Project Layout
+
+<details>
+<summary>展开内容</summary>
 
 ```text
 .
@@ -179,7 +193,12 @@ bash ~/.bashrc
 | `lua/overseer/` | 任务模板 |
 | `snippets/` | LuaSnip 片段 |
 
+</details>
+
 ## Quick Start
+
+<details>
+<summary>展开内容</summary>
 
 ### C/C++ LSP
 
@@ -234,7 +253,12 @@ package.json
 rm ~/.local/state/nvim/swap/*
 ```
 
+</details>
+
 ## Keybindings
+
+<details>
+<summary>展开内容</summary>
 
 `,` 是 leader key。
 
@@ -287,9 +311,6 @@ rm ~/.local/state/nvim/swap/*
 | `<leader>bd` | n | 删除当前 buffer |
 | `<leader>bo` | n | 删除其它 buffer |
 | `<F2>` | n | 打开/关闭 nvim-tree |
-
-<details>
-<summary><strong>各个插件的快捷键介绍</strong></summary>
 
 ### Search & Replace
 
