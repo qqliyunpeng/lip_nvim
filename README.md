@@ -1,10 +1,11 @@
 # lip.nvim
 
-一个面向 C/C++、Lua、Markdown 和日常工程编辑的个人 Neovim 配置。
+一个嵌入式工程师使用的个人 Neovim 配置，主要面向 C/C++、Python、Shell
+和日常工程编辑。
 
-这个配置不是最小化模板，而是把常用编辑动作、工程跳转、搜索替换、LSP、
-AI 辅助、Markdown 写作、多光标和构建任务整理成一套开箱即用的工作环境，
-并默认以 Gitee 镜像作为主要插件更新源。
+这个配置不是最小化模板，而是把嵌入式开发中常用的编辑动作、工程跳转、
+搜索替换、LSP、AI 辅助、Markdown 写作、多光标和构建任务整理成一套
+开箱即用的工作环境，并默认以 Gitee 镜像作为主要插件更新源。
 ## ✨ Features
 
 <table>
@@ -100,6 +101,14 @@ AI 辅助、Markdown 写作、多光标和构建任务整理成一套开箱即�
 ### ⚡ Performance
 
 - **Lazy loaded**: All plugins via [lazy.nvim](https://github.com/folke/lazy.nvim)
+
+## Screenshots
+
+![First screen](assets/01.first.png)
+
+![Workspace](assets/02.workspace.png)
+
+![Avante and Markdown](assets/03.avante_and_markdown.png)
 
 ## Requirements
 
