@@ -176,6 +176,12 @@ function M.snacksConfig()
             prompt  = "   ",
             ui_select = false,
             formatters = { file = { filename_first = true, truncate = 40 } },
+            sources = {
+                files = { exclude = { "*.d", "*.o", "*.zip", "*.tar", "*.tar.gz",
+                                      "*.tgz", "*.tar.bz2", "*.tbz2", "*.tar.xz",
+                                      "*.txz", "*.gz", "*.bz2", "*.xz", "*.zst",
+                                      "*.7z", "*.rar" } },
+            },
             win = snacksKeys,
             db  = { sqlite3_path = db_path .. '/snacks_history.sqlite3', }
         },
