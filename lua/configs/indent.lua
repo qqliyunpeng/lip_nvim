@@ -16,6 +16,7 @@ local indentscopeDisableFileType = {
     "cmp_menu",
     "noice",
     "notify",
+    "sagaoutline",
     "snacks_dashboard",
     "snacks_notif",
     "snacks_terminal",
