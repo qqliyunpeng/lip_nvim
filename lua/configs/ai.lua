@@ -274,95 +274,6 @@ function M.avanteConfig()
         Selection._lip_visual_hint_cleanup_fix = true
     end
 
-    -- Keep AvanteTodos split readable.
-    -- Sometimes the layout gets recomputed (equalize, resize, re-open) and the split
-    -- can shrink to a couple of lines. We enforce a minimum height and also set
-    -- winfixheight to prevent automatic resizing from overriding it.
-    local AVANTE_TODOS_HEIGHT = 6
-
-    local avante_sidebar_filetypes = {
-        Avante = true,
-        AvanteInput = true,
-        AvanteSelectedFiles = true,
-        AvanteTodos = true,
-    }
-
-    local function enforce_avante_sidebar_width()
-        local sidebar_width = math.ceil(vim.o.columns * avanteOpts.windows.width / 100)
-
-        for _, win in ipairs(vim.api.nvim_list_wins()) do
-            pcall(function()
-                local buf = vim.api.nvim_win_get_buf(win)
-                if avante_sidebar_filetypes[vim.bo[buf].filetype] then
-                    vim.wo[win].winfixwidth = true
-                    vim.api.nvim_win_set_width(win, sidebar_width)
-                end
-            end)
-        end
-    end
-
-    local function schedule_enforce_avante_sidebar_width()
-        vim.schedule(enforce_avante_sidebar_width)
-        vim.defer_fn(enforce_avante_sidebar_width, 80)
-    end
-
-    local function enforce_avante_todos_height(buf)
-        if not buf or not vim.api.nvim_buf_is_valid(buf) then
-            return
-        end
-
-        local function apply()
-            if not vim.api.nvim_buf_is_valid(buf) then
-                return
-            end
-            if vim.bo[buf].filetype ~= "AvanteTodos" then
-                return
-            end
-
-            for _, win in ipairs(vim.fn.win_findbuf(buf)) do
-                pcall(function()
-                    vim.wo[win].winfixheight = true
-                    vim.api.nvim_win_set_height(win, AVANTE_TODOS_HEIGHT)
-                end)
-            end
-        end
-
-        -- Apply now and once more after the UI/layout settles.
-        vim.schedule(apply)
-        vim.defer_fn(apply, 80)
-    end
-
-    local function enforce_all_avante_todos_height()
-        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].filetype == "AvanteTodos" then
-                enforce_avante_todos_height(buf)
-            end
-        end
-    end
-
-    -- Re-enforce after layout changes; this effectively "locks" the AvanteTodos split height.
-    vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter", "WinResized", "VimResized" }, {
-        callback = function()
-            schedule_enforce_avante_sidebar_width()
-            enforce_all_avante_todos_height()
-        end,
-    })
-
-    -- nvim-tree opens as another left split. When it closes, Vim may recompute
-    -- vertical split sizes; keep the Avante sidebar at its configured width.
-    vim.api.nvim_create_autocmd("FileType", {
-        pattern = "NvimTree",
-        callback = schedule_enforce_avante_sidebar_width,
-    })
-
-    vim.api.nvim_create_autocmd("BufWinLeave", {
-        callback = function(ev)
-            if vim.api.nvim_buf_is_valid(ev.buf) and vim.bo[ev.buf].filetype == "NvimTree" then
-                schedule_enforce_avante_sidebar_width()
-            end
-        end,
-    })
-
     vim.api.nvim_create_autocmd("FileType", {
         pattern = { "AvanteSelectedFiles", "AvanteTodos", "AvanteInput" },
         callback = function(ev)
@@ -373,12 +284,6 @@ function M.avanteConfig()
 
             -- normal mode: Ctrl-c 退出
             vim.keymap.set("n", "<C-c>", "<cmd>AvanteToggle<cr>", opts)
-
-            -- Force Avante Todos window height.
-            -- AvanteTodos is usually rendered in a small split; increase it to show more items.
-            if vim.bo[ev.buf].filetype == "AvanteTodos" then
-                enforce_avante_todos_height(ev.buf)
-            end
 
             -- insert mode: Ctrl-c 退出
             -- vim.keymap.set("i", "<C-c>", "<Esc><cmd>AvanteToggle<cr>", opts)
