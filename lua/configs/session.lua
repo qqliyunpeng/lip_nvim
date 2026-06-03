@@ -9,7 +9,7 @@ local default_allowed_dirs = {
 }
 
 local function load_allowed_dirs()
-    local config_path = vim.fn.stdpath("data") .. "/.session_allowed_dirs.lua"
+    local config_path = vim.fn.stdpath("config") .. "/.session_allowed_dirs.lua"
     local ok, dirs = pcall(dofile, config_path)
 
     if not ok or type(dirs) ~= "table" then
@@ -40,4 +40,3 @@ function M.setDefault()
 end
 
 return M
-
