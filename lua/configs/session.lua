@@ -4,15 +4,22 @@ local utils = require("persisted.utils")
 
 local M = {}
 
-local allowed_dirs = vim.tbl_map(vim.fn.expand, {
+local default_allowed_dirs = {
     "~/.config/nvim",
-    "~/wor_/test/aq300/r5/app_r5_0",
-    "~/wor_/test/lvgl/lvgl_aq300/AQ300_lvgl_demo/lvgl_aq300",
-    "~/wor_/test/aq160/lvgl",
-    "~/wor_/test/aq160/or160_ui",
-    "~/wor_/test/aq160/others_or160/libIPCProtocol",
-    "~/wor_/test/aq350/mb/app_src",
-})
+}
+
+local function load_allowed_dirs()
+    local config_path = vim.fn.stdpath("data") .. "/.session_allowed_dirs.lua"
+    local ok, dirs = pcall(dofile, config_path)
+
+    if not ok or type(dirs) ~= "table" then
+        dirs = default_allowed_dirs
+    end
+
+    return vim.tbl_map(vim.fn.expand, dirs)
+end
+
+local allowed_dirs = load_allowed_dirs()
 
 function M.setDefault()
     persisted.branch = function()
