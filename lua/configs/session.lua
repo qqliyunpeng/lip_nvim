@@ -11,6 +11,7 @@ local allowed_dirs = {
     "~/wor_/test/aq160/lvgl",
     "~/wor_/test/aq160/or160_ui",
     "/home/lip/wor_/test/aq160/others_or160/libIPCProtocol",
+    "/home/lip/wor_/test/aq350/mb/app_src",
 }
 
 function M.setDefault()
