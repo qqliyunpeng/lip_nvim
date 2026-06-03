@@ -4,15 +4,15 @@ local utils = require("persisted.utils")
 
 local M = {}
 
-local allowed_dirs = {
+local allowed_dirs = vim.tbl_map(vim.fn.expand, {
     "~/.config/nvim",
-    "~/wor_/test/aq300/r5/app_r5_0/src",
+    "~/wor_/test/aq300/r5/app_r5_0",
     "~/wor_/test/lvgl/lvgl_aq300/AQ300_lvgl_demo/lvgl_aq300",
     "~/wor_/test/aq160/lvgl",
     "~/wor_/test/aq160/or160_ui",
-    "/home/lip/wor_/test/aq160/others_or160/libIPCProtocol",
-    "/home/lip/wor_/test/aq350/mb/app_src",
-}
+    "~/wor_/test/aq160/others_or160/libIPCProtocol",
+    "~/wor_/test/aq350/mb/app_src",
+})
 
 function M.setDefault()
     persisted.branch = function()
