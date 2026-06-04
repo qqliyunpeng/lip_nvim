@@ -170,6 +170,11 @@ local avanteOpts = {
 }
 
 function M.avanteConfig()
+    local avante_build_cpath = vim.fn.stdpath("data") .. "/lazy/avante.nvim/build/?.so"
+    if not package.cpath:find(avante_build_cpath, 1, true) then
+        package.cpath = package.cpath .. ";" .. avante_build_cpath
+    end
+
     require("avante").setup(avanteOpts)
 
     -- Avante auto-connects ACP providers by submitting an empty request when
