@@ -177,10 +177,91 @@ function M.avanteConfig()
 
     require("avante").setup(avanteOpts)
 
+    local function toggle_avante_render_markdown(sidebar, enable)
+        if not sidebar or not sidebar.containers or not sidebar.containers.result then
+            return
+        end
+
+        local bufnr = sidebar.containers.result.bufnr
+        if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+            return
+        end
+
+        local ok_render_markdown, render_markdown = pcall(require, "render-markdown")
+        if not ok_render_markdown then
+            return
+        end
+
+        vim.api.nvim_buf_call(bufnr, function()
+            if enable then
+                render_markdown.buf_enable()
+            else
+                render_markdown.buf_disable()
+            end
+        end)
+    end
+
     -- Avante auto-connects ACP providers by submitting an empty request when
     -- the sidebar opens. With Codex ACP this can restore the previous session
     -- and show "generating" immediately, so suppress only that empty submit.
     local ok_sidebar, Sidebar = pcall(require, "avante.sidebar")
+    if ok_sidebar and not Sidebar._lip_render_markdown_stream_toggle then
+        local original_handle_submit = Sidebar.handle_submit
+        Sidebar.handle_submit = function(self, request, ...)
+            local should_toggle_render_markdown = request and request ~= "" and not self.is_generating
+            if should_toggle_render_markdown then
+                toggle_avante_render_markdown(self, false)
+            end
+
+            local ok_llm, Llm = pcall(require, "avante.llm")
+            if not ok_llm or Llm._lip_render_markdown_stream_sidebar then
+                local ok_submit, result = pcall(original_handle_submit, self, request, ...)
+                if should_toggle_render_markdown then
+                    toggle_avante_render_markdown(self, true)
+                end
+                if not ok_submit then
+                    error(result)
+                end
+                return result
+            end
+
+            local original_stream = Llm.stream
+            local stream_started = false
+            Llm._lip_render_markdown_stream_sidebar = self
+            Llm.stream = function(opts)
+                stream_started = true
+                local sidebar = Llm._lip_render_markdown_stream_sidebar
+                Llm._lip_render_markdown_stream_sidebar = nil
+                Llm.stream = original_stream
+
+                if sidebar and opts then
+                    local original_on_stop = opts.on_stop
+                    opts.on_stop = function(...)
+                        toggle_avante_render_markdown(sidebar, true)
+                        if original_on_stop then
+                            return original_on_stop(...)
+                        end
+                    end
+                end
+
+                return original_stream(opts)
+            end
+
+            local ok_submit, result = pcall(original_handle_submit, self, request, ...)
+            if Llm.stream ~= original_stream then
+                Llm.stream = original_stream
+                Llm._lip_render_markdown_stream_sidebar = nil
+            end
+            if should_toggle_render_markdown and (not ok_submit or not stream_started) then
+                toggle_avante_render_markdown(self, true)
+            end
+            if not ok_submit then
+                error(result)
+            end
+            return result
+        end
+        Sidebar._lip_render_markdown_stream_toggle = true
+    end
     if ok_sidebar and not Sidebar._lip_skip_empty_open_submit then
         local original_open = Sidebar.open
         Sidebar.open = function(self, opts)
