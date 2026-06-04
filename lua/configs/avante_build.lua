@@ -54,7 +54,17 @@ tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
 
 echo "Downloading avante-lib $latest_tag from $libs_repo"
-git clone --depth 1 --branch "$latest_tag" "$libs_repo" "$tmp_dir"
+if ! git clone --depth 1 --branch "$latest_tag" "$libs_repo" "$tmp_dir"; then
+    existing_lib="$(find build -maxdepth 1 -type f -name "*.$lib_ext" | head -n 1)"
+    if [ -n "$existing_lib" ]; then
+        echo "avante-lib $latest_tag is not available from $libs_repo; keeping existing local avante-lib $built_tag."
+        exit 0
+    fi
+
+    echo "avante-lib $latest_tag is not available from $libs_repo and no local artifact exists; falling back to upstream build."
+    make
+    exit $?
+fi
 
 archive="$(find "$tmp_dir" -type f \( -name "*$artifact_pattern*.tar.gz" -o -name "*$artifact_pattern*.tgz" \) | head -n 1)"
 zip_archive="$(find "$tmp_dir" -type f -name "*$artifact_pattern*.zip" | head -n 1)"
