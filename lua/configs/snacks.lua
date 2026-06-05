@@ -2,6 +2,13 @@ local M = {}
 
 local db_path = os.getenv('HOME') .. '/.local/share/nvim/databases'
 
+local picker_exclude = {
+    "*.d", "*.o", "*.zip", "*.tar", "*.tar.gz",
+    "*.tgz", "*.tar.bz2", "*.tbz2", "*.tar.xz",
+    "*.txz", "*.gz", "*.bz2", "*.xz", "*.zst",
+    "*.7z", "*.rar", "tags", "cscope.out",
+}
+
 local open_lazygit_with_refresh = function ()
     Snacks.lazygit()
     local exclude_filetypes = {
@@ -177,10 +184,9 @@ function M.snacksConfig()
             ui_select = false,
             formatters = { file = { filename_first = true, truncate = 40 } },
             sources = {
-                files = { exclude = { "*.d", "*.o", "*.zip", "*.tar", "*.tar.gz",
-                                      "*.tgz", "*.tar.bz2", "*.tbz2", "*.tar.xz",
-                                      "*.txz", "*.gz", "*.bz2", "*.xz", "*.zst",
-                                      "*.7z", "*.rar" } },
+                files = { exclude = picker_exclude },
+                grep = { exclude = picker_exclude },
+                grep_word = { exclude = picker_exclude },
             },
             win = snacksKeys,
             db  = { sqlite3_path = db_path .. '/snacks_history.sqlite3', }
