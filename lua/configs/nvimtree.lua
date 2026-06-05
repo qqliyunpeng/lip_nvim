@@ -1,4 +1,23 @@
 local use_ascii_icons = require("configs.icons").use_ascii_icons()
+local avante_refresh = require("configs.avante_refresh")
+
+local function setup_avante_refresh_on_tree_events()
+    if vim.g.lip_nvim_tree_avante_refresh_events then
+        return
+    end
+
+    local ok, api = pcall(require, "nvim-tree.api")
+    if not ok then
+        return
+    end
+
+    api.events.subscribe(api.events.Event.TreeClose, function()
+        avante_refresh.refresh({ require_tree_closed = true })
+    end)
+    vim.g.lip_nvim_tree_avante_refresh_events = true
+end
+
+setup_avante_refresh_on_tree_events()
 
 local ascii_icons = {
     glyphs = {
