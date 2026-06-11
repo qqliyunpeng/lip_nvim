@@ -73,7 +73,6 @@ return {
         event = "VeryLazy",
         dependencies = {
             "https://gitee.com/nvim_lip/middleclass.git",
-            "https://gitee.com/nvim_lip/animation.nvim.git",
         },
         config = function()
             return require("configs.ui_all").windowsConfig()

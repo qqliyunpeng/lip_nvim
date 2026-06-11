@@ -100,12 +100,6 @@ function M.windowsConfig()
                 "AvanteTodos",
             },
         },
-        animation = {
-            enable = false,
-            duration = 180,
-            fps = 60,
-            easing = "in_out_sine",
-        },
     })
 end
 
