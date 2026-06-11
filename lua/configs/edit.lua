@@ -70,8 +70,8 @@ function M.miniKeymapConfig()
                     return
                 end
 
-                vim.keymap.set('t', 'jk', '<BS><BS><C-\\><C-n>', { buffer = bufnr, noremap = true, silent = true })
-                vim.keymap.set('t', 'kj', '<BS><BS><C-\\><C-n>', { buffer = bufnr, noremap = true, silent = true })
+                vim.keymap.set('t', 'jk', '<C-\\><C-n>', { buffer = bufnr, noremap = true, silent = true })
+                vim.keymap.set('t', 'kj', '<C-\\><C-n>', { buffer = bufnr, noremap = true, silent = true })
             end)
         end,
     })

@@ -69,6 +69,17 @@ return {
         end,
     },
     {
+        "https://gitee.com/nvim_lip/windows.nvim.git",
+        event = "VeryLazy",
+        dependencies = {
+            "https://gitee.com/nvim_lip/middleclass.git",
+            "https://gitee.com/nvim_lip/animation.nvim.git",
+        },
+        config = function()
+            return require("configs.ui_all").windowsConfig()
+        end,
+    },
+    {
         -- 函数缩进前的条
         "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
         event = "VeryLazy",

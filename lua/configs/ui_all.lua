@@ -63,6 +63,52 @@ function M.noiceConfig()
     map("i", "<A-f>", function() vim.lsp.buf.signature_help() end)
 end
 
+function M.windowsConfig()
+    vim.o.equalalways = false
+    vim.o.winwidth = 10
+    vim.o.winminwidth = 10
+
+    package.preload["windows.lib.ffi"] = function()
+        return {
+            curwin_col_off = function()
+                local wininfo = vim.fn.getwininfo(vim.api.nvim_get_current_win())[1]
+                return wininfo and wininfo.textoff or 0
+            end,
+        }
+    end
+
+    require("windows").setup({
+        autowidth = {
+            enable = true,
+            winwidth = 15,
+            filetype = {
+                help = 2,
+            },
+        },
+        ignore = {
+            buftype = { "quickfix", "terminal" },
+            filetype = {
+                "NvimTree",
+                "snacks_dashboard",
+                "snacks_notif",
+                "snacks_picker_list",
+                "snacks_picker_preview",
+                "snacks_terminal",
+                "Avante",
+                "AvanteInput",
+                "AvanteSelectedFiles",
+                "AvanteTodos",
+            },
+        },
+        animation = {
+            enable = false,
+            duration = 180,
+            fps = 60,
+            easing = "in_out_sine",
+        },
+    })
+end
+
 function M.whitespaceConfig()
     require("whitespace-nvim").setup({
         highlight = 'DiffDelete',
@@ -573,7 +619,7 @@ function M.deviconsConfig()
 end
 
 function M.accjkConfig()
-    local function smart_(key, plug)
+    local function smart_(key, cmd)
         return function()
             local count = vim.v.count
 
@@ -583,9 +629,7 @@ function M.accjkConfig()
 
             vim.b.snacks_scroll = false
 
-            vim.api.nvim_feedkeys(
-                vim.api.nvim_replace_termcodes(plug,
-                true, false, true), "n", false)
+            vim.fn["accelerated#time_driven#command"](cmd)
 
             vim.defer_fn(function()
                 vim.b.snacks_scroll = nil
@@ -593,8 +637,8 @@ function M.accjkConfig()
         end
     end
 
-    vim.keymap.set("n", "j", smart_("j", "<Plug>(accelerated_jk_gj)"), { silent = true })
-    vim.keymap.set("n", "k", smart_("k", "<Plug>(accelerated_jk_gk)"), { silent = true })
+    vim.keymap.set("n", "j", smart_("j", "gj"), { silent = true })
+    vim.keymap.set("n", "k", smart_("k", "gk"), { silent = true })
 end
 
 function M.interestingwordsConfig()
