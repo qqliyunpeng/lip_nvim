@@ -112,7 +112,13 @@ local avanteOpts = {
         provider = "snacks",
         provider_opts = {
             title = "Avante Input",
-            iconns = " ",
+            icon = " ",
+            win = {
+                keys = {
+                    i_up = { "<Up>", "<Up>", mode = { "i", "n" }, expr = true },
+                    i_down = { "<Down>", "<Down>", mode = { "i", "n" }, expr = true },
+                },
+            },
         },
     },
     mappings = {
