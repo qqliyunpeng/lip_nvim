@@ -79,6 +79,13 @@ return {
         end,
     },
     {
+        "https://gitee.com/nvim_lip/smart-splits.nvim.git",
+        lazy = false,
+        config = function()
+            require("smart-splits").setup({})
+        end,
+    },
+    {
         -- 函数缩进前的条
         "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
         event = "VeryLazy",
@@ -198,4 +205,3 @@ return {
         end
     }
 }
-

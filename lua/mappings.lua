@@ -15,22 +15,22 @@ map("i", "<C-l>", "<Right>",    { desc = "move right" })
 map("i", "<C-j>", "<Down>",     { desc = "move down" })
 map("i", "<C-k>", "<Up>",       { desc = "move up" })
 
-map("n", "<C-h>", "<C-w>h",     { desc = "switch window left" })
-map("n", "<C-l>", "<C-w>l",     { desc = "switch window right" })
-map("n", "<C-j>", "<C-w>j",     { desc = "switch window down" })
-map("n", "<C-k>", "<C-w>k",     { desc = "switch window up" })
+map("n", "<C-h>", function() require("smart-splits").move_cursor_left() end,  { desc = "switch window left" })
+map("n", "<C-l>", function() require("smart-splits").move_cursor_right() end, { desc = "switch window right" })
+map("n", "<C-j>", function() require("smart-splits").move_cursor_down() end,  { desc = "switch window down" })
+map("n", "<C-k>", function() require("smart-splits").move_cursor_up() end,    { desc = "switch window up" })
 
 map({"n", "i"}, "<C-s>", "<cmd>w<CR>", { desc = "Save current files" })
 
 -- Resize splits with arrow keys
-map("n", "<C-S-up>", "<cmd>res +5<CR>",   { desc = "Increase upwards" })
-map("n", "<C-S-down>", "<cmd>res -5<CR>", { desc ="Increase downwards" })
-map("n", "<C-S-left>", "<cmd>vertical resize-5<CR>",  { desc = "Increase leftwards" })
-map("n", "<C-S-right>", "<cmd>vertical resize+5<CR>", { desc = "Increase rightwards" })
+map("n", "<C-S-up>", function() require("smart-splits").resize_up() end,       { desc = "Increase upwards" })
+map("n", "<C-S-down>", function() require("smart-splits").resize_down() end,   { desc ="Increase downwards" })
+map("n", "<C-S-left>", function() require("smart-splits").resize_left() end,   { desc = "Increase leftwards" })
+map("n", "<C-S-right>", function() require("smart-splits").resize_right() end, { desc = "Increase rightwards" })
 
 
 -- nvim中在ssh的终端中C-h表示backspace
-map("n", "<BS>", "<C-w>h", { desc = "switch window left" })
+map("n", "<BS>", function() require("smart-splits").move_cursor_left() end, { desc = "switch window left" })
 
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
@@ -118,10 +118,10 @@ map("t", "<A-b>", function()
     pcall(vim.cmd, "close")
     require("configs.avante_refresh").refresh()
 end, { desc = "Terminal Hide" })
-map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc =  "Go to Upper Window" })
-map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc =  "Go to Lower Window" })
-map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc =  "Go to Left Window"  })
-map("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc =  "Go to Right Window" })
+map("t", "<C-k>", function() require("smart-splits").move_cursor_up() end,    { desc =  "Go to Upper Window" })
+map("t", "<C-j>", function() require("smart-splits").move_cursor_down() end,  { desc =  "Go to Lower Window" })
+map("t", "<C-h>", function() require("smart-splits").move_cursor_left() end,  { desc =  "Go to Left Window"  })
+map("t", "<C-l>", function() require("smart-splits").move_cursor_right() end, { desc =  "Go to Right Window" })
 
 -- search
 map('n', '<A-/>', function()
@@ -160,4 +160,3 @@ map("n", "<leader>wl", function()
 end, opts "List workspace folders")
 
 map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action")
-
