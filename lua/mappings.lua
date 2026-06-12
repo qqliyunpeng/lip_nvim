@@ -113,7 +113,13 @@ map("x", "P", '"_dP`[v`]=', { desc = "Paste over selection and reindent" })
 map("n", "<leader>un", function() Snacks.notifier.hide() end, { desc = "Dismiss All Notifications" })
 map("n", "<leader>bd", function() Snacks.bufdelete() end,     { desc = "Delete Buffers" })
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
-map("n", "<A-b>", function() Snacks.terminal() end, { desc = "Terminal Open" })
+map("n", "<A-b>", function()
+    -- 只在通过 <A-b> 进入终端时进入插入模式；用 <C-j>/<C-k> 切回终端时保持普通模式。
+    Snacks.terminal(nil, { auto_insert = false, start_insert = false })
+    if vim.bo.buftype == "terminal" then
+        vim.cmd.startinsert()
+    end
+end, { desc = "Terminal Open" })
 map("t", "<A-b>", function()
     pcall(vim.cmd, "close")
     require("configs.avante_refresh").refresh()
