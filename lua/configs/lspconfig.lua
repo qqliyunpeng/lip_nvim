@@ -7,6 +7,7 @@ local dia_ascii_icons = { Error = "E", Warn = "W", Hint = "H", Info = "I" }
 local signs = use_ascii_icons and dia_ascii_icons or dia_nerd_icons
 
 vim.diagnostic.config({
+    severity_sort = true,
     signs = {
         text = {
             [vim.diagnostic.severity.ERROR] = signs.Error,
