@@ -47,6 +47,8 @@ function M.setup()
         callback = try_lint,
     })
 
+    vim.schedule(try_lint)
+
     vim.api.nvim_create_user_command("Lint", try_lint, {
         desc = "Run nvim-lint for current buffer",
     })

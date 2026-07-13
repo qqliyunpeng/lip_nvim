@@ -317,43 +317,6 @@ return {
         end,
     },
     {
-        "https://gitee.com/nvim_lip/none-ls.nvim.git",
-        event = { "BufReadPost", "BufNewFile" },
-
-        dependencies = {
-            string.format('%s/plenary.nvim', 'https://gitee.com/suyelu'),
-            { "https://gitee.com/yunduozhai/mason-null-ls.nvim.git", branch = 'main' },
-        },
-        config = function()
-            local tools = {
-                -- "black",
-            }
-
-            rawset(vim, "tbl_add_reverse_lookup", function(tbl)
-                for k, v in pairs(tbl) do
-                    tbl[v] = k
-                end
-
-                return tbl
-            end)
-
-            require("mason-null-ls").setup({
-                ensure_installed = tools,
-                automatic_installation = true,
-            })
-
-            local null_ls = require("null-ls")
-
-            null_ls.setup({
-                sources = {
-                    -- 示例：
-                    -- null_ls.builtins.formatting.black,
-                    -- null_ls.builtins.diagnostics.flake8,
-                },
-            })
-        end,
-    },
-    {
         "https://gitee.com/yunduozhai/neogen",
         branch = 'main',
         event = "VeryLazy",
