@@ -297,6 +297,13 @@ return {
         -- event = "User FilePost",
     },
     {
+        "https://github.com/mfussenegger/nvim-lint.git",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            require("configs.lint").setup()
+        end,
+    },
+    {
         "https://gitee.com/nvim_lip/LuaSnip",
         version = "v2.*",
         build = 'make install_jsregexp',
