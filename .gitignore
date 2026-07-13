@@ -1,3 +1,4 @@
 .luarc.json
 lazy-lock.json
 .session_allowed_dirs.lua
+.nvimlog
