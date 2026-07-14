@@ -175,6 +175,67 @@ local avanteOpts = {
     },
 }
 
+local function set_avante_window_highlights()
+    pcall(vim.api.nvim_set_hl, 0, "AvanteSidebarNormal", { link = "Normal" })
+    pcall(vim.api.nvim_set_hl, 0, "AvantePromptInput", { link = "Normal" })
+end
+
+local function avante_winhighlight(winhl, filetype, active)
+    local normal_group = "AvanteSidebarNormal"
+    if filetype == "AvantePromptInput" then
+        normal_group = "AvantePromptInput"
+    end
+    if not active then
+        normal_group = "NormalNC"
+    end
+
+    local pieces = {}
+    local found_normal = false
+    for piece in string.gmatch(winhl or "", "[^,]+") do
+        if piece:match("^Normal:") then
+            table.insert(pieces, "Normal:" .. normal_group)
+            found_normal = true
+        else
+            table.insert(pieces, piece)
+        end
+    end
+    if not found_normal then
+        table.insert(pieces, "Normal:" .. normal_group)
+    end
+    return table.concat(pieces, ",")
+end
+
+local avante_window_filetypes = {
+    Avante = true,
+    AvanteInput = true,
+    AvantePromptInput = true,
+}
+
+local function update_avante_window_highlight(active)
+    local filetype = vim.bo.filetype
+    if not avante_window_filetypes[filetype] then
+        return
+    end
+
+    vim.wo.winhighlight = avante_winhighlight(vim.wo.winhighlight, filetype, active)
+end
+
+local function setup_avante_window_highlight_autocmds()
+    local group = vim.api.nvim_create_augroup("LipAvanteWindowHighlights", { clear = true })
+    vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+        group = group,
+        callback = function()
+            update_avante_window_highlight(true)
+        end,
+    })
+    vim.api.nvim_create_autocmd("WinLeave", {
+        group = group,
+        callback = function()
+            update_avante_window_highlight(false)
+        end,
+    })
+end
+
 function M.avanteConfig()
     local avante_build_cpath = vim.fn.stdpath("data") .. "/lazy/avante.nvim/build/?.so"
     if not package.cpath:find(avante_build_cpath, 1, true) then
@@ -182,6 +243,8 @@ function M.avanteConfig()
     end
 
     require("avante").setup(avanteOpts)
+    set_avante_window_highlights()
+    setup_avante_window_highlight_autocmds()
 
     local function toggle_avante_render_markdown(sidebar, enable)
         if not sidebar or not sidebar.containers or not sidebar.containers.result then
@@ -417,5 +480,10 @@ function M.avanteConfig()
         end,
     })
 end
+
+M._test = {
+    avante_winhighlight = avante_winhighlight,
+    set_avante_window_highlights = set_avante_window_highlights,
+}
 
 return M
