@@ -35,4 +35,20 @@ eq(
     "Avante prompt input restores the active window background after entering"
 )
 
+local rendered = nil
+package.preload["render-markdown.api"] = function()
+    return {
+        render = function(context)
+            rendered = context
+        end,
+    }
+end
+vim.api.nvim_buf_is_valid = function(bufnr)
+    return bufnr == 42
+end
+
+helpers.render_avante_markdown(42)
+eq(rendered.buf, 42, "Avante completion renders its result buffer")
+eq(rendered.event, "AvanteViewBufferUpdated", "Avante completion identifies its render event")
+
 print("avante_highlight_spec: ok")

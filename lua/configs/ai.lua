@@ -236,6 +236,35 @@ local function setup_avante_window_highlight_autocmds()
     })
 end
 
+local function render_avante_markdown(bufnr)
+    if not vim.api.nvim_buf_is_valid(bufnr) then
+        return
+    end
+
+    local ok_render_markdown, render_markdown = pcall(require, "render-markdown.api")
+    if ok_render_markdown then
+        render_markdown.render({
+            buf = bufnr,
+            event = "AvanteViewBufferUpdated",
+        })
+    end
+end
+
+local function setup_avante_completion_markdown_render()
+    local group = vim.api.nvim_create_augroup("LipAvanteCompletionMarkdownRender", { clear = true })
+    vim.api.nvim_create_autocmd("User", {
+        group = group,
+        pattern = "AvanteViewBufferUpdated",
+        callback = function()
+            for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].filetype == "Avante" then
+                    render_avante_markdown(bufnr)
+                end
+            end
+        end,
+    })
+end
+
 function M.avanteConfig()
     local avante_build_cpath = vim.fn.stdpath("data") .. "/lazy/avante.nvim/build/?.so"
     if not package.cpath:find(avante_build_cpath, 1, true) then
@@ -245,6 +274,7 @@ function M.avanteConfig()
     require("avante").setup(avanteOpts)
     set_avante_window_highlights()
     setup_avante_window_highlight_autocmds()
+    setup_avante_completion_markdown_render()
 
     -- Avante auto-connects ACP providers by submitting an empty request when
     -- the sidebar opens. With Codex ACP this can restore the previous session
@@ -403,6 +433,7 @@ end
 M._test = {
     avante_winhighlight = avante_winhighlight,
     set_avante_window_highlights = set_avante_window_highlights,
+    render_avante_markdown = render_avante_markdown,
 }
 
 return M
