@@ -736,4 +736,3 @@ function M.interestingwordsConfig()
 end
 
 return M
-
