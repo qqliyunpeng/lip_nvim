@@ -59,7 +59,7 @@ local avanteOpts = {
     acp_providers = {
         codex = {
             command = "npx",
-            args = { "@zed-industries/codex-acp" },
+            args = { "@agentclientprotocol/codex-acp" },
             env = {
                 OPENAI_API_KEY = os.getenv("CHATGPT_API_KEY"),
             },

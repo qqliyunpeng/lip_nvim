@@ -88,11 +88,6 @@ if not vim.loop.fs_stat(lazypath) then
         vim.fn.getchar()
         os.exit(1)
     end
-else
-    local remote = vim.fn.system { "git", "-C", lazypath, "remote", "get-url", "origin" }
-    if vim.v.shell_error == 0 and remote:find("github.com/folke/lazy.nvim", 1, true) then
-        vim.fn.system { "git", "-C", lazypath, "remote", "set-url", "origin", "https://gitee.com/nvim_lip/lazy.nvim" }
-    end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -229,4 +224,3 @@ require("configs.gencompiledb")
 -- avante.nvim 兼容老 nvim 版本
 vim.text = vim.text or {}
 vim.text.diff = vim.diff
-
