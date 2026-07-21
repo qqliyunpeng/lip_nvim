@@ -6,7 +6,7 @@ local picker_exclude = {
     "*.d", "*.o", "*.zip", "*.tar", "*.tar.gz",
     "*.tgz", "*.tar.bz2", "*.tbz2", "*.tar.xz",
     "*.txz", "*.gz", "*.bz2", "*.xz", "*.zst",
-    "*.7z", "*.rar", "tags", "cscope.out",
+    "*.7z", "*.rar", "*.a1", "*.s1", "*.snalyzerinfo", "tags", "cscope.out",
 }
 
 local open_lazygit_with_refresh = function ()
@@ -294,4 +294,3 @@ function M.snacksConfig()
 end
 
 return M
-
