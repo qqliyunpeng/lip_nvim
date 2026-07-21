@@ -894,15 +894,13 @@ function M.llmConfig()
 
     require("llm").setup({
         url = "http://172.16.9.15:8317/v1/chat/completions",
-        -- model = "gpt-5.2",
-        model = "qwen3-coder-plus",
+        model = "gpt-5.5",
         api_type = "openai",
         timeout = 30,
         enable_trace = false,
         log_level = 1,
         fetch_key = function()
-            -- Prefer Qwen key when using qwen models; fall back to CHATGPT_API_KEY.
-            return vim.env.QWEN_API_KEY or vim.env.CHATGPT_API_KEY or ""
+            return vim.env.CHATGPT_API_KEY or vim.env.QWEN_API_KEY or ""
         end,
         temperature = 0.3,
         max_tokens = 1024,
