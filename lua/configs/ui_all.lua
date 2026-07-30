@@ -707,8 +707,25 @@ function M.interestingwordsConfig()
         return vim.v.hlsearch ~= 0 and vim.fn.getreg("/") ~= "" and cursor_in_pattern(vim.fn.getreg("/"))
     end
 
+    local function jump_pair_under_cursor(forward)
+        local line = vim.api.nvim_get_current_line()
+        local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+        local char = line:sub(col, col)
+        local pairs = forward and { ["("] = true, ["{"] = true, ["["] = true }
+            or { [")"] = true, ["}"] = true, ["]"] = true }
+
+        if not pairs[char] then
+            return false
+        end
+
+        vim.cmd("normal! %")
+        return true
+    end
+
     local function jump_forward()
-        if cursor_word_is_interesting() then
+        if jump_pair_under_cursor(true) then
+            return
+        elseif cursor_word_is_interesting() then
             iw.NavigateToWord(true)
         elseif cursor_in_illuminate_reference() then
             illuminate.goto_next_reference()
@@ -720,7 +737,9 @@ function M.interestingwordsConfig()
     end
 
     local function jump_backward()
-        if cursor_word_is_interesting() then
+        if jump_pair_under_cursor(false) then
+            return
+        elseif cursor_word_is_interesting() then
             iw.NavigateToWord(false)
         elseif cursor_in_illuminate_reference() then
             illuminate.goto_prev_reference()
