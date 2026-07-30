@@ -317,9 +317,12 @@ function M.config()
         -- 如果没有 diff buffer -> 打开 diff
         if not found then
             gs.diffthis()
-            local line_count = vim.api.nvim_buf_line_count(0)
-            if line_count > 2000 then
-                vim.cmd("normal! zR")  -- 展开所有折叠
+
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+                if vim.wo[win].diff then
+                    vim.wo[win].foldenable = false
+                    vim.wo[win].foldlevel = 99
+                end
             end
 
             vim.cmd("wincmd H")
