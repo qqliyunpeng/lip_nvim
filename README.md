@@ -121,6 +121,14 @@
 - `python3`
 - Nerd Font
 
+终端已配置 Nerd Font 时，可设置环境变量以启用 Nerd Font 图标：
+
+```bash
+export NVIM_USE_NERD_FONT=1
+```
+
+可将该设置写入 `~/.bashrc`、`~/.zshrc` 等 shell 配置文件。
+
 部分插件或语言工具可能还需要 `cargo`、`sqlite3`、`libsqlite3-dev`、`unzip`、`curl`。
 进入 Neovim 后可用 `:checkhealth` 检查缺失项。
 

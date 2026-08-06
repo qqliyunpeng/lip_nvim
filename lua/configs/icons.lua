@@ -1,6 +1,20 @@
 local M = {}
 
+function M.nerd_font_env_enabled()
+    local value = vim.env.NVIM_USE_NERD_FONT
+    if not value or value == "" then
+        return false
+    end
+
+    value = value:lower()
+    return not vim.tbl_contains({ "0", "false", "no", "off" }, value)
+end
+
 function M.detect_terminal()
+    if M.nerd_font_env_enabled() then
+        return "nerd"
+    end
+
     local term = vim.env.TERM or ""
     if term == "xterm-256color" then
         return "nerd"
@@ -154,6 +168,10 @@ end
 
 
 local snacks_nerd_icons = {
+    prompt       = "   ",
+    keymaps      = " ",
+    recent_files = " ",
+    projects     = " ",
     find_file   = " ",
     new_file    = " ",
     find_text   = " ",
@@ -167,6 +185,10 @@ local snacks_nerd_icons = {
 }
 
 local snacks_asci_icons = {
+    prompt       = " >  ",
+    keymaps      = "[K] ",
+    recent_files = "[R] ",
+    projects     = "[P] ",
     find_file   = "[F] ",
     new_file    = "[N] ",
     find_text   = "[G] ",
