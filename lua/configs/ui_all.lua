@@ -322,7 +322,7 @@ function M.todoConfig()
         todo.jump_prev({keywords = { "TODO", "NOTE", "FIX", "FIXME" }})
     end, { desc = "Previous TODO/NOTE comment" })
 
-    map("n", "<leader>to", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME,NOTE,PERF<CR>",
+    map("n", "<leader>fo", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME,NOTE,PERF<CR>",
         { desc = "Open todo/fixed/note list" })
 end
 

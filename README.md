@@ -422,7 +422,7 @@ rm ~/.local/state/nvim/swap/*
 |-----|------|--------|
 | `<leader>ut` | n | 开关 table mode |
 | `<leader>tr` | n | Markdown 表格整理 |
-| `<leader>to` | n | 查找 TODO/NOTE/FIX/FIXME |
+| `<leader>fo` | n | 查找 TODO/NOTE/FIX/FIXME |
 | `]t` / `[t` | n | 下一个/上一个 TODO/NOTE/FIX/FIXME |
 
 ### Toggles
