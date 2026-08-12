@@ -113,17 +113,19 @@ map("x", "P", '"_dP`[v`]=', { desc = "Paste over selection and reindent" })
 map("n", "<leader>un", function() Snacks.notifier.hide() end, { desc = "Dismiss All Notifications" })
 map("n", "<leader>bd", function() Snacks.bufdelete() end,     { desc = "Delete Buffers" })
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
+local function hide_terminal()
+    pcall(vim.cmd, "close")
+    require("configs.avante_refresh").refresh()
+end
 map("n", "<A-b>", function()
     -- 只在通过 <A-b> 进入终端时进入插入模式；用 <C-j>/<C-k> 切回终端时保持普通模式。
     Snacks.terminal(nil, { auto_insert = false, start_insert = false })
     if vim.bo.buftype == "terminal" then
+        vim.keymap.set("n", "q", hide_terminal, { buffer = true, desc = "Terminal Hide" })
         vim.cmd.startinsert()
     end
 end, { desc = "Terminal Open" })
-map("t", "<A-b>", function()
-    pcall(vim.cmd, "close")
-    require("configs.avante_refresh").refresh()
-end, { desc = "Terminal Hide" })
+map("t", "<A-b>", hide_terminal, { desc = "Terminal Hide" })
 map("t", "<C-k>", function() require("smart-splits").move_cursor_up() end,    { desc =  "Go to Upper Window" })
 map("t", "<C-j>", function() require("smart-splits").move_cursor_down() end,  { desc =  "Go to Lower Window" })
 map("t", "<C-h>", function() require("smart-splits").move_cursor_left() end,  { desc =  "Go to Left Window"  })
