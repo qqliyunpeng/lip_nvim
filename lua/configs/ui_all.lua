@@ -160,6 +160,9 @@ function M.lspsagaConfig()
             use_nerd = not use_ascii_icons,
             code_action = use_ascii_icons and " A" or '󱠀',
         },
+        lightbulb = {
+            sign_priority = 9,
+        },
         finder = {
             max_height = 0.6,
             keys = {
