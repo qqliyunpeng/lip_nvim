@@ -894,7 +894,7 @@ function M.llmConfig()
 
     require("llm").setup({
         url = "http://172.16.9.15:8317/v1/chat/completions",
-        model = "gpt-5.5",
+        model = "gpt-5.6-sol",
         api_type = "openai",
         timeout = 30,
         enable_trace = false,
