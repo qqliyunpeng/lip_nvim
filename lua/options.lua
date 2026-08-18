@@ -2,6 +2,39 @@ local opt = vim.opt
 local o = vim.o
 local g = vim.g
 
+-- SSH 会话使用 OSC 52 将复制内容写入本地终端的系统剪贴板
+if vim.env.SSH_TTY then
+    -- Tabby 不响应 OSC 52 剪贴板读取请求，因此使用会话缓存避免读取超时
+    local cache = {
+        ["+"] = { {}, "v" },
+        ["*"] = { {}, "v" },
+    }
+
+    local function copy(reg)
+        local osc52_copy = require("vim.ui.clipboard.osc52").copy(reg)
+
+        return function(lines, regtype)
+            cache[reg] = { lines, regtype }
+            osc52_copy(lines)
+        end
+    end
+
+    g.clipboard = {
+        name = "OSC 52 copy only",
+        copy = {
+            ["+"] = copy("+"),
+            ["*"] = copy("*"),
+        },
+        paste = {
+            ["+"] = function() return cache["+"] end,
+            ["*"] = function() return cache["*"] end,
+        },
+    }
+end
+
+-- 普通 y/p 默认使用系统剪贴板寄存器
+opt.clipboard = "unnamedplus"
+
 -------------------------------------- options ------------------------------------------
 --
 -- base config

@@ -1,8 +1,4 @@
 local map = vim.keymap.set
-local opt = vim.opt
-
-opt.clipboard = "unnamedplus"
-opt.cursorline = true
 
 -- 大小的L和H映射
 map({ "x", "n", "o" }, "L", "g_",  { noremap = true, silent = true, desc = "To end of line" })
