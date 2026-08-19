@@ -8,6 +8,18 @@ local Space = { provider = " "  }
 local heirline_components = require("heirline-components.all")
 local lib = require "heirline-components.all"
 
+local avante_filetypes = {
+    Avante = true,
+    AvanteInput = true,
+    AvantePromptInput = true,
+    AvanteSelectedFiles = true,
+    AvanteTodos = true,
+}
+
+local function is_avante_buffer()
+    return avante_filetypes[vim.bo.filetype] == true
+end
+
 -- Setup heirline-components.nvim
 heirline_components.init.subscribe_to_events()
 heirline.load_colors(heirline_components.hl.get_colors())
@@ -128,6 +140,14 @@ local FileIcon = {
 
 local FileName = {
     provider = function(self)
+        local avante_names = {
+            Avante = " AI ",
+            AvanteInput = " AI ",
+            AvanteSelectedFiles = " AI ",
+        }
+        if avante_names[vim.bo.filetype] then
+            return avante_names[vim.bo.filetype]
+        end
         -- first, trim the pattern relative to the current directory. For other
         -- options, see :h filename-modifers
         local filename = vim.fn.fnamemodify(self.filename, ":.")
@@ -182,6 +202,9 @@ FileNameBlock = utils.insert(FileNameBlock, FileIcon,
     )
 
 local FileEncoding = {
+    condition = function()
+        return not is_avante_buffer()
+    end,
     provider = function()
         local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc -- :h 'enc'
         return enc:upper()
@@ -191,6 +214,9 @@ local FileEncoding = {
 }
 
 local FileFormat = {
+    condition = function()
+        return not is_avante_buffer()
+    end,
     provider = function()
         local eol = vim.bo.fileformat
         if eol == 'unix' then
@@ -267,7 +293,12 @@ local StatusLine = {
     lib.component.cmd_info(),
     Align,
     -- lib.component.lsp(),
-    lib.component.compiler_state(),
+    {
+        condition = function()
+            return not is_avante_buffer()
+        end,
+        lib.component.compiler_state(),
+    },
     Space, Space,
     lib.component.diagnostics(),
     -- lib.component.virtual_env(),
@@ -276,7 +307,12 @@ local StatusLine = {
     { FileFormat }, Space, Space,
     VisualSelection,
     VisualSeparators,
-    lib.component.nav(),
+    {
+        condition = function()
+            return not is_avante_buffer()
+        end,
+        lib.component.nav(),
+    },
 }
 
 function M.config()
@@ -288,4 +324,3 @@ function M.config()
 end
 
 return M
-
