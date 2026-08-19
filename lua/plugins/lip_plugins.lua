@@ -304,6 +304,12 @@ return {
         end,
     },
     {
+        "https://gitee.com/nvim_lip/conform.git",
+        cmd = { "ConformInfo" },
+        keys = require("configs.conform").keys,
+        opts = require("configs.conform").opts,
+    },
+    {
         "https://gitee.com/nvim_lip/LuaSnip",
         version = "v2.*",
         build = 'make install_jsregexp',
