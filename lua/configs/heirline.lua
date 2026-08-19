@@ -222,6 +222,39 @@ local VisualSelection = {
     end,
 }
 
+local VisualSeparators = {
+    provider = function()
+        local mode = vim.fn.mode()
+        if not mode:match("[vV]") then
+            return ""
+        end
+        local region = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
+        local text = table.concat(region, "\n")
+        local count = 0
+        local label = ","
+        if text:find(",", 1, true) then
+            local _, matches = text:gsub(",", "")
+            count = matches + 1
+            if text:match(",%s*$") then
+                count = count - 1
+            end
+        else
+            label = "s"
+            for _ in text:gmatch("%S+") do
+                count = count + 1
+            end
+        end
+        if count == 0 then
+            return ""
+        end
+        return string.format("[%s:%d]", label, count)
+    end,
+    hl = { fg = "#00FFFF", bold = true },
+    condition = function()
+        return vim.fn.mode():match("[vV]") ~= nil
+    end,
+}
+
 local StatusLine = {
     condition = conditions.is_active,
     hl = { fg = "fg", bg = "bg" },
@@ -242,6 +275,7 @@ local StatusLine = {
     { FileEncoding }, Space, Space,
     { FileFormat }, Space, Space,
     VisualSelection,
+    VisualSeparators,
     lib.component.nav(),
 }
 
