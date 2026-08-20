@@ -124,6 +124,9 @@ function M.whitespaceConfig()
             'TelescopePrompt',
             'blink-cmp-menu',
             'blink-cmp-documentation',
+            'Avante',
+            'AvanteInput',
+            'AvantePromptInput',
         },
         ignore_terimal = true,
         return_cursor = true,
@@ -202,6 +205,9 @@ function M.visualWhitespaceConfig()
         tab_char = '→',
         space_char = '·',
         highlight = { link = "Visual" },
+        excluded = {
+            filetypes = { "Avante", "AvanteInput", "AvantePromptInput" },
+        },
     }
     require('visual-whitespace').setup(opts)
 end
