@@ -8,10 +8,8 @@ M.options = {
     right_mouse_command = "bdelete! %d", -- can be a string | function | false, see "Mouse actions"
     left_mouse_command = "buffer %d",    -- can be a string | function, | false see "Mouse actions"
     middle_mouse_command = nil,          -- can be a string | function, | false see "Mouse actions"
-    indicator = {
-        icon = '▊',
-        style = 'icon',
-    },
+    show_buffer_icons = false,
+    tab_size = 1,
     offsets = {
         {
             filetype = "NvimTree",
@@ -25,16 +23,21 @@ M.options = {
 
 M.highlights = {
     buffer_selected = {
-        fg='#ff966c',
+        fg = '#1e1e2e',
+        bg = '#89B4FA',
         bold = true,
         italic = false,
     },
     numbers_selected = {
-        fg = '#ff966c',
+        fg = '#1e1e2e',
+        bg = '#89B4FA',
         bold = true,
         italic = false,
     },
+    close_button_selected = { fg = '#1e1e2e', bg = '#89B4FA' },
+    indicator_selected = { fg = '#1e1e2e', bg = '#89B4FA' },
+    modified_selected = { fg = '#1e1e2e', bg = '#89B4FA' },
+    separator_selected = { fg = '#89B4FA', bg = '#89B4FA' },
 }
 
 return M
-
