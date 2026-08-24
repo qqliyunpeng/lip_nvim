@@ -177,10 +177,10 @@ return {
     },
     {
         -- 语法高亮
-        "https://gitee.com/zgpio/nvim-treesitter.git",
-        event = "VeryLazy",
-        dependencies = { { "https://gitee.com/yunduozhai/nvim-treesitter-textobjects.git" } },
-        cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+        "https://gitee.com/nvim_lip/nvim-treesitter.git",
+        branch = "main",
+        lazy = false,
+        dependencies = { { "https://gitee.com/yunduozhai/nvim-treesitter-textobjects.git", branch = "main" } },
         build = ":TSUpdate",
         config = function()
             require("configs.treesitter").treesitterConfig()

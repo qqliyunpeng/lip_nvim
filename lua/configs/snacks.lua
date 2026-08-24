@@ -151,27 +151,11 @@ local snacksKeys = {
 }
 
 function M.snacksConfig()
-    Snacks.picker.actions.list_cycle_down = function(picker)
-        -- local row = picker.list.cursor or 0
-        -- vim.print(string.format("%d/%d", row, picker.list:count()))
-        if picker.list.cursor == picker.list:count() then
-            picker.list:move(1, true)
-        else
-            picker.list:move(vim.v.count1)
-        end
-    end
-    Snacks.picker.actions.list_cycle_up = function(picker)
-        if picker.list.cursor == 1 then
-            picker.list:move(picker.list:count(), true)
-        else
-            picker.list:move(-vim.v.count1)
-        end
-    end
-
     local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
         indent    = { enabled = false },
         bigfile   = { enabled = true },
+        image     = { enabled = false },
         words     = { enabled = true },
         scope     = { enabled = false },
         quickfile = { enabled = true },
@@ -252,6 +236,23 @@ function M.snacksConfig()
             },
         },
     })
+
+    Snacks.picker.actions.list_cycle_down = function(picker)
+        -- local row = picker.list.cursor or 0
+        -- vim.print(string.format("%d/%d", row, picker.list:count()))
+        if picker.list.cursor == picker.list:count() then
+            picker.list:move(1, true)
+        else
+            picker.list:move(vim.v.count1)
+        end
+    end
+    Snacks.picker.actions.list_cycle_up = function(picker)
+        if picker.list.cursor == 1 then
+            picker.list:move(picker.list:count(), true)
+        else
+            picker.list:move(-vim.v.count1)
+        end
+    end
 
     -- In lazygit terminal, remap <C-j>/<C-k> to j / k
     vim.api.nvim_create_autocmd("TermOpen", {

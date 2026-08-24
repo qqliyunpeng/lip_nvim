@@ -2,31 +2,49 @@
 local M = {}
 
 function M.textobjectsConfig()
-    -- If treesitter is already loaded, we need to run config again for textobjects
-    -- When in diff mode, we want to use the default, 在 diff窗口中仍然使用默认的vim的配置，比如 ]c
-    -- vim text objects c & C instead of the treesitter ones.
-    local move = require("nvim-treesitter.textobjects.move") ---@type table<string,fun(...)>
-    local configs = require("nvim-treesitter.configs")
-    for name, fn in pairs(move) do
-        if name:find("goto") == 1 then
-            move[name] = function(q, ...)
-                if vim.wo.diff then
-                    local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
-                    for key, query in pairs(config or {}) do
-                        if q == query and key:find("[%]%[][cC]") then
-                            vim.cmd("normal! " .. key)
-                            return
-                        end
-                    end
-                end
-                return fn(q, ...)
-            end
-        end
+    require("nvim-treesitter-textobjects").setup {
+        select = { lookahead = true, include_surrounding_whitespace = true },
+        move = { set_jumps = true },
+    }
+
+    local select = require("nvim-treesitter-textobjects.select")
+    local move = require("nvim-treesitter-textobjects.move")
+    local ts_repeat_move = require "nvim-treesitter-textobjects.repeatable_move"
+
+    local function map_select(key, query, group)
+        vim.keymap.set({ "x", "o" }, key, function()
+            select.select_textobject(query, group or "textobjects")
+        end)
     end
 
-    -- treesitter
-    local ts_move = require("nvim-treesitter.textobjects.move")
-    local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+    map_select("af", "@function.outer")
+    map_select("if", "@function.inner")
+    map_select("as", "@local.scope", "locals")
+
+    local function map_move(key, fn, query)
+        vim.keymap.set({ "n", "x", "o" }, key, function()
+            if vim.wo.diff and key:find("[cC]", 1, false) then
+                vim.cmd("normal! " .. key)
+                return
+            end
+            fn(query, "textobjects")
+        end)
+    end
+
+    map_move("]f", move.goto_next_start, "@function.outer")
+    map_move("]c", move.goto_next_start, "@class.outer")
+    map_move("]a", move.goto_next_start, "@parameter.inner")
+    map_move("]F", move.goto_next_end, "@function.outer")
+    map_move("]C", move.goto_next_end, "@class.outer")
+    map_move("]A", move.goto_next_end, "@parameter.inner")
+    map_move("[f", move.goto_previous_start, "@function.outer")
+    map_move("[c", move.goto_previous_start, "@class.outer")
+    map_move("[a", move.goto_previous_start, "@parameter.inner")
+    map_move("[F", move.goto_previous_end, "@function.outer")
+    map_move("[C", move.goto_previous_end, "@class.outer")
+    map_move("[A", move.goto_previous_end, "@parameter.inner")
+    map_move("]d", move.goto_next, "@conditional.outer")
+    map_move("[d", move.goto_previous, "@conditional.outer")
 
     local has_last_move = false
 
@@ -34,7 +52,7 @@ function M.textobjectsConfig()
         if has_last_move then
             ts_repeat_move.repeat_last_move_next()
         else
-            ts_move.goto_next_start("@function.outer")
+            move.goto_next_start("@function.outer", "textobjects")
             has_last_move = true
         end
     end
@@ -43,7 +61,7 @@ function M.textobjectsConfig()
         if has_last_move then
             ts_repeat_move.repeat_last_move_previous()
         else
-            ts_move.goto_previous_start("@function.outer")
+            move.goto_previous_start("@function.outer", "textobjects")
             has_last_move = true
         end
     end
@@ -53,57 +71,16 @@ function M.textobjectsConfig()
 end
 
 function M.treesitterConfig()
-    require("nvim-treesitter.configs").setup {
-        ensure_installed = { "c", "make", "lua", "luadoc", "printf", "vim", "vimdoc", "bash" },
+    local treesitter = require("nvim-treesitter")
+    treesitter.setup()
+    treesitter.install({ "c", "make", "lua", "luadoc", "printf", "vim", "vimdoc", "bash", "markdown", "markdown_inline" })
 
-        highlight = {
-            enable = true,
-            use_languagetree = true,
-        },
-
-        indent = { enable = false },
-
-        incremental_selection = {
-            enable = true,
-            keymaps = {
-                init_selection = "<nop>",
-                node_incremental = "v",
-                scope_incremental = false,
-                node_decremental = "<bs>", -- backspace 键
-            },
-        },
-
-        textobjects = {
-            select = {
-                enable = true,
-                lookahead = true,
-
-                keymaps = {
-                    ["af"] = "@function.outer",
-                    ["if"] = "@function.inner",
-                    -- 这里和vim-textobj-comment冲突，先临时使用vim-textobj-comment
-                    -- ["ac"] = "@class.outer",
-                    -- ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
-                    ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
-                },
-
-                include_surrounding_whitespace = true,
-            },
-            move = {
-                enable = true,
-                set_jumps = true,
-                goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
-                goto_next_end   = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
-                goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer", ["[a"] = "@parameter.inner" },
-                goto_previous_end   = { ["[F"] = "@function.outer", ["[C"] = "@class.outer", ["[A"] = "@parameter.inner" },
-
-                goto_next     = { ["]d"] = "@conditional.outer", },
-                goto_previous = { ["[d"] = "@conditional.outer", },
-            }
-        },
-    }
+    vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+            pcall(vim.treesitter.start, args.buf)
+        end,
+    })
     M.textobjectsConfig();
 end
 
 return M
-
