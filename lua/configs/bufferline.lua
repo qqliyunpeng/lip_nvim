@@ -22,6 +22,12 @@ M.options = {
 }
 
 M.highlights = {
+    buffer_visible = {
+        fg = '#1e1e2e',
+        bg = '#89B4FA',
+        bold = true,
+        italic = false,
+    },
     buffer_selected = {
         fg = '#1e1e2e',
         bg = '#89B4FA',
@@ -34,9 +40,19 @@ M.highlights = {
         bold = true,
         italic = false,
     },
+    numbers_visible = {
+        fg = '#1e1e2e',
+        bg = '#89B4FA',
+        bold = true,
+        italic = false,
+    },
+    close_button_visible = { fg = '#1e1e2e', bg = '#89B4FA' },
     close_button_selected = { fg = '#1e1e2e', bg = '#89B4FA' },
-    indicator_selected = { fg = '#1e1e2e', bg = '#89B4FA' },
+    indicator_visible = { fg = '#1e1e2e', bg = '#89B4FA' },
+    indicator_selected = { fg = '#89B4FA', bg = '#89B4FA' },
+    modified_visible = { fg = '#1e1e2e', bg = '#89B4FA' },
     modified_selected = { fg = '#1e1e2e', bg = '#89B4FA' },
+    separator_visible = { fg = '#89B4FA', bg = '#89B4FA' },
     separator_selected = { fg = '#89B4FA', bg = '#89B4FA' },
 }
 
