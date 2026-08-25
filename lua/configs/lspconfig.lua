@@ -53,12 +53,28 @@ local function clangd_capabilities()
     return caps
 end
 
+local function clangd_publish_diagnostics(err, result, ctx, config)
+    if result and result.diagnostics then
+        -- 忽略当前目标平台不支持编译参数的诊断
+        result.diagnostics = vim.tbl_filter(function(diagnostic)
+            return diagnostic.code ~= "drv_unsupported_opt_for_target"
+        end, result.diagnostics)
+    end
+
+    return vim.lsp.handlers["textDocument/publishDiagnostics"](err, result, ctx, config)
+end
+
+local clangd_handlers = {
+    ["textDocument/publishDiagnostics"] = clangd_publish_diagnostics,
+}
+
 local handlers = {
     function(server_name)
 
         require('lspconfig')[server_name].setup({
             on_attach = M.on_attach,
             capabilities = server_name == "clangd" and clangd_capabilities() or capabilities,
+            handlers = server_name == "clangd" and clangd_handlers or nil,
 
             settings = servers[server_name] and servers[server_name].settings or {},
         })
@@ -94,6 +110,7 @@ function M.defaults()
             on_attach = M.on_attach,
             capabilities = clangd_capabilities(),
             cmd = { clangd_path },
+            handlers = clangd_handlers,
             settings = servers.clangd.settings or {},
         })
     end)

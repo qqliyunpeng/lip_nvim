@@ -27,6 +27,11 @@ end
 function M.setup()
     local lint = require("lint")
 
+    -- 忽略可缩小变量作用域的提示
+    table.insert(lint.linters.cppcheck.args, "--suppress=variableScope")
+    -- 将条件编译配置检查上限从 12 提高到 40
+    table.insert(lint.linters.cppcheck.args, "--max-configs=40")
+
     lint.linters_by_ft = {
         lua = available_linters({ "luacheck" }),
         python = available_linters({ "ruff" }),
