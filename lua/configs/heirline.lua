@@ -26,6 +26,19 @@ heirline.load_colors(heirline_components.hl.get_colors())
 
 
 ----lip 1----
+local function project_name()
+    local root = vim.fs.root(0, ".git") or vim.fn.getcwd()
+    local name = vim.fs.basename(vim.fs.normalize(root))
+    return vim.fn.strcharpart(name, 0, 10)
+end
+
+local ProjectName = {
+    provider = function()
+        return project_name() .. "  "
+    end,
+    hl = { fg = utils.get_highlight("Directory").fg },
+}
+
 local ViMode = {
     -- get vim current mode, this information will be required by the provider
     -- and the highlight functions, so we compute it only once per component
@@ -74,11 +87,11 @@ local ViMode = {
             t = "T",
         },
         mode_colors = {
-            n = "red" ,
-            i = "green",
-            v = "cyan",
-            V =  "cyan",
-            ["\22"] =  "cyan",
+            n = "#7AA2F7",
+            i = "#9ECE6A",
+            v = "#BB9AF7",
+            V = "#BB9AF7",
+            ["\22"] = "#BB9AF7",
             c =  "orange",
             s =  "purple",
             S =  "purple",
@@ -97,12 +110,12 @@ local ViMode = {
     -- control the padding and make sure our string is always at least 2
     -- characters long. Plus a nice Icon.
     provider = function(self)
-        return " %2("..self.mode_names[self.mode].."  %)"
+        return " " .. self.mode_names[self.mode] .. " "
     end,
     -- Same goes for the highlight. Now the foreground will change according to the current mode.
     hl = function(self)
         local mode = self.mode:sub(1, 1) -- get only the first mode character
-        return { fg = self.mode_colors[mode], bold = true, }
+        return { fg = "#000000", bg = self.mode_colors[mode], bold = true, }
     end,
     -- Re-evaluate the component only on ModeChanged event!
     -- Also allows the statusline to be re-evaluated when entering operator-pending mode
@@ -284,7 +297,8 @@ local VisualSeparators = {
 local StatusLine = {
     condition = conditions.is_active,
     hl = { fg = "fg", bg = "bg" },
-    { ViMode }, Space,
+    { ViMode },
+    ProjectName,
     lib.component.git_branch(),
     lib.component.git_diff(),
     { FileNameBlock }, Space,
