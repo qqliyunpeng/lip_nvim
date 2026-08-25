@@ -51,6 +51,9 @@ local avanteOpts = {
     history = {
         max_messages = 20,
     },
+    session_recovery = {
+        include_history_count = 1,
+    },
     -- Disable diff-based apply flow and diff view as much as possible.
     -- (Keeps Avante usable for chat/ask without opening diff UIs.)
     diff = {
