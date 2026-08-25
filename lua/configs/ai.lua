@@ -225,6 +225,21 @@ end
 
 local function setup_avante_window_highlight_autocmds()
     local group = vim.api.nvim_create_augroup("LipAvanteWindowHighlights", { clear = true })
+    vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        pattern = { "Avante", "AvanteInput", "AvantePromptInput" },
+        callback = function()
+            local winid = vim.api.nvim_get_current_win()
+            vim.schedule(function()
+                if vim.api.nvim_win_is_valid(winid) then
+                    local active = vim.api.nvim_get_current_win() == winid
+                    vim.api.nvim_win_call(winid, function()
+                        update_avante_window_highlight(active)
+                    end)
+                end
+            end)
+        end,
+    })
     vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
         group = group,
         callback = function()
@@ -283,6 +298,12 @@ function M.avanteConfig()
     -- the sidebar opens. With Codex ACP this can restore the previous session
     -- and show "generating" immediately, so suppress only that empty submit.
     local ok_sidebar, Sidebar = pcall(require, "avante.sidebar")
+    if ok_sidebar and not Sidebar._lip_input_hint_at_bottom then
+        Sidebar.get_input_float_window_row = function(self)
+            return math.max(vim.api.nvim_win_get_height(self.containers.input.winid) - 1, 0)
+        end
+        Sidebar._lip_input_hint_at_bottom = true
+    end
     if ok_sidebar and not Sidebar._lip_skip_empty_open_submit then
         local original_open = Sidebar.open
         Sidebar.open = function(self, opts)
