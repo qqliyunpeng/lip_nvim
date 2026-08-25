@@ -261,6 +261,7 @@ function M.blinkConfig()
                 }
             },
         },
+        signature = { enabled = true },
         snippets = { preset = 'luasnip' },
         sources = {
             -- NOTE: Put ripgrep at the end so it has the lowest priority among sources.
