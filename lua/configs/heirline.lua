@@ -297,7 +297,7 @@ local VisualSeparators = {
 local StatusLine = {
     condition = conditions.is_active,
     hl = { fg = "fg", bg = "bg" },
-    { ViMode },
+    { ViMode }, Space,
     ProjectName,
     lib.component.git_branch(),
     lib.component.git_diff(),
