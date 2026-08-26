@@ -354,6 +354,17 @@ return {
         "https://gitee.com/yunduozhai/lazygit.nvim.git",
         event = { "BufReadPost", "BufNewFile" },
         config = function()
+            vim.keymap.set("n", "<leader>gv", function()
+                vim.system({ "git", "remote", "-v" }, { text = true }, function(result)
+                    vim.schedule(function()
+                        vim.notify(
+                            result.stdout ~= "" and result.stdout or result.stderr or "",
+                            nil,
+                            { title = "Git remotes" }
+                        )
+                    end)
+                end)
+            end, { desc = "Git remotes" })
         end
     },
     {
