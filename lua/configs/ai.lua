@@ -149,7 +149,7 @@ local avanteOpts = {
         },
         ask = {
             floating = false, -- Open the 'AvanteAsk' prompt in a floating window
-            start_insert = true, -- Start insert mode when opening the ask window
+            start_insert = false, -- Tab enters insert mode; Ctrl-h/j/k/l keeps normal mode
             border = "rounded",
             ---@type "ours" | "theirs"
             focus_on_apply = "ours", -- which diff to focus after applying
@@ -274,9 +274,21 @@ function M.avanteConfig()
         end
         Sidebar._lip_input_hint_at_bottom = true
     end
+    if ok_sidebar and not Sidebar._lip_tab_enters_input_insert then
+        local original_switch_window_focus = Sidebar.switch_window_focus
+        Sidebar.switch_window_focus = function(self, direction)
+            local result = original_switch_window_focus(self, direction)
+            if vim.bo.filetype == "AvanteInput" then
+                vim.cmd("noautocmd startinsert!")
+            end
+            return result
+        end
+        Sidebar._lip_tab_enters_input_insert = true
+    end
     if ok_sidebar and not Sidebar._lip_skip_empty_open_submit then
         local original_open = Sidebar.open
         Sidebar.open = function(self, opts)
+            local was_open = self:is_open()
             local had_local_handle_submit = rawget(self, "handle_submit") ~= nil
             local original_handle_submit = self.handle_submit
 
@@ -300,6 +312,13 @@ function M.avanteConfig()
             end
             if not ok_open then
                 error(result)
+            end
+            if not was_open then
+                vim.schedule(function()
+                    if vim.bo.filetype == "AvanteInput" then
+                        vim.cmd("noautocmd startinsert!")
+                    end
+                end)
             end
             return result
         end
