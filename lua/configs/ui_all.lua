@@ -187,10 +187,23 @@ function M.lspsagaConfig()
         },
     })
 
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "sagarename",
+        callback = function(args)
+            vim.keymap.set("n", "<Esc>", "<C-c>", { buffer = args.buf, remap = true })
+            vim.schedule(function()
+                if vim.api.nvim_get_current_buf() == args.buf then
+                    local line = vim.api.nvim_get_current_line()
+                    vim.api.nvim_win_set_cursor(0, { 1, #line })
+                end
+            end)
+        end,
+    })
+
     map("n", "gf"        , "<cmd>Lspsaga finder def+ref+imp<CR>", { desc = "Show LSP methods search result"} )
     map("n", "<A-h>"     , "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover Documentation"} )
     map("n", "<A-l>"     , "<cmd>Lspsaga peek_definition<CR>", { desc = "Hover definition in hover"} )
-    map("n", "<leader>cn", "<cmd>Lspsaga rename ++project<cr>", { desc = '[R]e[n]ame'} )
+    map("n", "<leader>cn", "<cmd>Lspsaga rename ++project mode=i<cr>", { desc = '[R]e[n]ame'} )
     map("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc ='[C]ode [A]ction'} )
     map("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", { desc ='goto [N]ext diagnostic'} )
     map("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { desc ='goto [P]rev diagnostic'} )
