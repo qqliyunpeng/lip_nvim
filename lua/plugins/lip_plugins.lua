@@ -1,11 +1,13 @@
+local ge = require("lip.utils").ge
+
 return {
     {
-        "https://gitee.com/nvim_lip/onedarkpro.nvim.git",
+        ge("nvim_lip/onedarkpro.nvim.git"),
         branch = 'main',
         priority = 1000, -- Ensure it loads first
     },
     {
-        "https://gitee.com/yunduozhai/nvim-notify.git",
+        ge("yunduozhai/nvim-notify.git"),
         config = function()
             local function calculate_half_width()
                 return math.floor(vim.o.columns * 0.4)
@@ -21,14 +23,14 @@ return {
         end,
     },
     {
-        "https://gitee.com/yunduozhai/neoscroll.nvim.git",
+        ge("yunduozhai/neoscroll.nvim.git"),
         event = "VeryLazy",
         config = function ()
             return require('configs.neoscroll').defaultConfig()
         end
     },
     {
-        "https://gitee.com/huangshaoqi/flash.nvim.git",
+        ge("huangshaoqi/flash.nvim.git"),
         event = "VeryLazy",
         -- type Flash.Config
         opts = {},
@@ -48,10 +50,10 @@ return {
     },
     {
         -- need `sudo apt-get install sqlite3 libsqlite3-dev`
-        "https://gitee.com/nvim_lip/sqlite.lua.git",
+        ge("nvim_lip/sqlite.lua.git"),
     },
     {
-        "https://gitee.com/yunduozhai/project.nvim.git",
+        ge("yunduozhai/project.nvim.git"),
         config = function()
             require("project_nvim").setup {
                 -- 需不需要手动切换到工程目录下
@@ -67,13 +69,13 @@ return {
         end
     },
     {
-        "https://gitee.com/zhengqijun/nvim-lastplace.git",
+        ge("zhengqijun/nvim-lastplace.git"),
         config = function()
             require('nvim-lastplace').setup()
         end
     },
     {
-        "https://gitee.com/nvim_lip/vim-autoread.git",
+        ge("nvim_lip/vim-autoread.git"),
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             vim.opt.autoread = true
@@ -140,14 +142,14 @@ return {
         end,
     },
     {
-        "https://gitee.com/hello-luiswu/accelerated-jk.git",
+        ge("hello-luiswu/accelerated-jk.git"),
         event = "VeryLazy",
         config = function ()
             return require("configs.ui_all").accjkConfig()
         end
     },
     {
-        "https://gitee.com/nvim_lip/vim-illuminate.git",
+        ge("nvim_lip/vim-illuminate.git"),
         event = "VeryLazy",
         config = function()
             require('illuminate').configure({
@@ -166,21 +168,21 @@ return {
     },
     {
         -- 优化弹出结果中的排序
-        "https://gitee.com/nvim_lip/telescope-zf-native.nvim.git",
+        ge("nvim_lip/telescope-zf-native.nvim.git"),
         -- config = true,
     },
     {
-        "https://gitee.com/nvim_lip/telescope-smart-history.nvim.git",
+        ge("nvim_lip/telescope-smart-history.nvim.git"),
     },
     {
-        "https://gitee.com/dragon-teng140806/telescope-live-grep-args.nvim.git",
+        ge("dragon-teng140806/telescope-live-grep-args.nvim.git"),
     },
     {
         -- 语法高亮
-        "https://gitee.com/nvim_lip/nvim-treesitter.git",
+        ge("nvim_lip/nvim-treesitter.git"),
         branch = "main",
         lazy = false,
-        dependencies = { { "https://gitee.com/yunduozhai/nvim-treesitter-textobjects.git", branch = "main" } },
+        dependencies = { { ge("yunduozhai/nvim-treesitter-textobjects.git"), branch = "main" } },
         build = ":TSUpdate",
         config = function()
             require("configs.treesitter").treesitterConfig()
@@ -188,28 +190,28 @@ return {
     },
     {
         -- vaq/viq 选中单引号或者双引号等各种引号之间的内容
-        "https://gitee.com/nvim_lip/vim-textobj-quotes.git",
+        ge("nvim_lip/vim-textobj-quotes.git"),
         event = { "BufReadPost", "BufNewFile" },
         dependencies = {
-            "https://gitee.com/duyz1218/vim-textobj-user.git",
+            ge("duyz1218/vim-textobj-user.git"),
             -- vaj/vij 向上查找最近的 '{[('
-            "https://gitee.com/nvim_lip/vim-textobj-brace.git",
+            ge("nvim_lip/vim-textobj-brace.git"),
             -- var/vir 相同缩进的一整个认为的段落
-            "https://gitee.com/nvim_lip/vim-textobj-indented-paragraph.git",
+            ge("nvim_lip/vim-textobj-indented-paragraph.git"),
             -- vau/viu to first , . : ; ! ?
-            "https://gitee.com/nvim_lip/vim-textobj-punctuation.git",
+            ge("nvim_lip/vim-textobj-punctuation.git"),
             -- val/vil 选中一行
-            "https://gitee.com/nvim_lip/vim-textobj-line.git",
+            ge("nvim_lip/vim-textobj-line.git"),
             -- va%/vi% match [] () {} or jump ]% [%
             -- "https://gitee.com/zgpio/vim-matchup.git",
             -- vac/vic 选中注释
-            "https://gitee.com/nvim_lip/vim-textobj-comment.git",
+            ge("nvim_lip/vim-textobj-comment.git"),
         },
         config = function()
         end
     },
     {
-        'https://gitee.com/nvim_lip/telescope.nvim.git', --tag = '0.1.8',
+        ge('nvim_lip/telescope.nvim.git'), --tag = '0.1.8',
         -- dependencies = { "nvim-treesitter/nvim-treesitter" },
         cmd = "Telescope",
         opts = function()
@@ -217,7 +219,7 @@ return {
         end,
     },
     {
-        "https://gitee.com/nvim_lip/gitsigns.nvim.git", tag = 'v1.0.2',
+        ge("nvim_lip/gitsigns.nvim.git"), tag = 'v1.0.2',
         event = "VeryLazy",
         opts = function()
             require("configs.gitsigns").config()
@@ -225,28 +227,28 @@ return {
     },
     {
         -- file managing , picker etc
-        "https://gitee.com/oyaay/nvim-tree.lua.git",
+        ge("oyaay/nvim-tree.lua.git"),
         cmd = { "NvimTreeToggle", "NvimTreeFocus" },
         opts = function()
             return require "configs.nvimtree"
         end,
     },
     {
-        'https://gitee.com/nvim_lip/interestingwords.nvim.git',
+        ge('nvim_lip/interestingwords.nvim.git'),
         event = "VeryLazy",
         config = function()
             require("configs.ui_all").interestingwordsConfig()
         end,
     },
     {
-        'https://gitee.com/dragon-teng140806/nvim-colorizer.lua.git',
+        ge('dragon-teng140806/nvim-colorizer.lua.git'),
         event = "BufReadPost",
         config = function()
             return require("configs.ui_all").colorizerConfig()
         end
     },
     {
-        "https://gitee.com/nvim_lip/nvim-autopairs.git",
+        ge("nvim_lip/nvim-autopairs.git"),
         event = "InsertEnter",
         opts = {
             map_bs = true,
@@ -259,7 +261,7 @@ return {
     },
     {
         -- Automatically install LSPs to stdpath for neovim
-        'https://gitee.com/suyelu/mason.nvim',
+        ge('suyelu/mason.nvim'),
         cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },
         opts = function()
             return require "configs.mason"
@@ -273,7 +275,7 @@ return {
         -- end
     },
     {
-        'https://gitee.com/suyelu/mason-lspconfig.nvim',
+        ge('suyelu/mason-lspconfig.nvim'),
         event = { "BufReadPre", "BufNewFile" },
         config = function()
             return require("configs.lspconfig").defaults()
@@ -282,9 +284,9 @@ return {
     -- below from https://gitee.com/suyelu/nvim/blob/master/init.lua
     {
         -- LSP Configuration & Plugins
-        'https://gitee.com/suyelu/nvim-lspconfig',
+        ge('suyelu/nvim-lspconfig'),
         dependencies = {
-            'https://gitee.com/suyelu/mason-lspconfig.nvim',
+            ge('suyelu/mason-lspconfig.nvim'),
 
             -- Useful status updates for LSP
             -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -297,25 +299,25 @@ return {
         -- event = "User FilePost",
     },
     {
-        "https://github.com/mfussenegger/nvim-lint.git",
+        ge("nvim_lip/nvim-lint.git"),
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             require("configs.lint").setup()
         end,
     },
     {
-        "https://gitee.com/nvim_lip/conform.git",
+        ge("nvim_lip/conform.git"),
         cmd = { "ConformInfo" },
         keys = require("configs.conform").keys,
         opts = require("configs.conform").opts,
     },
     {
-        "https://gitee.com/nvim_lip/LuaSnip",
+        ge("nvim_lip/LuaSnip"),
         version = "v2.*",
         build = 'make install_jsregexp',
         event = { "BufReadPost", "BufNewFile" },
         dependencies = {
-            { "https://gitee.com/yunduozhai/friendly-snippets.git", branch = "main" }
+            { ge("yunduozhai/friendly-snippets.git"), branch = "main" }
         },
 
         config = function()
@@ -323,7 +325,7 @@ return {
         end,
     },
     {
-        "https://gitee.com/yunduozhai/neogen",
+        ge("yunduozhai/neogen"),
         branch = 'main',
         event = "VeryLazy",
         config = function ()
@@ -331,7 +333,7 @@ return {
         end
     },
     {
-        'https://gitee.com/nvim_lip/render-markdown.nvim.git',
+        ge('nvim_lip/render-markdown.nvim.git'),
         branch = "main",
         ft = { "markdown", "vimwiki", "Avante" },
         config = function ()
@@ -340,7 +342,7 @@ return {
     },
     {
         -- 自动格式化 markdown 里边的表格 <leader>tm
-        "https://gitee.com/yaozhijin/vim-table-mode.git",
+        ge("yaozhijin/vim-table-mode.git"),
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             vim.cmd[[
@@ -351,7 +353,7 @@ return {
         end
     },
     {
-        "https://gitee.com/yunduozhai/lazygit.nvim.git",
+        ge("yunduozhai/lazygit.nvim.git"),
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             vim.keymap.set("n", "<leader>gv", function()
@@ -368,14 +370,14 @@ return {
         end
     },
     {
-        "https://gitee.com/nvim_lip/vim-visual-multi.git",
+        ge("nvim_lip/vim-visual-multi.git"),
         event = { "BufReadPost", "BufNewFile" },
         config = function ()
             require('configs.edit').visualMulConfig()
         end
     },
     {
-        "https://gitee.com/nvim_lip/navimark.nvim.git",
+        ge("nvim_lip/navimark.nvim.git"),
         event = { "BufReadPost", "BufNewFile" },
         config = function ()
             require('navimark').setup({
@@ -395,7 +397,7 @@ return {
         end,
     },
     {
-        "https://gitee.com/nvim_lip/grug-far.nvim.git", branch = 'main',
+        ge("nvim_lip/grug-far.nvim.git"), branch = 'main',
         event = { "BufReadPost", "BufNewFile" },
         opts = { headerMaxWidth = 80 },
         cmd = "GrugFar",
@@ -433,20 +435,20 @@ return {
     },
     {
         -- session
-        "https://gitee.com/nvim_lip/persisted.nvim.git",
+        ge("nvim_lip/persisted.nvim.git"),
         lazy = false,
         config = function ()
             require("configs.session").setDefault()
         end
     },
     {
-        "https://gitee.com/yunduozhai/ts-comments.nvim.git",
+        ge("yunduozhai/ts-comments.nvim.git"),
         event = "VeryLazy",
         opts = {},
         enabled = vim.fn.has("nvim-0.10.0") == 1,
     },
     {
-        "https://gitee.com/nvim_lip/yanky.nvim.git",
+        ge("nvim_lip/yanky.nvim.git"),
         event = "VeryLazy",
         keys = function()
             return require("configs.edit").yankKeys
@@ -456,16 +458,16 @@ return {
         end
     },
     {
-        "https://gitee.com/nvim_lip/nvim-toggler.git",
+        ge("nvim_lip/nvim-toggler.git"),
         event = "VeryLazy",
         config = function ()
             return require("configs.edit").nvimToggleConfig()
         end
     },
     {
-        "https://gitee.com/nvim_lip/harpoon.git",
+        ge("nvim_lip/harpoon.git"),
         branch = "harpoon2",
-        dependencies = { "https://gitee.com/suyelu/plenary.nvim" },
+        dependencies = { ge("suyelu/plenary.nvim") },
         event = "VeryLazy",
         config = function()
             local harpoon = require("harpoon")
@@ -489,7 +491,7 @@ return {
         end,
     },
     {
-        "https://gitee.com/nvim_lip/mini.nvim.git",
+        ge("nvim_lip/mini.nvim.git"),
         branch = "stable",
         event = "VeryLazy",
         config = function ()
@@ -506,15 +508,15 @@ return {
         end
     },
     {
-        "https://gitee.com/nvim_lip/lspkind.nvim.git",
+        ge("nvim_lip/lspkind.nvim.git"),
         opts = {},
     },
     {
-        "https://gitee.com/nvim_lip/blink.cmp.git",
+        ge("nvim_lip/blink.cmp.git"),
         dependencies = {
-            { "https://gitee.com/nvim_lip/blink-cmp-yanky.git", },
-            { "https://gitee.com/nvim_lip/blink-cmp-copilot.git", },
-            { "https://gitee.com/nvim_lip/blink-ripgrep.nvim", version = "*", },
+            { ge("nvim_lip/blink-cmp-yanky.git"), },
+            { ge("nvim_lip/blink-cmp-copilot.git"), },
+            { ge("nvim_lip/blink-ripgrep.nvim"), version = "*", },
         },
         branch = "v1",
         -- event = "VeryLazy",
@@ -525,7 +527,7 @@ return {
         end
     },
     {
-        "https://gitee.com/nvim_lip/overseer.nvim.git",
+        ge("nvim_lip/overseer.nvim.git"),
         branch = "master",
         event = "BufReadPost",
         config = function ()
@@ -533,7 +535,7 @@ return {
         end
     },
     {
-        "https://gitee.com/nvim_lip/sniprun.git",
+        ge("nvim_lip/sniprun.git"),
         build = "sh install.sh",
         event = { "BufReadPost", "BufNewFile" },
         config = function ()
@@ -549,7 +551,7 @@ return {
         end
     },
     {
-        "https://gitee.com/nvim_lip/other.nvim.git",
+        ge("nvim_lip/other.nvim.git"),
         branch = "main",
         cmd = { "Other", "OtherSplit", "OtherVSplit", "OtherTabNew" }, -- 懒加载：只在调用这些命令时加载
         config = function ()
@@ -561,9 +563,9 @@ return {
         end
     },
     {
-        "https://gitee.com/nvim_lip/copilot.lua.git", -- 用于 providers='copilot'
+        ge("nvim_lip/copilot.lua.git"), -- 用于 providers='copilot'
         dependencies = {
-            "https://gitee.com/nvim_lip/copilot-lsp.nvim.git", -- (optional) for NES functionality
+            ge("nvim_lip/copilot-lsp.nvim.git"), -- (optional) for NES functionality
         },
         enabled = function ()
             local v = vim.version()
@@ -574,7 +576,7 @@ return {
         end
     },
     {
-        "https://gitee.com/nvim_lip/avante.nvim.git",
+        ge("nvim_lip/avante.nvim.git"),
         branch = 'main',
         build = vim.fn.has("win32") ~= 0
             and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
@@ -584,19 +586,19 @@ return {
         event = "VeryLazy",
         version = false, -- 永远不要将此值设置为 "*"！永远不要！
         dependencies = {
-            "https://gitee.com/suyelu/plenary.nvim",
-            "https://gitee.com/nvim_lip/nui.nvim.git",
-            "https://gitee.com/nvim_lip/copilot.lua.git", -- 用于 providers='copilot'
+            ge("suyelu/plenary.nvim"),
+            ge("nvim_lip/nui.nvim.git"),
+            ge("nvim_lip/copilot.lua.git"), -- 用于 providers='copilot'
         },
         config = function()
             require("configs.ai").avanteConfig()
         end
     },
     {
-        "https://gitee.com/nvim_lip/llm.nvim.git",
+        ge("nvim_lip/llm.nvim.git"),
         dependencies = {
-            "https://gitee.com/suyelu/plenary.nvim",
-            "https://gitee.com/nvim_lip/nui.nvim.git",
+            ge("suyelu/plenary.nvim"),
+            ge("nvim_lip/nui.nvim.git"),
         },
         cmd = { "LLMSessionToggle", "LLMSelectedTextHandler", "LLMAppHandler" },
         opts = {

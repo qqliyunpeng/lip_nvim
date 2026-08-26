@@ -1,26 +1,28 @@
+local ge = require("lip.utils").ge
+
 return {
     {
-        "https://gitee.com/nvim_lip/nvim-web-devicons.git",
+        ge("nvim_lip/nvim-web-devicons.git"),
         config = function ()
             require("configs.ui_all").deviconsConfig()
         end
     },
     {
-        "https://gitee.com/nvim_lip/heirline-components.nvim.git",
+        ge("nvim_lip/heirline-components.nvim.git"),
         opts = require("configs.ui_all").componentsConfig()
     },
     {
-        "https://gitee.com/nvim_lip/heirline.nvim.git",
+        ge("nvim_lip/heirline.nvim.git"),
         event = { "BufReadPost", "BufNewFile" },
         dependencies = {
-            "https://gitee.com/nvim_lip/heirline-components.nvim.git",
+            ge("nvim_lip/heirline-components.nvim.git"),
         },
         config = function()
             return require("configs.heirline").config()
         end
     },
     {
-        'https://gitee.com/yunduozhai/bufferline.nvim.git',
+        ge('yunduozhai/bufferline.nvim.git'),
         version = "*",
         event = { "BufReadPost", "BufNewFile" },
         dependencies = 'nvim-web-devicons',
@@ -31,7 +33,7 @@ return {
     },
     {
         --  [better ui elements]
-        "https://gitee.com/yunduozhai/dressing.nvim.git",
+        ge("yunduozhai/dressing.nvim.git"),
         event = "VeryLazy",
         opts = {
             input = { default_prompt = "➤ " },
@@ -39,22 +41,22 @@ return {
         }
     },
     {
-        "https://gitee.com/nvim_lip/nui.nvim.git",
+        ge("nvim_lip/nui.nvim.git"),
         branch = 'main',
     },
     {
-        "https://gitee.com/yunduozhai/noice.nvim.git",
+        ge("yunduozhai/noice.nvim.git"),
         branch = 'main',
         tag = 'v4.10.0',
         dependencies = {
-            "https://gitee.com/nvim_lip/nui.nvim.git",
+            ge("nvim_lip/nui.nvim.git"),
         },
         config = function()
             return require("configs.ui_all").noiceConfig()
         end
     },
     {
-        "https://gitee.com/nvim_lip/snacks.nvim.git",
+        ge("nvim_lip/snacks.nvim.git"),
         branch = 'main',
         priority = 1000,
         lazy = false,
@@ -69,17 +71,17 @@ return {
         end,
     },
     {
-        "https://gitee.com/nvim_lip/windows.nvim.git",
+        ge("nvim_lip/windows.nvim.git"),
         event = "VeryLazy",
         dependencies = {
-            "https://gitee.com/nvim_lip/middleclass.git",
+            ge("nvim_lip/middleclass.git"),
         },
         config = function()
             return require("configs.ui_all").windowsConfig()
         end,
     },
     {
-        "https://gitee.com/nvim_lip/smart-splits.nvim.git",
+        ge("nvim_lip/smart-splits.nvim.git"),
         lazy = false,
         config = function()
             require("smart-splits").setup({})
@@ -87,7 +89,7 @@ return {
     },
     {
         -- 函数缩进前的条
-        "https://gitee.com/yunduozhai/indent-blankline.nvim.git",
+        ge("yunduozhai/indent-blankline.nvim.git"),
         event = "VeryLazy",
         main = "ibl",
         opts = function()
@@ -96,7 +98,7 @@ return {
     },
     {
         -- 显示并去掉空格
-        "https://gitee.com/nvim_lip/whitespace.nvim.git",
+        ge("nvim_lip/whitespace.nvim.git"),
         event = "BufReadPost",
         config = function()
             require('configs.ui_all').whitespaceConfig()
@@ -104,7 +106,7 @@ return {
     },
     {
         -- function tree in top
-        "https://gitee.com/nvim_lip/lspsaga.nvim.git",
+        ge("nvim_lip/lspsaga.nvim.git"),
         event = "LspAttach",
         config = function()
             require('configs.ui_all').lspsagaConfig()
@@ -112,7 +114,7 @@ return {
     },
     {
         -- 选中行后，在选中的里边显示空格和Tab
-        "https://gitee.com/nvim_lip/visual-whitespace.nvim.git",
+        ge("nvim_lip/visual-whitespace.nvim.git"),
         branch = 'compat-v10',
         event = 'BufReadPost',
         config = function()
@@ -121,14 +123,14 @@ return {
     },
     {
         -- 在最上边显示当前函数的函数名字
-        "https://gitee.com/yunduozhai/nvim-treesitter-context.git",
+        ge("yunduozhai/nvim-treesitter-context.git"),
         event = { "BufReadPost", "BufNewFile" },
         opts = {
             max_lines = 5,
         }
     },
     {
-        "https://gitee.com/yunduozhai/which-key.nvim.git", branch = "main",
+        ge("yunduozhai/which-key.nvim.git"), branch = "main",
         event = "VeryLazy",
         opts_extend = { "spec" },
         keys = {
@@ -145,34 +147,34 @@ return {
         end
     },
     {
-        "https://gitee.com/masa-laboratory/todo-comments.nvim.git",
+        ge("masa-laboratory/todo-comments.nvim.git"),
         event = "VeryLazy",
         config = function ()
             require('configs.ui_all').todoConfig()
         end
     },
     {
-        "https://gitee.com/nvim_lip/rainbow-delimiters.nvim.git",
+        ge("nvim_lip/rainbow-delimiters.nvim.git"),
         event = "BufReadPost",
     },
     {
-        "https://gitee.com/nvim_lip/nvim-ufo.git",
+        ge("nvim_lip/nvim-ufo.git"),
         event = "VeryLazy",
         dependencies = {
-            "https://gitee.com/yunduozhai/promise-async.git",
+            ge("yunduozhai/promise-async.git"),
         },
         config = function()
             require("configs.ui_all").ufoConfig()
         end
     },
     {
-        "https://gitee.com/nvim_lip/twilight.nvim.git",
+        ge("nvim_lip/twilight.nvim.git"),
         branch = 'main',
         event = "VeryLazy",
         opts = {}
     },
     {
-        "https://gitee.com/nvim_lip/smear-cursor.nvim.git",
+        ge("nvim_lip/smear-cursor.nvim.git"),
         branch = 'dev',
         event = { "BufReadPost", "BufNewFile" },
         opts = {
@@ -184,7 +186,7 @@ return {
         },
     },
     {
-        "https://gitee.com/nvim_lip/nvim-early-retirement.git",
+        ge("nvim_lip/nvim-early-retirement.git"),
         event = "VeryLazy",
         config = function ()
             require('early-retirement').setup({
