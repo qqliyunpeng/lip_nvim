@@ -12,7 +12,7 @@ local copileOpts = {
         markdown = true,
     },
     keymap = { -- 快捷键映射
-        accept = "<CR>",
+        accept = "<Tab>",
         -- accept = "<M-j>",
         next = false,
         prev = false,
@@ -22,8 +22,6 @@ local copileOpts = {
 
 function M.copileConfig()
     require("copilot").setup(copileOpts)
-
-    local suggestion = require("copilot.suggestion")
 
     Snacks.toggle({
         name = "copilot",
@@ -35,14 +33,6 @@ function M.copileConfig()
             vim.b.copilot_suggestion_auto_trigger = state
         end,
     }):map("<leader>uc")
-
-    vim.keymap.set("i", "<CR>", function()
-        if suggestion.is_visible() then
-            suggestion.accept()
-        else
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", true)
-        end
-    end, { silent = true })
 end
 
 local avanteOpts = {
