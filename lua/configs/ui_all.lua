@@ -205,8 +205,8 @@ function M.lspsagaConfig()
     map("n", "<A-l>"     , "<cmd>Lspsaga peek_definition<CR>", { desc = "Hover definition in hover"} )
     map("n", "<leader>cn", "<cmd>Lspsaga rename ++project mode=i<cr>", { desc = '[R]e[n]ame'} )
     map("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc ='[C]ode [A]ction'} )
-    map("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", { desc ='goto [N]ext diagnostic'} )
-    map("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { desc ='goto [P]rev diagnostic'} )
+    map("n", "]d", "<cmd>Lspsaga diagnostic_jump_next<CR>", { desc ='goto [N]ext diagnostic'} )
+    map("n", "[d", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { desc ='goto [P]rev diagnostic'} )
     map("n", "<F3>", "<cmd>Lspsaga outline<CR>", { desc ='Show outline'} )
 end
 
@@ -772,6 +772,70 @@ function M.interestingwordsConfig()
         end
     end
 
+    local function jump_next_interesting()
+        local nearest
+        local nearest_pattern
+
+        for pattern in pairs(iw.words) do
+            local pos = vim.fn.searchpos(pattern, "nW")
+            if pos[1] ~= 0 and (not nearest or pos[1] < nearest[1]
+                    or (pos[1] == nearest[1] and pos[2] < nearest[2])) then
+                nearest = pos
+                nearest_pattern = pattern
+            end
+        end
+
+        if not nearest then
+            for pattern in pairs(iw.words) do
+                local pos = vim.fn.searchpos(pattern, "nw")
+                if pos[1] ~= 0 and (not nearest or pos[1] < nearest[1]
+                        or (pos[1] == nearest[1] and pos[2] < nearest[2])) then
+                    nearest = pos
+                    nearest_pattern = pattern
+                end
+            end
+        end
+
+        if nearest then
+            vim.api.nvim_win_set_cursor(0, { nearest[1], nearest[2] - 1 })
+            vim.cmd("normal! zz")
+            iw.search_count(nearest_pattern)
+        end
+    end
+
+    local function jump_previous_interesting()
+        local nearest
+        local nearest_pattern
+
+        for pattern in pairs(iw.words) do
+            local pos = vim.fn.searchpos(pattern, "bnW")
+            if pos[1] ~= 0 and (not nearest or pos[1] > nearest[1]
+                    or (pos[1] == nearest[1] and pos[2] > nearest[2])) then
+                nearest = pos
+                nearest_pattern = pattern
+            end
+        end
+
+        if not nearest then
+            for pattern in pairs(iw.words) do
+                local pos = vim.fn.searchpos(pattern, "bnw")
+                if pos[1] ~= 0 and (not nearest or pos[1] > nearest[1]
+                        or (pos[1] == nearest[1] and pos[2] > nearest[2])) then
+                    nearest = pos
+                    nearest_pattern = pattern
+                end
+            end
+        end
+
+        if nearest then
+            vim.api.nvim_win_set_cursor(0, { nearest[1], nearest[2] - 1 })
+            vim.cmd("normal! zz")
+            iw.search_count(nearest_pattern)
+        end
+    end
+
+    vim.keymap.set("n", "]e", jump_next_interesting, { silent = true, desc = "Next interesting word" })
+    vim.keymap.set("n", "[e", jump_previous_interesting, { silent = true, desc = "Previous interesting word" })
     vim.keymap.set("n", "<A-j>", jump_forward,  { silent = true, desc = "Next matching highlight" })
     vim.keymap.set("n", "<A-k>", jump_backward, { silent = true, desc = "Prev matching highlight" })
 end
