@@ -20,6 +20,7 @@ function M.llmConfig()
     local spinner_frames = { "-", "\\", "|", "/" }
     local window_translate_ns = vim.api.nvim_create_namespace("llm_window_translate_overlay")
     local window_translate_state = {}
+    local word_translate_popup
 
     -- Make floating popups transparent (spinner + translation result).
     -- We use dedicated highlight groups and override them via `winhighlight`.
@@ -287,6 +288,13 @@ function M.llmConfig()
 
     -- Streaming WordTranslate handler (silent when empty).
     local function word_translate_stream_handler(name, F, state, _, prompt, opts)
+        if word_translate_popup and word_translate_popup.winid
+            and vim.api.nvim_win_is_valid(word_translate_popup.winid) then
+            vim.api.nvim_set_current_win(word_translate_popup.winid)
+            return
+        end
+        word_translate_popup = nil
+
         local Popup = require("nui.popup")
 
         local options = {
@@ -538,15 +546,22 @@ function M.llmConfig()
                         end)
                         return
                     end
+                    word_translate_popup = pop
 
                     if options.exit_on_move then
                         vim.api.nvim_create_autocmd("CursorMoved", {
                             group = vim.api.nvim_create_augroup("llm_word_translate_exit_on_move", { clear = true }),
                             callback = function()
+                                if pop.winid and vim.api.nvim_get_current_win() == pop.winid then
+                                    return
+                                end
                                 if pop then
                                     pcall(function()
                                         pop:unmount()
                                     end)
+                                    if word_translate_popup == pop then
+                                        word_translate_popup = nil
+                                    end
                                 end
                             end,
                         })
