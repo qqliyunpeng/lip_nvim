@@ -663,7 +663,7 @@ function M.interestingwordsConfig()
         colors = { '#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF' },
         search_count = true,
         navigation = false,
-        scroll_center = true,
+        scroll_center = false,
         color_key = "<leader>e",
         select_mode = "loop",
     }
@@ -799,7 +799,6 @@ function M.interestingwordsConfig()
 
         if nearest then
             vim.api.nvim_win_set_cursor(0, { nearest[1], nearest[2] - 1 })
-            vim.cmd("normal! zz")
             iw.search_count(nearest_pattern)
         end
     end
@@ -830,7 +829,6 @@ function M.interestingwordsConfig()
 
         if nearest then
             vim.api.nvim_win_set_cursor(0, { nearest[1], nearest[2] - 1 })
-            vim.cmd("normal! zz")
             iw.search_count(nearest_pattern)
         end
     end
