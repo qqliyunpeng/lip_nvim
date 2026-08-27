@@ -201,6 +201,7 @@ vim.api.nvim_set_hl(0, "@method.call", { fg = "#39A6FF" })
 vim.api.nvim_set_hl(0, "@variable.member", { fg = "#FF5A4F" })
 vim.api.nvim_set_hl(0, "@field", { fg = "#FF5A4F" })
 vim.api.nvim_set_hl(0, "@property", { fg = "#FF5A4F" })
+vim.api.nvim_set_hl(0, "MatchParen", { fg = "#D8D8D8", bg = "#4A4A4A", bold = true })
 
 vim.lsp.set_log_level("off")
 
