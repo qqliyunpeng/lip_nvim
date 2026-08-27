@@ -254,6 +254,7 @@ function M.whichKeyConfig()
                 {"<leader>tm", desc = "Table mode toggle" },
                 {"<leader>s" , desc = "Surround, search, replace" },
                 {"<leader>c" , desc = "Code action, rename, comment" },
+                {"]D", desc = "Last diagnostic" },
             }
         },
         icons = {
