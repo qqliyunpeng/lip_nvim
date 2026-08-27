@@ -186,7 +186,7 @@ local FileFlags = {
     },
     {
         condition = function()
-            return not vim.bo.modifiable or vim.bo.readonly
+            return not is_avante_buffer() and (not vim.bo.modifiable or vim.bo.readonly)
         end,
         provider = "",
         hl = { fg = "orange" },
