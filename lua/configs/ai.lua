@@ -37,10 +37,6 @@ end
 
 local avanteOpts = {
     provider = "codex",
-    -- Limit stored chat history.
-    history = {
-        max_messages = 20,
-    },
     session_recovery = {
         include_history_count = 1,
     },
@@ -168,6 +164,8 @@ local avanteOpts = {
     },
 }
 
+local max_avante_history_sessions = 50
+
 local function set_avante_window_highlights()
     pcall(vim.api.nvim_set_hl, 0, "AvanteSidebarNormal", { link = "Normal" })
     pcall(vim.api.nvim_set_hl, 0, "AvantePromptInput", { link = "Normal" })
@@ -254,6 +252,60 @@ function M.avanteConfig()
     set_avante_window_highlights()
     setup_avante_window_highlight_autocmds()
 
+    local Path = require("avante.path")
+    local History = require("avante.history")
+
+    local original_history_new = Path.history.new
+    Path.history.new = function(bufnr)
+        local history = original_history_new(bufnr)
+        local max_index = 0
+        for _, existing in ipairs(Path.history.list(bufnr)) do
+            local index = tonumber(existing.filename:match("^(%d+)%.json$"))
+            max_index = math.max(max_index, index or 0)
+        end
+        history.filename = string.format("%d.json", max_index + 1)
+        return history
+    end
+
+    local function prune_avante_history(bufnr)
+        if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+            return
+        end
+
+        local histories = Path.history.list(bufnr)
+        for _, history in ipairs(histories) do
+            if #History.get_history_messages(history) == 0 and #history.entries == 0 then
+                Path.history.delete(bufnr, history.filename)
+            end
+        end
+
+        histories = Path.history.list(bufnr)
+        for i = max_avante_history_sessions + 1, #histories do
+            Path.history.delete(bufnr, histories[i].filename)
+        end
+    end
+
+    local original_history_save = Path.history.save
+    Path.history.save = function(bufnr, history)
+        original_history_save(bufnr, history)
+        if #History.get_history_messages(history) > 0 or #history.entries > 0 then
+            prune_avante_history(bufnr)
+        end
+    end
+
+    local Api = require("avante.api")
+    local original_select_history = Api.select_history
+    Api.select_history = function()
+        prune_avante_history(vim.api.nvim_get_current_buf())
+        return original_select_history()
+    end
+
+    vim.api.nvim_create_autocmd("VimLeavePre", {
+        callback = function()
+            prune_avante_history(vim.api.nvim_get_current_buf())
+        end,
+    })
+
     -- Avante auto-connects ACP providers by submitting an empty request when
     -- the sidebar opens. With Codex ACP this can restore the previous session
     -- and show "generating" immediately, so suppress only that empty submit.
@@ -284,11 +336,6 @@ function M.avanteConfig()
 
             self.handle_submit = function(sidebar, request, ...)
                 if request == "" then
-                    sidebar.acp_client = nil
-                    if sidebar.chat_history then
-                        sidebar.chat_history.acp_session_id = nil
-                        sidebar:save_history()
-                    end
                     return
                 end
                 return original_handle_submit(sidebar, request, ...)
