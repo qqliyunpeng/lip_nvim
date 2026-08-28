@@ -34,9 +34,20 @@ end
 
 local ProjectName = {
     provider = function()
-        return project_name() .. "  "
+        return project_name()
     end,
-    hl = { fg = utils.get_highlight("Directory").fg },
+    hl = function()
+        local task_colors = {
+            running = "#EEC956",
+            success = "#9ECE6A",
+            failure = "#E47272",
+        }
+        local task_color = task_colors[vim.g.overseer_heirline_status]
+        return {
+            fg = task_color and "#000000" or utils.get_highlight("Directory").fg,
+            bg = task_color,
+        }
+    end,
 }
 
 local ViMode = {
@@ -298,7 +309,7 @@ local StatusLine = {
     condition = conditions.is_active,
     hl = { fg = "fg", bg = "bg" },
     { ViMode }, Space,
-    ProjectName,
+    ProjectName, Space, Space,
     lib.component.git_branch(),
     lib.component.git_diff(),
     { FileNameBlock }, Space,

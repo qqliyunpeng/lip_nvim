@@ -27,6 +27,16 @@ function M.overseerConfig()
             "user.make_aq300_pc", "user.make_aq300_machine",
             "user.make_aq300_r5",
         },
+        component_aliases = {
+            default = {
+                { "display_duration", detail_level = 2 },
+                "on_output_summarize",
+                "on_exit_set_status",
+                "on_complete_notify",
+                "heirline_status",
+                { "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
+            },
+        },
         dap = false,
         task_list = {
             bindings = {
