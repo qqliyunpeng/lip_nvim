@@ -10,6 +10,15 @@ M.options = {
     middle_mouse_command = nil,          -- can be a string | function, | false see "Mouse actions"
     show_buffer_icons = false,
     tab_size = 1,
+    custom_filter = function(bufnr)
+        return not vim.tbl_contains({
+            "Avante",
+            "AvanteInput",
+            "AvantePromptInput",
+            "AvanteSelectedFiles",
+            "AvanteTodos",
+        }, vim.bo[bufnr].filetype)
+    end,
     offsets = {
         {
             filetype = "NvimTree",
