@@ -252,6 +252,31 @@ function M.avanteConfig()
     set_avante_window_highlights()
     setup_avante_window_highlight_autocmds()
 
+    -- Avante 完成回答后主动检查磁盘变化，及时刷新 AI 已修改的文件。
+    local refresh_group = vim.api.nvim_create_augroup("LipAvanteRefreshFiles", { clear = true })
+    vim.api.nvim_create_autocmd("User", {
+        group = refresh_group,
+        pattern = "AvanteViewBufferUpdated",
+        callback = function()
+            local views = {}
+            for _, winid in ipairs(vim.api.nvim_list_wins()) do
+                views[winid] = vim.api.nvim_win_call(winid, vim.fn.winsaveview)
+            end
+
+            vim.cmd("checktime")
+            vim.schedule(function()
+                for winid, view in pairs(views) do
+                    if vim.api.nvim_win_is_valid(winid) then
+                        vim.api.nvim_win_call(winid, function()
+                            view.lnum = math.min(view.lnum, vim.api.nvim_buf_line_count(0))
+                            vim.fn.winrestview(view)
+                        end)
+                    end
+                end
+            end)
+        end,
+    })
+
     local Path = require("avante.path")
     local History = require("avante.history")
 
