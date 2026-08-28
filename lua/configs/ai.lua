@@ -265,6 +265,13 @@ function M.avanteConfig()
 
             vim.cmd("checktime")
             vim.schedule(function()
+                -- `checktime` 会重新加载已变更的缓冲区，但 Gitsigns 可能仍缓存着旧索引。
+                -- 重新加载后刷新标记，使图标和状态栏及时反映 Avante 的修改。
+                local ok, gitsigns = pcall(require, "gitsigns")
+                if ok then
+                    pcall(gitsigns.refresh)
+                end
+
                 for winid, view in pairs(views) do
                     if vim.api.nvim_win_is_valid(winid) then
                         vim.api.nvim_win_call(winid, function()
