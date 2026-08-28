@@ -2,6 +2,20 @@ local ge = require("lip.utils").ge
 
 return {
     {
+        ge("nvim_lip/nvim-scrollbar.git"),
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            require("scrollbar").setup({
+                marks = {
+                    GitAdd = { text = "▐" },
+                    GitChange = { text = "▐" },
+                    GitDelete = { text = "▐" },
+                },
+            })
+            require("scrollbar.handlers.gitsigns").setup()
+        end,
+    },
+    {
         ge("nvim_lip/nvim-web-devicons.git"),
         config = function ()
             require("configs.ui_all").deviconsConfig()
