@@ -341,7 +341,7 @@ function M.avanteConfig()
         Sidebar._lip_tab_enters_input_insert = true
     end
     -- Avante 提交时会强制聚焦输出框。仅当请求来自输入框时
-    -- 拦截这一次聚焦，以保持当前窗口及 Insert/Normal 模式不变。
+    -- 拦截这一次聚焦，并在提交后保持输入窗口的 Normal 模式。
     if ok_sidebar and not Sidebar._lip_keep_input_focus_on_submit then
         local original_update_content = Sidebar.update_content
         Sidebar.update_content = function(self, content, opts)
@@ -358,6 +358,9 @@ function M.avanteConfig()
             self._lip_submitting_from_input = keep_input_focus
             local ok_submit, result = pcall(original_submit_input, self)
             self._lip_submitting_from_input = nil
+            if keep_input_focus then
+                vim.cmd("noautocmd stopinsert")
+            end
             if not ok_submit then
                 error(result)
             end
