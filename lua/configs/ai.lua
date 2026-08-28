@@ -519,6 +519,9 @@ function M.avanteConfig()
             -- normal mode: Ctrl-c 退出
             vim.keymap.set("n", "<C-c>", "<cmd>AvanteToggle<cr>", opts)
 
+            -- normal mode: Tab 先进入 Insert，Insert 中再按 Tab 切换窗口
+            vim.keymap.set("n", "<Tab>", "<cmd>startinsert<cr>", opts)
+
             -- insert mode: Ctrl-c 退出
             -- vim.keymap.set("i", "<C-c>", "<Esc><cmd>AvanteToggle<cr>", opts)
         end,
