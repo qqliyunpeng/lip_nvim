@@ -368,6 +368,23 @@ function M.avanteConfig()
         end
         Sidebar._lip_keep_input_focus_on_submit = true
     end
+    -- handle_submit() 会先渲染，再追加当前用户消息。ACP 续接历史会话时
+    -- 不会回显该消息，因此追加后刷新一次，以显示提问及历史分隔符。
+    if ok_sidebar and not Sidebar._lip_render_submitted_user_message then
+        local original_handle_submit = Sidebar.handle_submit
+        Sidebar.handle_submit = function(self, request)
+            local messages = History.get_history_messages(self.chat_history)
+            local previous_count = #messages
+            local result = original_handle_submit(self, request)
+            messages = History.get_history_messages(self.chat_history)
+            local last_message = messages[#messages]
+            if #messages > previous_count and last_message and last_message.is_user_submission then
+                self:update_content("", { focus = false })
+            end
+            return result
+        end
+        Sidebar._lip_render_submitted_user_message = true
+    end
     if ok_sidebar and not Sidebar._lip_skip_empty_open_submit then
         local original_open = Sidebar.open
         Sidebar.open = function(self, opts)
@@ -407,6 +424,28 @@ function M.avanteConfig()
     -- 编辑请求没有聊天历史，因此强制走普通提示词路径；
     -- 否则 Codex ACP 会收到空提示词并拒绝请求。
     local ok_llm, Llm = pcall(require, "avante.llm")
+    -- 加载已有 ACP 会话时会重放远端历史。本地已经保存了同一份历史，
+    -- 因此加载期间忽略重放消息，避免它们插到当前提问之后并打乱顺序。
+    if ok_llm and not Llm._lip_skip_loaded_session_replay then
+        Llm._load_acp_session_and_continue = function(opts, acp_client, session_id)
+            local original_on_messages_add = opts.on_messages_add
+            opts.on_messages_add = function() end
+            acp_client:load_session(session_id, require("avante.utils").root.get(), {}, function(_, err)
+                if err then
+                    opts.on_messages_add = original_on_messages_add
+                    Llm._create_acp_session_and_continue(opts, acp_client)
+                    return
+                end
+                vim.schedule(function()
+                    opts.on_messages_add = original_on_messages_add
+                    if not opts.just_connect_acp_client then
+                        Llm._continue_stream_acp(opts, acp_client, session_id)
+                    end
+                end)
+            end)
+        end
+        Llm._lip_skip_loaded_session_replay = true
+    end
     if ok_llm and not Llm._lip_acp_edit_prompt_fix then
         local original_continue_stream_acp = Llm._continue_stream_acp
         Llm._continue_stream_acp = function(opts, acp_client, session_id)
