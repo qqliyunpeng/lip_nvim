@@ -271,8 +271,21 @@ function M.avanteConfig()
                             view.lnum = math.min(view.lnum, vim.api.nvim_buf_line_count(0))
                             vim.fn.winrestview(view)
                         end)
+
+                        local bufnr = vim.api.nvim_win_get_buf(winid)
+                        if vim.bo[bufnr].filetype == "Avante" then
+                            local ok, render_markdown = pcall(require, "render-markdown")
+                            if ok then
+                                pcall(render_markdown.render, {
+                                    buf = bufnr,
+                                    win = winid,
+                                    event = "AvanteViewBufferUpdated",
+                                })
+                            end
+                        end
                     end
                 end
+                vim.cmd("redraw")
             end)
         end,
     })
