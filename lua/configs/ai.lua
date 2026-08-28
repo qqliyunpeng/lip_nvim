@@ -285,26 +285,14 @@ function M.avanteConfig()
         end
     end
 
-    local original_history_save = Path.history.save
-    Path.history.save = function(bufnr, history)
-        original_history_save(bufnr, history)
-        if #History.get_history_messages(history) > 0 or #history.entries > 0 then
-            prune_avante_history(bufnr)
-        end
-    end
-
     local Api = require("avante.api")
-    local original_select_history = Api.select_history
-    Api.select_history = function()
-        prune_avante_history(vim.api.nvim_get_current_buf())
-        return original_select_history()
-    end
-
-    vim.api.nvim_create_autocmd("VimLeavePre", {
-        callback = function()
+    local original_ask = Api.ask
+    Api.ask = function(opts)
+        if opts and opts.new_chat == true then
             prune_avante_history(vim.api.nvim_get_current_buf())
-        end,
-    })
+        end
+        return original_ask(opts)
+    end
 
     -- Avante auto-connects ACP providers by submitting an empty request when
     -- the sidebar opens. With Codex ACP this can restore the previous session
