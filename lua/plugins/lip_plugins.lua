@@ -520,7 +520,7 @@ return {
         },
         branch = "v1",
         -- event = "VeryLazy",
-        event = { "BufReadPost", "BufNewFile" },
+        event = { "InsertEnter", "CmdlineEnter" },
         build = require("configs.blink_cmp").blinkBuild(),
         config = function()
             require("configs.blink_cmp").blinkConfig()
