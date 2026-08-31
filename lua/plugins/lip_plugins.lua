@@ -379,9 +379,6 @@ return {
             { "\\\\", mode = "n", desc = "VM add cursor at position" },
             { "\\/", mode = { "n", "x" }, desc = "VM regex search" },
             { "\\A", mode = { "n", "x" }, desc = "VM select all" },
-            { "\\a", mode = "x", desc = "VM visual add" },
-            { "\\f", mode = "x", desc = "VM visual find" },
-            { "\\c", mode = "x", desc = "VM visual cursors" },
         },
         config = function ()
             require('configs.edit').visualMulConfig()
