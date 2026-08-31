@@ -8,6 +8,7 @@ local indentscopeDisableFileType = {
     "AvanteInput",
     "dashboard",
     "fzf",
+    "grug-far",
     "help",
     "lazy",
     "mason",

@@ -98,6 +98,7 @@ function M.windowsConfig()
                 "AvanteInput",
                 "AvanteSelectedFiles",
                 "AvanteTodos",
+                "grug-far",
             },
         },
     })
@@ -127,6 +128,7 @@ function M.whitespaceConfig()
             'Avante',
             'AvanteInput',
             'AvantePromptInput',
+            'grug-far',
         },
         ignore_terimal = true,
         return_cursor = true,

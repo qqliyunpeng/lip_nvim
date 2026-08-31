@@ -5,6 +5,7 @@ return {
         ge("nvim_lip/nvim-scrollbar.git"),
         event = { "BufReadPost", "BufNewFile" },
         config = function()
+            table.insert(require("scrollbar.config").get().excluded_filetypes, "grug-far")
             require("scrollbar").setup({
                 marks = {
                     GitAdd = { text = "▐" },

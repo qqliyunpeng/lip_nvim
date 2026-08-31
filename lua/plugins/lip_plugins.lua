@@ -406,8 +406,6 @@ return {
     },
     {
         ge("nvim_lip/grug-far.nvim.git"), branch = 'main',
-        event = { "BufReadPost", "BufNewFile" },
-        opts = { headerMaxWidth = 80 },
         cmd = "GrugFar",
         keys = {
             {
@@ -429,6 +427,10 @@ return {
         },
         config = function()
             require('grug-far').setup({
+                headerMaxWidth = 80,
+                folding = {
+                    enabled = false,
+                },
                 keymaps = {
                     qflist = { n = '=' },
                     close = { n = 'q' },
@@ -439,6 +441,7 @@ return {
                     },
                 },
             })
+            vim.api.nvim_set_hl(0, "GrugFarResultsPath", { link = "Directory" })
         end,
     },
     {
