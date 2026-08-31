@@ -320,7 +320,7 @@ local StatusLine = {
     -- lib.component.lsp(),
     {
         condition = function()
-            return not is_avante_buffer()
+            return not is_avante_buffer() and package.loaded.overseer ~= nil
         end,
         lib.component.compiler_state(),
     },
