@@ -561,6 +561,7 @@ return {
     },
     {
         ge("nvim_lip/sniprun.git"),
+        enabled = false,
         build = "sh install.sh",
         event = { "BufReadPost", "BufNewFile" },
         config = function ()
