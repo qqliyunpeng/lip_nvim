@@ -182,16 +182,28 @@ return {
         ge("nvim_lip/nvim-treesitter.git"),
         branch = "main",
         lazy = false,
-        dependencies = { { ge("yunduozhai/nvim-treesitter-textobjects.git"), branch = "main" } },
         build = ":TSUpdate",
         config = function()
             require("configs.treesitter").treesitterConfig()
         end,
     },
     {
+        ge("yunduozhai/nvim-treesitter-textobjects.git"),
+        branch = "main",
+        keys = {
+            "c", "d", "y", "v", "V", "<C-v>",
+            "]f", "]c", "]a", "]F", "]C", "]A",
+            "[f", "[c", "[a", "[F", "[C", "[A",
+            ";", "<a-;>",
+        },
+        config = function()
+            require("configs.treesitter").textobjectsConfig()
+        end,
+    },
+    {
         -- vaq/viq 选中单引号或者双引号等各种引号之间的内容
         ge("nvim_lip/vim-textobj-quotes.git"),
-        event = "VeryLazy",
+        keys = { "c", "d", "y", "v", "V", "<C-v>" },
         dependencies = {
             ge("duyz1218/vim-textobj-user.git"),
             -- vaj/vij 向上查找最近的 '{[('

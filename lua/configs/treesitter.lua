@@ -80,7 +80,6 @@ function M.treesitterConfig()
             pcall(vim.treesitter.start, args.buf)
         end,
     })
-    M.textobjectsConfig();
 end
 
 return M
