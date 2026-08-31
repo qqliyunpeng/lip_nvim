@@ -7,6 +7,24 @@ function M.componentsConfig()
     return {icons = require("configs.icons").componentsIcons() }
 end
 
+function M.scrollbarConfig()
+    table.insert(require("scrollbar.config").get().excluded_filetypes, "grug-far")
+    vim.list_extend(require("scrollbar.config").get().excluded_filetypes, {
+        "Avante",
+        "AvanteInput",
+        "AvantePromptInput",
+        "AvanteSelectedFiles",
+    })
+    require("scrollbar").setup({
+        marks = {
+            GitAdd = { text = "▐" },
+            GitChange = { text = "▐" },
+            GitDelete = { text = "▐" },
+        },
+    })
+    require("scrollbar.handlers.gitsigns").setup()
+end
+
 function M.noiceConfig()
     local enable_conceal = false          -- Hide command text if true
     require('noice').setup({
