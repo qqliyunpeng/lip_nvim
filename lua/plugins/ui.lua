@@ -6,6 +6,12 @@ return {
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             table.insert(require("scrollbar.config").get().excluded_filetypes, "grug-far")
+            vim.list_extend(require("scrollbar.config").get().excluded_filetypes, {
+                "Avante",
+                "AvanteInput",
+                "AvantePromptInput",
+                "AvanteSelectedFiles",
+            })
             require("scrollbar").setup({
                 marks = {
                     GitAdd = { text = "▐" },
