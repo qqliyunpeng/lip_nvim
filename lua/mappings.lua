@@ -26,7 +26,8 @@ map("n", "<C-S-right>", function() require("smart-splits").resize_right() end, {
 
 
 -- nvim中在ssh的终端中C-h表示backspace
-map("n", "<BS>", function() require("smart-splits").move_cursor_left() end, { desc = "switch window left" })
+-- map("n", "<BS>", function() require("smart-splits").move_cursor_left() end, { desc = "switch window left" })
+map("n", "<BS>", "<Nop>", { desc = "disable backspace" })
 
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
