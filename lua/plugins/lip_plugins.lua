@@ -191,7 +191,7 @@ return {
     {
         -- vaq/viq 选中单引号或者双引号等各种引号之间的内容
         ge("nvim_lip/vim-textobj-quotes.git"),
-        event = { "BufReadPost", "BufNewFile" },
+        event = "VeryLazy",
         dependencies = {
             ge("duyz1218/vim-textobj-user.git"),
             -- vaj/vij 向上查找最近的 '{[('
@@ -315,7 +315,7 @@ return {
         ge("nvim_lip/LuaSnip"),
         version = "v2.*",
         build = 'make install_jsregexp',
-        event = { "BufReadPost", "BufNewFile" },
+        event = "InsertEnter",
         dependencies = {
             { ge("yunduozhai/friendly-snippets.git"), branch = "main" }
         },
@@ -378,7 +378,7 @@ return {
     },
     {
         ge("nvim_lip/navimark.nvim.git"),
-        event = { "BufReadPost", "BufNewFile" },
+        event = "VeryLazy",
         config = function ()
             require('navimark').setup({
                 keymap = {
@@ -583,7 +583,30 @@ return {
             or function(plugin)
                 require("configs.avante_build").build(plugin)
             end,
-        event = "VeryLazy",
+        cmd = {
+            "AvanteAsk",
+            "AvanteChat",
+            "AvanteChatNew",
+            "AvanteToggle",
+            "AvanteBuild",
+            "AvanteEdit",
+            "AvanteRefresh",
+            "AvanteFocus",
+            "AvanteSwitchProvider",
+            "AvanteSwitchSelectorProvider",
+            "AvanteSwitchInputProvider",
+            "AvanteClear",
+            "AvanteShowRepoMap",
+            "AvanteModels",
+            "AvanteACPModels",
+            "AvanteACPModes",
+            "AvanteHistory",
+            "AvanteStop",
+        },
+        keys = {
+            { "<leader>aa", "<Plug>(AvanteAsk)", mode = { "n", "v" }, desc = "Avante ask" },
+            { "<leader>an", "<Plug>(AvanteAskNew)", mode = { "n", "v" }, desc = "Avante new ask" },
+        },
         version = false, -- 永远不要将此值设置为 "*"！永远不要！
         dependencies = {
             ge("suyelu/plenary.nvim"),
