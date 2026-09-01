@@ -112,7 +112,7 @@ map("n", "<leader>bd", function() Snacks.bufdelete() end,     { desc = "Delete B
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
 local function hide_terminal()
     pcall(vim.cmd, "close")
-    require("configs.avante_refresh").refresh()
+    require("configs.avante_refresh").refresh({ delay = 10 })
 end
 map("n", "<A-b>", function()
     -- 只在通过 <A-b> 进入终端时进入插入模式；用 <C-j>/<C-k> 切回终端时保持普通模式。
