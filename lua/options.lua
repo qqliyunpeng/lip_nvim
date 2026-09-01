@@ -105,11 +105,15 @@ opt.expandtab   = true -- enable the use of space in tab
 opt.whichwrap:append "<>[]hl"
 
 opt.colorcolumn = "80"
--- 欢迎界面和 grug-far 中禁用
+-- 欢迎界面、grug-far 和 Avante 中禁用
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "snacks_dashboard", "grug-far" },
-    callback = function ()
-        vim.opt_local.colorcolumn = ''
+    pattern = { "snacks_dashboard", "grug-far", "Avante", "AvanteInput", "AvanteSelectedFiles" },
+    callback = function (args)
+        vim.schedule(function()
+            for _, win in ipairs(vim.fn.win_findbuf(args.buf)) do
+                vim.wo[win].colorcolumn = ''
+            end
+        end)
     end,
 })
 
