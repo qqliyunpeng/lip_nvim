@@ -350,6 +350,32 @@ return {
         ft = { "markdown", "vimwiki", "Avante" },
         config = function ()
             require('configs.ui_all').markdownConfig()
+
+            local group = vim.api.nvim_create_augroup("lip_avante_render_markdown", { clear = true })
+            local function set_avante_rendering(enabled)
+                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                    if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].filetype == "Avante" then
+                        vim.api.nvim_buf_call(buf, function()
+                            require("render-markdown").set_buf(enabled)
+                        end)
+                    end
+                end
+            end
+
+            vim.api.nvim_create_autocmd("User", {
+                group = group,
+                pattern = "AvanteInputSubmitted",
+                callback = function()
+                    set_avante_rendering(false)
+                end,
+            })
+            vim.api.nvim_create_autocmd("User", {
+                group = group,
+                pattern = "AvanteViewBufferUpdated",
+                callback = function()
+                    set_avante_rendering(true)
+                end,
+            })
         end,
     },
     {
