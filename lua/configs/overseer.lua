@@ -34,6 +34,15 @@ function M.overseerConfig()
         },
     })
 
+    local refresh_group = vim.api.nvim_create_augroup("LipOverseerAvanteRefresh", { clear = true })
+    vim.api.nvim_create_autocmd("User", {
+        group = refresh_group,
+        pattern = "OverseerListClose",
+        callback = function()
+            require("configs.avante_refresh").refresh({ delay = 10 })
+        end,
+    })
+
     overseer.add_template_hook({
         module = "make",
     }, function (task_defn, util)
