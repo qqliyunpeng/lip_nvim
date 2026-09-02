@@ -243,6 +243,23 @@ function M.visualWhitespaceConfig()
         },
     }
     require('visual-whitespace').setup(opts)
+
+    -- 进入按行可视模式时，可能会在选区就绪前触发；
+    -- 在下一个事件循环周期重绘一次，使标记立即显示。
+    local group = vim.api.nvim_create_augroup("lip_visual_whitespace", { clear = true })
+    vim.api.nvim_create_autocmd("ModeChanged", {
+        group = group,
+        pattern = "*:[vV]",
+        callback = function()
+            vim.schedule(function()
+                if vim.fn.mode() == "v" or vim.fn.mode() == "V" then
+                    vim.api.nvim_exec_autocmds("CursorMoved", {
+                        group = "VisualWhitespaceHL",
+                    })
+                end
+            end)
+        end,
+    })
 end
 
 function M.whichKeyConfig()
