@@ -35,6 +35,8 @@ return {
         dependencies = 'nvim-web-devicons',
         config = function()
             local opts = require('configs.bufferline')
+            opts.keep_current_buffer_in_avante()
+            opts.keep_current_buffer_in_avante = nil
             require('bufferline').setup(opts)
         end
     },
