@@ -116,7 +116,11 @@ local function hide_terminal()
 end
 map("n", "<A-b>", function()
     -- 只在通过 <A-b> 进入终端时进入插入模式；用 <C-j>/<C-k> 切回终端时保持普通模式。
-    Snacks.terminal(nil, { auto_insert = false, start_insert = false })
+    Snacks.terminal(nil, {
+        auto_insert = false,
+        start_insert = false,
+        win = { wo = { winhighlight = "Normal:Normal,NormalNC:NormalNC" } },
+    })
     if vim.bo.buftype == "terminal" then
         vim.keymap.set("n", "q", hide_terminal, { buffer = true, desc = "Terminal Hide" })
         vim.cmd.startinsert()

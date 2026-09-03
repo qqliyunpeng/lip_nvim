@@ -72,12 +72,27 @@ end
 
 function M.treesitterConfig()
     local treesitter = require("nvim-treesitter")
+    local disabled_filetypes = {
+        AvanteInput = true,
+        AvantePromptInput = true,
+        AvanteSelectedFiles = true,
+    }
     treesitter.setup()
     treesitter.install({ "c", "make", "lua", "luadoc", "printf", "vim", "vimdoc", "bash", "markdown", "markdown_inline" })
 
     vim.api.nvim_create_autocmd("FileType", {
         callback = function(args)
+            if vim.bo[args.buf].buftype == "terminal" or disabled_filetypes[vim.bo[args.buf].filetype] then
+                pcall(vim.treesitter.stop, args.buf)
+                return
+            end
             pcall(vim.treesitter.start, args.buf)
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("TermOpen", {
+        callback = function(args)
+            pcall(vim.treesitter.stop, args.buf)
         end,
     })
 end
