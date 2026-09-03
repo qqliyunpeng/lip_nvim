@@ -34,18 +34,30 @@ end
 
 local ProjectName = {
     provider = function()
+        if vim.g.overseer_heirline_status == "running" then
+            local letters = {}
+            for index = 1, #"building" do
+                letters[index] = string.format("%%#OverseerBuilding%d#%s", index, string.sub("building", index, index))
+            end
+            return table.concat(letters) .. "%*"
+        elseif vim.g.overseer_heirline_status == "success" then
+            return "Success"
+        elseif vim.g.overseer_heirline_status == "failure" then
+            return "Failed"
+        end
         return project_name()
     end,
     hl = function()
+        if vim.g.overseer_heirline_status == "running" then
+            return { fg = "#EEC956" }
+        end
         local task_colors = {
-            running = "#EEC956",
             success = "#9ECE6A",
             failure = "#E47272",
         }
         local task_color = task_colors[vim.g.overseer_heirline_status]
         return {
-            fg = task_color and "#000000" or utils.get_highlight("Directory").fg,
-            bg = task_color,
+            fg = task_color or utils.get_highlight("Directory").fg,
         }
     end,
 }
@@ -308,7 +320,7 @@ local VisualSeparators = {
 local StatusLine = {
     condition = conditions.is_active,
     hl = { fg = "fg", bg = "bg" },
-    { ViMode }, Space,
+    { ViMode }, Space, Space,
     ProjectName, Space, Space,
     lib.component.git_branch(),
     lib.component.git_diff(),

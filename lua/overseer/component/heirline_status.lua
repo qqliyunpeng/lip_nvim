@@ -1,7 +1,49 @@
 local flash_id = 0
+local animation_timer
+local animation_frame = 1
+local animation_colors = { "#6F6029", "#8F7A32", "#AF943D", "#CFAD49", "#EEC956", "#FFE786", "#EEC956", "#CFAD49" }
+
+local function update_animation_highlights()
+    for index = 1, 8 do
+        local color = animation_colors[(index - animation_frame) % #animation_colors + 1]
+        vim.api.nvim_set_hl(0, "OverseerBuilding" .. index, { fg = color })
+    end
+end
+
+local function stop_animation()
+    if animation_timer then
+        animation_timer:stop()
+        animation_timer:close()
+        animation_timer = nil
+    end
+    vim.g.overseer_heirline_frame = nil
+end
+
+local function start_animation()
+    stop_animation()
+    animation_frame = 1
+    vim.g.overseer_heirline_frame = animation_frame
+    update_animation_highlights()
+    animation_timer = vim.uv.new_timer()
+    animation_timer:start(80, 80, vim.schedule_wrap(function()
+        if vim.g.overseer_heirline_status ~= "running" then
+            stop_animation()
+            return
+        end
+        animation_frame = animation_frame % #animation_colors + 1
+        vim.g.overseer_heirline_frame = animation_frame
+        update_animation_highlights()
+        vim.cmd("redrawstatus")
+    end))
+end
 
 local function set_status(status)
     vim.g.overseer_heirline_status = status
+    if status == "running" then
+        start_animation()
+    else
+        stop_animation()
+    end
     vim.cmd("redrawstatus")
 end
 
