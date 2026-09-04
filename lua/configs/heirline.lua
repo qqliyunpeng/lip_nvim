@@ -24,7 +24,7 @@ end
 heirline_components.init.subscribe_to_events()
 heirline.load_colors(heirline_components.hl.get_colors())
 
-local avante_state_colors = { "#8B8B8B", "#101010", "#292929", "#444444", "#606060", "#767676" }
+local avante_state_colors = { utils.get_highlight("Normal").fg, "#101010", "#292929", "#444444", "#606060", "#767676" }
 for index, color in ipairs(avante_state_colors) do
     vim.api.nvim_set_hl(0, "AvanteHeirlineState" .. index, { fg = color })
 end
@@ -316,7 +316,7 @@ local AvanteState = {
     hl = function()
         local colors = {
             failed = "red",
-            succeeded = "green",
+            succeeded = "#98C379",
             cancelled = "orange",
             thinking = "yellow",
         }
