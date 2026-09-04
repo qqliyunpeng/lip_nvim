@@ -344,6 +344,73 @@ function M.avanteConfig()
     -- the sidebar opens. With Codex ACP this can restore the previous session
     -- and show "generating" immediately, so suppress only that empty submit.
     local ok_sidebar, Sidebar = pcall(require, "avante.sidebar")
+    if ok_sidebar and not Sidebar._lip_state_in_heirline then
+        local animated_states = {
+            generating = true,
+            ["tool calling"] = true,
+            thinking = true,
+            compacting = true,
+        }
+        local function stop_heirline_timer(self)
+            if self._lip_heirline_timer then
+                self._lip_heirline_timer:stop()
+                self._lip_heirline_timer:close()
+                self._lip_heirline_timer = nil
+            end
+        end
+        local function clear_heirline_state(self)
+            stop_heirline_timer(self)
+            vim.g.avante_heirline_state = nil
+            vim.g.avante_heirline_spinner = nil
+            vim.cmd("redrawstatus")
+        end
+
+        Sidebar.render_state = function(self)
+            if not self.current_state then
+                return
+            end
+            if not self:is_open() then
+                clear_heirline_state(self)
+                return
+            end
+            if vim.g.avante_heirline_state ~= self.current_state then
+                vim.g.avante_heirline_spinner = 1
+            end
+            vim.g.avante_heirline_state = self.current_state
+            vim.cmd("redrawstatus")
+            if animated_states[self.current_state] then
+                if not self._lip_heirline_timer then
+                    self._lip_heirline_timer = vim.uv.new_timer()
+                    self._lip_heirline_timer:start(125, 125, vim.schedule_wrap(function()
+                        if not self:is_open() or not animated_states[self.current_state] then
+                            stop_heirline_timer(self)
+                            return
+                        end
+                        vim.g.avante_heirline_spinner = (vim.g.avante_heirline_spinner or 0) + 1
+                        vim.cmd("redrawstatus")
+                    end))
+                end
+            else
+                stop_heirline_timer(self)
+            end
+        end
+
+        local original_clear_state = Sidebar.clear_state
+        Sidebar.clear_state = function(self)
+            original_clear_state(self)
+            if not self.current_state then
+                clear_heirline_state(self)
+            end
+        end
+
+        local original_close = Sidebar.close
+        Sidebar.close = function(self, opts)
+            local result = original_close(self, opts)
+            clear_heirline_state(self)
+            return result
+        end
+        Sidebar._lip_state_in_heirline = true
+    end
     if ok_sidebar and not Sidebar._lip_input_hint_at_bottom then
         Sidebar.get_input_float_window_row = function(self)
             return math.max(vim.api.nvim_win_get_height(self.containers.input.winid) - 1, 0)

@@ -24,6 +24,11 @@ end
 heirline_components.init.subscribe_to_events()
 heirline.load_colors(heirline_components.hl.get_colors())
 
+local avante_state_colors = { "#8B8B8B", "#101010", "#292929", "#444444", "#606060", "#767676" }
+for index, color in ipairs(avante_state_colors) do
+    vim.api.nvim_set_hl(0, "AvanteHeirlineState" .. index, { fg = color })
+end
+
 
 ----lip 1----
 local function project_name()
@@ -284,6 +289,41 @@ local VisualSelection = {
     end,
 }
 
+local AvanteState = {
+    condition = function()
+        return is_avante_buffer() and vim.g.avante_heirline_state ~= nil
+    end,
+    provider = function()
+        local state = vim.g.avante_heirline_state
+        local animated = state == "generating" or state == "tool calling"
+            or state == "thinking" or state == "compacting"
+        if not animated then
+            return state
+        end
+        local trail_length = #avante_state_colors - 1
+        local pause_frames = 32
+        local active = ((vim.g.avante_heirline_spinner or 1) - 1)
+            % (#state + trail_length + pause_frames) + 1
+        local letters = {}
+        for index = 1, #state do
+            local distance = active - index
+            local color_index = distance >= 0 and distance < trail_length and distance + 2 or 1
+            local group = "AvanteHeirlineState" .. color_index
+            letters[index] = string.format("%%#%s#%s", group, state:sub(index, index))
+        end
+        return table.concat(letters) .. "%*"
+    end,
+    hl = function()
+        local colors = {
+            failed = "red",
+            succeeded = "green",
+            cancelled = "orange",
+            thinking = "yellow",
+        }
+        return { fg = colors[vim.g.avante_heirline_state] or "cyan", bold = true }
+    end,
+}
+
 local VisualSeparators = {
     provider = function()
         local mode = vim.fn.mode()
@@ -324,7 +364,7 @@ local StatusLine = {
     ProjectName, Space, Space,
     lib.component.git_branch(),
     lib.component.git_diff(),
-    { FileNameBlock }, Space,
+    { FileNameBlock }, Space, AvanteState, Space,
     -- lib.component.file_info(),
     Align,
     lib.component.cmd_info(),
