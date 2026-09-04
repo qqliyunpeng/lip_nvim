@@ -668,8 +668,10 @@ return {
             "AvanteStop",
         },
         keys = {
-            { "<leader>aa", "<Plug>(AvanteAsk)", mode = { "n", "v" }, desc = "Avante ask" },
-            { "<leader>an", "<Plug>(AvanteAskNew)", mode = { "n", "v" }, desc = "Avante new ask" },
+            { "<leader>aa", "<Plug>(AvanteAsk)",     mode = { "n", "v" }, desc = "Avante ask" },
+            { "<leader>an", "<Plug>(AvanteAskNew)",  mode = { "n", "v" }, desc = "Avante new ask" },
+            { "<leader>az", "<Plug>(AvanteZenMode)", mode = { "n", "v" }, desc = "Avante zen mode" },
+            { "<leader>ae", "<Plug>(AvanteEdit)", mode = "v", desc = "Avante edit" },
         },
         version = false, -- 永远不要将此值设置为 "*"！永远不要！
         dependencies = {
