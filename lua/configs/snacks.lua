@@ -219,7 +219,6 @@ function M.snacksConfig()
                     { icon = icons.config     , key = "c", desc = "Config",          action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
                     { icon = icons.all_session, key = "p", desc = "Projects",        action = ":Telescope persisted" },
                     { icon = icons.restore    , key = "s", desc = "Restore Session", action = ":SessionLoadLast" },
-                    { icon = icons.extras     , key = "x", desc = "Lazy Extras",     action = ":LazyExtras" },
                     { icon = icons.lazy       , key = "l", desc = "Lazy",            action = ":Lazy" },
                     { icon = icons.quit       , key = "q", desc = "Quit",            action = ":qa" },
                 },
