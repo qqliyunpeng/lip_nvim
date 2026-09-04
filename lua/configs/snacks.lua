@@ -198,7 +198,8 @@ function M.snacksConfig()
         },
         dashboard = {
             enabled = true,
-            width = 50,
+            width = 64,
+            formats = { header = { "%s", align = "left" } },
             row = nil, -- dashboard position. nil for center
             col = nil, -- dashboard position. nil for center
             -- pane_gap = 4, -- empty columns between vertical panes
@@ -225,12 +226,12 @@ function M.snacksConfig()
                 header = [[
 
 
-██╗     ██╗██████╗ ██╗   ██╗██╗███╗   ███╗
+       ██╗     ██╗██████╗ ██╗   ██╗██╗███╗   ███╗
        ██║     ██║██╔══██╗██║   ██║██║████╗ ████║   /\_/\
-        ██║     ██║██████╔╝██║   ██║██║██╔████╔██║  ( o.o )
-          ██║     ██║██╔═══╝ ╚██╗ ██╔╝██║██║╚██╔╝██║  (  -  )っ
-              ███████╗██║██║      ╚████╔╝ ██║██║ ╚═╝ ██║   > ^ <   ~~~~
- ╚══════╝╚═╝╚═╝       ╚═══╝  ╚═╝╚═╝     ╚═╝
+       ██║     ██║██████╔╝██║   ██║██║██╔████╔██║  ( o.o )
+       ██║     ██║██╔═══╝ ╚██╗ ██╔╝██║██║╚██╔╝██║  (  -  )っ
+       ███████╗██║██║      ╚████╔╝ ██║██║ ╚═╝ ██║   > ^ <   ~~~~
+       ╚══════╝╚═╝╚═╝       ╚═══╝  ╚═╝╚═╝     ╚═╝
 ]],
             },
         },
