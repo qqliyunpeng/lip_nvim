@@ -74,6 +74,16 @@ o.splitbelow = true
 o.splitright = true
 o.timeoutlen = 400
 o.undofile = true
+o.autoread = true
+
+vim.api.nvim_create_autocmd("FocusGained", {
+    group = vim.api.nvim_create_augroup("lip_checktime", { clear = true }),
+    callback = function(args)
+        if vim.bo[args.buf].buftype == "" and not vim.bo[args.buf].modified then
+            vim.cmd("checktime " .. args.buf)
+        end
+    end,
+})
 
 -- interval for writing swap file to disk, also used by gitsigns
 o.updatetime = 250
