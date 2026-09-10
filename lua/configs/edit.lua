@@ -1,6 +1,20 @@
 
 local M = {}
 
+function M.numberToggleConfig()
+    -- 当前窗口获得焦点时显示相对行号，失去焦点时显示绝对行号。
+    -- 插入模式不参与切换，因此编辑时仍保留相对行号。
+    vim.cmd [[
+        augroup numbertoggle
+            autocmd!
+            " 进入或重新聚焦窗口时显示相对行号
+            autocmd BufEnter,FocusGained,WinEnter * if &nu | set rnu | endif
+            " 离开窗口或 Neovim 失去焦点时显示绝对行号
+            autocmd BufLeave,FocusLost,WinLeave * if &nu | set nornu | endif
+        augroup END
+    ]]
+end
+
 function M.miniSurroundConfig()
     require'mini.surround'.setup({
         mappings = {
@@ -431,4 +445,3 @@ function M.miniFileConfig()
 end
 
 return M
-

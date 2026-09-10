@@ -82,6 +82,13 @@ return {
         end
     },
     {
+        ge("nvim_lip/vim-numbertoggle.git"),
+        lazy = false,
+        config = function()
+            require("configs.edit").numberToggleConfig()
+        end,
+    },
+    {
         ge("nvim_lip/vim-illuminate.git"),
         event = "VeryLazy",
         config = function()
