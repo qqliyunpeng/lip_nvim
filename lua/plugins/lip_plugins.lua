@@ -103,6 +103,14 @@ return {
         end,
     },
     {
+        ge("nvim_lip/numb.nvim"),
+        event = "VeryLazy",
+        opts = {
+            show_numbers = true,
+            show_cursorline = true,
+        },
+    },
+    {
         ge("nvim_lip/vim-illuminate.git"),
         event = "VeryLazy",
         config = function()
