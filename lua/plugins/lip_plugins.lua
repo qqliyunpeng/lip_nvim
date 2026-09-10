@@ -53,6 +53,20 @@ return {
         ge("nvim_lip/sqlite.lua.git"),
     },
     {
+        ge("nvim_lip/neo-composer.nvim"),
+        event = "VeryLazy",
+        dependencies = {
+            ge("nvim_lip/sqlite.lua.git"),
+        },
+        opts = {
+            notify = false,
+            keymaps = {
+                cycle_next = "<A-n>",
+                cycle_prev = "<A-p>",
+            },
+        },
+    },
+    {
         ge("yunduozhai/project.nvim.git"),
         config = function()
             require("project_nvim").setup {

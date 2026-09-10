@@ -324,6 +324,37 @@ local AvanteState = {
     end,
 }
 
+local function neo_composer_active()
+    if package.loaded["NeoComposer.state"] == nil then
+        return false
+    end
+    local state = require("NeoComposer.state")
+    return state.get_recording() or state.get_playing() or state.get_delay()
+end
+
+local NeoComposerStatus = {
+    condition = function()
+        return neo_composer_active()
+    end,
+    init = function(self)
+        self.status = require("NeoComposer.ui").status_recording()
+    end,
+    provider = function(self)
+        return self.status or ""
+    end,
+    update = {
+        "User",
+        pattern = {
+            "NeoComposerRecordingSet",
+            "NeoComposerPlayingSet",
+            "NeoComposerDelaySet",
+        },
+        callback = function(self)
+            self.status = require("NeoComposer.ui").status_recording()
+        end,
+    },
+}
+
 local VisualSeparators = {
     provider = function()
         local mode = vim.fn.mode()
@@ -367,7 +398,13 @@ local StatusLine = {
     { FileNameBlock }, Space, AvanteState, Space,
     -- lib.component.file_info(),
     Align,
-    lib.component.cmd_info(),
+    {
+        condition = function()
+            return not neo_composer_active()
+        end,
+        lib.component.cmd_info(),
+    },
+    NeoComposerStatus,
     Align,
     -- lib.component.lsp(),
     {
