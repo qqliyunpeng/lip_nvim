@@ -102,7 +102,7 @@ return {
             require("configs.edit").numberToggleConfig()
         end,
     },
-    {
+    { -- :num 的时候语言要跳转的位置
         ge("nvim_lip/numb.nvim"),
         event = "VeryLazy",
         opts = {
