@@ -395,7 +395,8 @@ local StatusLine = {
     ProjectName, Space, Space,
     lib.component.git_branch(),
     lib.component.git_diff(),
-    { FileNameBlock }, Space, AvanteState, Space,
+    { FileNameBlock }, Space, Space,
+    -- AvanteState,
     -- lib.component.file_info(),
     Align,
     {
