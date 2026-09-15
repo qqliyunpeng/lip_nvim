@@ -592,7 +592,7 @@ function M.markdownConfig()
             sign = false,
             width = 'block',
             min_width = 0,
-            border = true,
+            border = false,
             render_modes = false, -- not keep rendering while inserting
             border_virtual = true,
             icons = { ' 󰼏 ', ' 󰎨 ', ' 󰼑 ', ' 󰎲 ', ' 󰼓 ', ' 󰎴 ' },
@@ -619,7 +619,7 @@ function M.markdownConfig()
         },
         quote = { repeat_linebreak = true },
         pipe_table = {
-            alignment_indicator = '─',
+            alignment_indicator = '━',
             border = { '╭', '┬', '╮', '├', '┼', '┤', '╰', '┴', '╯', '│', '─' },
         },
         link = {
