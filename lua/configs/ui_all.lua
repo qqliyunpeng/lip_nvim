@@ -605,6 +605,7 @@ function M.markdownConfig()
             -- left_pad = 0,
             -- right_pad = 2,
             style = 'normal',
+            border = 'thick', -- 把后边的 ``` 位置空间保留下来
         },
         dash = { width = 79, },
         checkbox = {
