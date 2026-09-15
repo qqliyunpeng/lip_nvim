@@ -114,6 +114,13 @@ return {
         ge("nvim_lip/vim-illuminate.git"),
         event = "VeryLazy",
         config = function()
+            local function cursor_on_keyword()
+                local cursor = vim.api.nvim_win_get_cursor(0)
+                local line = vim.api.nvim_get_current_line()
+                local char = line:sub(cursor[2] + 1, cursor[2] + 1)
+                return char ~= "" and vim.fn.match(char, [[\k]]) == 0
+            end
+
             require('illuminate').configure({
                 providers = { 'lsp', 'treesitter', 'regex' },
                 delay = 100,
@@ -121,6 +128,7 @@ return {
                 filetypes_denylist = { 'dirbuf', 'dirvish', 'fugitive', 'NvimTree' },
                 filetypes_allowlist = {'python', 'lua', 'c', 'cpp'},
                 large_file_cutoff = 10000,
+                should_enable = cursor_on_keyword,
                 disable_keymaps = true,
             })
 
