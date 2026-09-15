@@ -7,6 +7,7 @@ local Align = { provider = "%="  }
 local Space = { provider = " "  }
 local heirline_components = require("heirline-components.all")
 local lib = require "heirline-components.all"
+local mode_colors = require("configs.mode_colors")
 
 local avante_filetypes = {
     Avante = true,
@@ -114,21 +115,7 @@ local ViMode = {
             ["!"] = "!",
             t = "T",
         },
-        mode_colors = {
-            n = "#7AA2F7",
-            i = "#9ECE6A",
-            v = "#BB9AF7",
-            V = "#BB9AF7",
-            ["\22"] = "#BB9AF7",
-            c =  "orange",
-            s =  "purple",
-            S =  "purple",
-            ["\19"] =  "purple",
-            R =  "orange",
-            r =  "orange",
-            ["!"] =  "red",
-            t =  "red",
-        }
+        mode_colors = mode_colors,
     },
     -- We can now access the value of mode() that, by now, would have been
     -- computed by `init()` and use it to index our strings dictionary.

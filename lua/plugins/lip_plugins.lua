@@ -602,6 +602,13 @@ return {
         end
     },
     {
+        require("lip.utils").gh("mawkler/modicator.nvim"),
+        event = "VeryLazy",
+        config = function()
+            require("configs.ui_all").modicatorConfig()
+        end,
+    },
+    {
         ge("nvim_lip/avante.nvim.git"),
         branch = 'main',
         build = vim.fn.has("win32") ~= 0

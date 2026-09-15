@@ -3,6 +3,81 @@ local use_ascii_icons = require("configs.icons").use_ascii_icons()
 
 local map = vim.keymap.set
 
+-- 当前光标行下当前行号的颜色设置
+function M.modicatorConfig()
+    -- 加载 Modicator 以及各模式对应的颜色配置
+    local modicator = require("modicator")
+    local mode_colors = require("configs.mode_colors")
+    -- 在这些文件类型或终端缓冲区中不显示模式行号颜色
+    local disabled_filetypes = {
+        Avante = true,
+        AvanteInput = true,
+        AvantePromptInput = true,
+        AvanteSelectedFiles = true,
+        AvanteTodos = true,
+        snacks_terminal = true,
+    }
+    -- 为不同编辑模式定义高亮颜色
+    local mode_highlights = {
+        Normal = mode_colors.cursorline_n,
+        Insert = mode_colors.i,
+        Visual = mode_colors.v,
+        Command = mode_colors.c,
+        Replace = mode_colors.R,
+        Select = mode_colors.s,
+        Terminal = mode_colors.t,
+        TerminalNormal = mode_colors.n,
+    }
+    -- 将 Vim 的模式缩写映射为 Modicator 使用的模式名称
+    local mode_names = { n = "Normal", i = "Insert", v = "Visual", c = "Command", R = "Replace", s = "Select", t = "Terminal" }
+
+    -- 根据当前缓冲区判断功能是否启用
+    local enabled = not disabled_filetypes[vim.bo.filetype] and vim.bo.buftype ~= "terminal"
+
+    -- 注册各模式高亮，并更新当前行号颜色
+    local function set_mode_highlights()
+        for mode, color in pairs(mode_highlights) do
+            vim.api.nvim_set_hl(0, mode .. "Mode", { fg = color, bold = true })
+        end
+        if enabled then
+            local mode = vim.fn.mode(1):sub(1, 1)
+            local color = mode_highlights[mode_names[mode]]
+            vim.api.nvim_set_hl(0, "CursorLineNr", { fg = color or mode_colors.n, bold = true })
+        end
+    end
+
+    -- 初始化 Modicator，并让光标行背景参与高亮计算
+    set_mode_highlights()
+    modicator.setup({ highlights = { use_cursorline_background = true } })
+
+    -- 按当前编辑模式设置光标行高亮
+    local function update_cursorline()
+        if enabled then
+            modicator.set_cursor_line_highlight(modicator.hl_name_from_mode(vim.fn.mode(1)))
+        end
+    end
+
+    -- 在切换窗口或文件类型时同步启用状态
+    local function sync_modicator()
+        local should_enable = not disabled_filetypes[vim.bo.filetype] and vim.bo.buftype ~= "terminal"
+        if should_enable == enabled then return end
+        enabled = should_enable
+        if enabled then modicator.enable(); update_cursorline() else modicator.disable() end
+        set_mode_highlights()
+    end
+
+    -- 监听缓冲区、窗口和文件类型变化，延迟同步避免事件嵌套
+    local group = vim.api.nvim_create_augroup("LipModicator", { clear = true })
+    vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "FileType", "WinEnter", "WinLeave" }, {
+        group = group, callback = function() vim.schedule(sync_modicator) end,
+    })
+    vim.api.nvim_create_autocmd({ "Colorscheme", "ModeChanged" }, {
+        -- 主题或编辑模式变化后重新应用颜色
+        group = group, callback = function() set_mode_highlights(); update_cursorline() end,
+    })
+    sync_modicator()
+end
+
 function M.componentsConfig()
     return {icons = require("configs.icons").componentsIcons() }
 end

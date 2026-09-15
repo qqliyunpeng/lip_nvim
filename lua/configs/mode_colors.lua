@@ -1,0 +1,16 @@
+return {
+    n = "#7AA2F7",
+    cursorline_n = "#FF966C",
+    i = "#9ECE6A",
+    v = "#BB9AF7",
+    V = "#BB9AF7",
+    ["\22"] = "#BB9AF7",
+    c = "orange",
+    s = "purple",
+    S = "purple",
+    ["\19"] = "purple",
+    R = "orange",
+    r = "orange",
+    ["!"] = "red",
+    t = "red",
+}
