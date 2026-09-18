@@ -29,26 +29,33 @@ function M.modicatorConfig()
         TerminalNormal = mode_colors.n,
     }
     -- 将 Vim 的模式缩写映射为 Modicator 使用的模式名称
-    local mode_names = { n = "Normal", i = "Insert", v = "Visual", c = "Command", R = "Replace", s = "Select", t = "Terminal" }
+    local mode_names = { n = "Normal", i = "Insert", v = "Visual", V = "Visual", ["\22"] = "Visual", c = "Command", R = "Replace", s = "Select", t = "Terminal" }
 
     -- 根据当前缓冲区判断功能是否启用
     local enabled = not disabled_filetypes[vim.bo.filetype] and vim.bo.buftype ~= "terminal"
 
     -- 注册各模式高亮，并更新当前行号颜色
     local function set_mode_highlights()
+        local cursorline_bg = vim.api.nvim_get_hl(0, { name = "CursorLine" }).bg
         for mode, color in pairs(mode_highlights) do
-            vim.api.nvim_set_hl(0, mode .. "Mode", { fg = color, bold = true })
+            local highlight = mode == "Visual"
+                and { fg = "#000000", bg = color, bold = true }
+                or { fg = color, bg = cursorline_bg, bold = true }
+            vim.api.nvim_set_hl(0, mode .. "Mode", highlight)
         end
         if enabled then
             local mode = vim.fn.mode(1):sub(1, 1)
             local color = mode_highlights[mode_names[mode]]
-            vim.api.nvim_set_hl(0, "CursorLineNr", { fg = color or mode_colors.n, bold = true })
+            local highlight = mode_names[mode] == "Visual"
+                and { fg = "#000000", bg = color, bold = true }
+                or { fg = color or mode_colors.n, bg = cursorline_bg, bold = true }
+            vim.api.nvim_set_hl(0, "CursorLineNr", highlight)
         end
     end
 
-    -- 初始化 Modicator，并让光标行背景参与高亮计算
+    -- 初始化 Modicator；仅 Visual 模式使用模式背景色
     set_mode_highlights()
-    modicator.setup({ highlights = { use_cursorline_background = true } })
+    modicator.setup({ highlights = { use_cursorline_background = false } })
 
     -- 按当前编辑模式设置光标行高亮
     local function update_cursorline()

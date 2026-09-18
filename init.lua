@@ -118,6 +118,8 @@ hi CursorLine guibg=#2a2b3c ctermbg=235
 hi CursorLineNr cterm = bold gui = bold guifg=#ff966c
 " 搜索的结果中当前的块的背景颜色
 hi CurSearch guibg=#ff966c
+" visual/v/V 选中内容的背景颜色
+hi Visual guifg=NONE guibg=#483A58 ctermbg=238
 " set guicursor=n-v-c-sm:block-CursorLineNr,i-ci-ve:ver25,r-cr-o:hor20
 hi Search guifg=#c8d3f5 guibg=#3e68d7
 " 弹出的窗口右侧的下拉框的颜色
