@@ -201,6 +201,8 @@ local avante_window_filetypes = {
     Avante = true,
     AvanteInput = true,
     AvantePromptInput = true,
+    AvanteSelectedFiles = true,
+    AvanteTodos = true,
 }
 
 local function update_avante_window_highlight(active)
@@ -212,33 +214,38 @@ local function update_avante_window_highlight(active)
     vim.wo.winhighlight = avante_winhighlight(vim.wo.winhighlight, filetype, active)
 end
 
+local function sync_avante_window_highlights()
+    local current_filetype = vim.bo.filetype
+    local active = avante_window_filetypes[current_filetype] == true
+
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_is_valid(winid) then
+            vim.api.nvim_win_call(winid, function()
+                update_avante_window_highlight(active)
+            end)
+        end
+    end
+end
+
 local function setup_avante_window_highlight_autocmds()
     local group = vim.api.nvim_create_augroup("LipAvanteWindowHighlights", { clear = true })
     vim.api.nvim_create_autocmd("FileType", {
         group = group,
-        pattern = { "Avante", "AvanteInput", "AvantePromptInput" },
+        pattern = { "Avante", "AvanteInput", "AvantePromptInput", "AvanteSelectedFiles", "AvanteTodos" },
         callback = function()
-            local winid = vim.api.nvim_get_current_win()
-            vim.schedule(function()
-                if vim.api.nvim_win_is_valid(winid) then
-                    local active = vim.api.nvim_get_current_win() == winid
-                    vim.api.nvim_win_call(winid, function()
-                        update_avante_window_highlight(active)
-                    end)
-                end
-            end)
+            vim.schedule(sync_avante_window_highlights)
         end,
     })
     vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
         group = group,
         callback = function()
-            update_avante_window_highlight(true)
+            vim.schedule(sync_avante_window_highlights)
         end,
     })
     vim.api.nvim_create_autocmd("WinLeave", {
         group = group,
         callback = function()
-            update_avante_window_highlight(false)
+            vim.schedule(sync_avante_window_highlights)
         end,
     })
 end
