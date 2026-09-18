@@ -90,6 +90,7 @@ function M.componentsConfig()
 end
 
 function M.scrollbarConfig()
+    table.insert(require("scrollbar.config").get().excluded_buftypes, "nofile")
     table.insert(require("scrollbar.config").get().excluded_filetypes, "grug-far")
     vim.list_extend(require("scrollbar.config").get().excluded_filetypes, {
         "Avante",
