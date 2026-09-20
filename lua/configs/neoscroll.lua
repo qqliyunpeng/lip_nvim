@@ -43,6 +43,9 @@ function M.defaultConfig()
         -- Use the "circular" easing function
         ["<C-b>"] = function() neoscroll.ctrl_b({ duration = 450; easing = 'circular' }) end;
         ["<C-f>"] = function() neoscroll.ctrl_f({ duration = 450; easing = 'circular' }) end;
+        ["zt"] = function() neoscroll.zt({ half_win_duration = 80 }) end;
+        ["zz"] = function() neoscroll.zz({ half_win_duration = 80 }) end;
+        ["zb"] = function() neoscroll.zb({ half_win_duration = 80 }) end;
         -- When no value is passed the `easing` option supplied in `setup()` is used
         ["<A-y>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 80 }) end;
         ["<A-w>"] = function() neoscroll.scroll(-0.1, { move_cursor=false; duration = 80 }) end;
