@@ -251,12 +251,27 @@ local function setup_avante_window_highlight_autocmds()
 end
 
 function M.avanteConfig()
+    -- Lazy.nvim 可能在 Avante 模块仍处于加载状态时再次进入配置回调
+    -- （例如上一次命令调用加载失败后）。保持回调幂等，避免重复进入
+    -- `require("avante")`。
+    if vim.g.lip_avante_configuring or vim.g.lip_avante_configured then
+        return
+    end
+    vim.g.lip_avante_configuring = true
+
     local avante_build_cpath = vim.fn.stdpath("data") .. "/lazy/avante.nvim/build/?.so"
     if not package.cpath:find(avante_build_cpath, 1, true) then
         package.cpath = package.cpath .. ";" .. avante_build_cpath
     end
 
-    require("avante").setup(avanteOpts)
+    local ok, avante = pcall(require, "avante")
+    if not ok then
+        vim.g.lip_avante_configuring = false
+        error(avante)
+    end
+    avante.setup(avanteOpts)
+    vim.g.lip_avante_configured = true
+    vim.g.lip_avante_configuring = false
     set_avante_window_highlights()
     setup_avante_window_highlight_autocmds()
 
