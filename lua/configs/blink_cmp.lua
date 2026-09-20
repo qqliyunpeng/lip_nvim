@@ -265,7 +265,7 @@ function M.blinkConfig()
         snippets = { preset = 'luasnip' },
         sources = {
             -- NOTE: Put ripgrep at the end so it has the lowest priority among sources.
-            default = { 'lsp', 'path', 'snippets', 'buffer', "yank", "ripgrep" , "copilot"},
+            default = { 'lsp', 'path', 'at_file', 'snippets', 'buffer', "yank", "ripgrep" , "copilot"},
             providers = {
                 yank = {
                     name = "yank",
@@ -276,6 +276,19 @@ function M.blinkConfig()
                         onlyCurrentFiletype = true,
                         trigger_characters = { '"' },
                         kind_icon = "󰅍",
+                    },
+                },
+                at_file = {
+                    name = "AtFile",
+                    module = "at-file",
+                    score_offset = 100,
+                    opts = {
+                        trigger       = "@",
+                        insert_format = "absolute",
+                        root          = "auto",
+                        max_entries   = 10000,
+                        cache_ttl_ms  = 5000,
+                        -- enumerator = nil, -- see below
                     },
                 },
                 copilot = {

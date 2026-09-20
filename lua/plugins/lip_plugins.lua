@@ -533,11 +533,12 @@ return {
     {
         ge("nvim_lip/blink.cmp.git"),
         dependencies = {
-            { ge("nvim_lip/blink-cmp-yanky.git"), },
-            { ge("nvim_lip/blink-cmp-copilot.git"), },
+            { ge("nvim_lip/blink-cmp-yanky.git") },
+            { ge("nvim_lip/blink-cmp-copilot.git") },
             { ge("nvim_lip/blink-ripgrep.nvim"), version = "*", },
+            { ge("nvim_lip/at-file.nvim") },
         },
-        branch = "v1",
+        version = "v1.*",
         -- event = "VeryLazy",
         event = { "InsertEnter", "CmdlineEnter" },
         build = require("configs.blink_cmp").blinkBuild(),
