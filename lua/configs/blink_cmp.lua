@@ -137,15 +137,6 @@ function M.blinkConfig()
     local cmp = require("blink.cmp")
     local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
 
-    local function default_sources()
-        local cursor = vim.api.nvim_win_get_cursor(0)
-        local line = vim.api.nvim_get_current_line():sub(1, cursor[2])
-        if line:match("![^%s!]*$") then
-            return { "insert_yanky" }
-        end
-        return { 'lsp', 'path', 'at_file', 'snippets', 'buffer', "ripgrep", "copilot" }
-    end
-
     -- Prefer LSP enum completions over yank history when both appear in the menu.
     local function enum_before_yank(a, b)
         local a_is_enum = a.kind == CompletionItemKind.Enum or a.kind == CompletionItemKind.EnumMember
