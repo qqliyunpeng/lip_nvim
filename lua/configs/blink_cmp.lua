@@ -295,11 +295,6 @@ function M.blinkConfig()
                         return line:match("![^%s!]*$") ~= nil
                     end,
                     score_offset = 100,
-                    opts = {
-                        trigger = "!",
-                        manual_trigger = true,
-                        kind_icon = "󰅍",
-                    },
                 },
                 at_file = {
                     name = "AtFile",
