@@ -156,7 +156,7 @@ return {
         end
     },
     {
-        ge("masa-laboratory/todo-comments.nvim.git"),
+        ge("nvim_lip/todo-comments.nvim.git"),
         event = "VeryLazy",
         config = function ()
             require('configs.ui_all').todoConfig()

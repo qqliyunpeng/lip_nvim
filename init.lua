@@ -190,6 +190,15 @@ hi! link SnacksPickerDir               TelescopePromptCounter
 hi! link SnacksPickerCol               TelescopePromptCounter
 hi! link SnacksPickerRow               TelescopePromptCounter
 hi! link SnacksPickerDelim             TelescopePromptCounter
+
+" todo-comments
+hi TodoSignTODO guifg=#61afef guibg=NONE
+hi TodoSignPERF guifg=#e06c75 guibg=NONE
+hi TodoSignNOTE guifg=#56b6c2 guibg=NONE
+hi TodoSignFIX  guifg=#e06c75 guibg=NONE
+hi TodoSignHACK guifg=#e5c07b guibg=NONE
+hi TodoSignTEST guifg=#e06c75 guibg=NONE
+hi TodoSignWARN guifg=#e5c07b guibg=NONE
 ]])
 
 vim.api.nvim_set_hl(0, "@keyword.conditional", { fg = "#BB8AFF" })
