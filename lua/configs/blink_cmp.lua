@@ -265,16 +265,14 @@ function M.blinkConfig()
         snippets = { preset = 'luasnip' },
         sources = {
             -- NOTE: Put ripgrep at the end so it has the lowest priority among sources.
-            default = { 'lsp', 'path', 'at_file', 'snippets', 'buffer', "yank", "ripgrep" , "copilot"},
+            default = { 'lsp', 'path', 'at_file', 'snippets', 'buffer', "insert_yanky", "ripgrep" , "copilot"},
             providers = {
-                yank = {
-                    name = "yank",
-                    module = "blink-yanky",
-                    score_offset = -10,
+                insert_yanky = {
+                    name = "InsertYanky",
+                    module = "insert_yanky",
+                    score_offset = 100,
                     opts = {
-                        minLength = 5,
-                        onlyCurrentFiletype = true,
-                        trigger_characters = { '"' },
+                        trigger = "!",
                         kind_icon = "󰅍",
                     },
                 },
