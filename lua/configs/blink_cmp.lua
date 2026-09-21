@@ -269,7 +269,7 @@ function M.blinkConfig()
             providers = {
                 insert_yanky = {
                     name = "InsertYanky",
-                    module = "insert_yanky",
+                    module = "blink-insert-yanky",
                     score_offset = 100,
                     opts = {
                         trigger = "!",

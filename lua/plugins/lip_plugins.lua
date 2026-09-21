@@ -533,10 +533,10 @@ return {
     {
         ge("nvim_lip/blink.cmp.git"),
         dependencies = {
-            { ge("nvim_lip/blink-cmp-yanky.git") },
             { ge("nvim_lip/blink-cmp-copilot.git") },
             { ge("nvim_lip/blink-ripgrep.nvim"), version = "*", },
             { ge("nvim_lip/at-file.nvim") },
+            { ge("nvim_lip/blink-insert-yanky"), commit = "76439294133a0e808258ad9138825af8488f70a5" },
         },
         version = "v1.*",
         -- event = "VeryLazy",
