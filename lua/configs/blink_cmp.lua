@@ -195,6 +195,11 @@ function M.blinkConfig()
             },
             -- ["<S-Tab>"] = { 'select_prev', 'snippet_backward', 'fallback' },
             ['<CR>']  = { 'accept', 'fallback' },
+            ['<C-y>'] = {
+                function(bcmp)
+                    return bcmp.show({ providers = { "insert_yanky" } })
+                end,
+            },
             ['<C-e>'] = { 'cancel' }, -- or {}
             ["<C-b>"] = false,
             ["<C-f>"] = false,
@@ -273,6 +278,7 @@ function M.blinkConfig()
                     score_offset = 100,
                     opts = {
                         trigger = "!",
+                        manual_trigger = true,
                         kind_icon = "󰅍",
                     },
                 },
