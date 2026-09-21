@@ -137,6 +137,15 @@ function M.blinkConfig()
     local cmp = require("blink.cmp")
     local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
 
+    local function default_sources()
+        local cursor = vim.api.nvim_win_get_cursor(0)
+        local line = vim.api.nvim_get_current_line():sub(1, cursor[2])
+        if line:match("![^%s!]*$") then
+            return { "insert_yanky" }
+        end
+        return { 'lsp', 'path', 'at_file', 'snippets', 'buffer', "ripgrep", "copilot" }
+    end
+
     -- Prefer LSP enum completions over yank history when both appear in the menu.
     local function enum_before_yank(a, b)
         local a_is_enum = a.kind == CompletionItemKind.Enum or a.kind == CompletionItemKind.EnumMember
@@ -197,6 +206,7 @@ function M.blinkConfig()
             ['<CR>']  = { 'accept', 'fallback' },
             ['<C-y>'] = {
                 function(bcmp)
+                    vim.b.blink_manual_yanky = true
                     return bcmp.show({ providers = { "insert_yanky" } })
                 end,
             },
@@ -275,6 +285,15 @@ function M.blinkConfig()
                 insert_yanky = {
                     name = "InsertYanky",
                     module = "blink-insert-yanky",
+                    enabled = function()
+                        -- 只有按下 <C-y> 手动触发，或当前输入位于 ! 触发上下文时才显示 yank history。
+                        if vim.b.blink_manual_yanky then
+                            return true
+                        end
+                        local cursor = vim.api.nvim_win_get_cursor(0)
+                        local line = vim.api.nvim_get_current_line():sub(1, cursor[2])
+                        return line:match("![^%s!]*$") ~= nil
+                    end,
                     score_offset = 100,
                     opts = {
                         trigger = "!",
@@ -343,6 +362,7 @@ function M.blinkConfig()
     vim.api.nvim_create_autocmd("User", {
         pattern = "BlinkCmpMenuClose",
         callback = function()
+            vim.b.blink_manual_yanky = false
             vim.b.copilot_suggestion_hidden = false
         end,
     })
