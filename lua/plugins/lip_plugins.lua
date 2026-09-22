@@ -254,7 +254,7 @@ return {
         opts = {
             map_bs = true,
             fast_wrap = {},
-            disable_filetype = { "TelescopePrompt", "vim", "bitbake" },
+            disable_filetype = { "TelescopePrompt", "vim", "bitbake", "AvanteInput", "AvantePromptInput", "snacks_input", "snacks_picker_input" },
         },
         config = function (_, opts)
             require("configs.autopairs").setup(opts)
