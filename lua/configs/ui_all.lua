@@ -273,6 +273,11 @@ function M.lspsagaConfig()
         lightbulb = {
             sign_priority = 9,
         },
+        code_action = {
+            keys = {
+                quit = { "q", "<C-c>" },
+            },
+        },
         finder = {
             max_height = 0.6,
             keys = {
