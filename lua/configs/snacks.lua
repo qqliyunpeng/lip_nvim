@@ -9,6 +9,26 @@ local picker_exclude = {
     "*.7z", "*.rar", "*.a1", "*.s1", "*.snalyzerinfo", "tags", "cscope.out",
 }
 
+local function prefer_devicons()
+    local snacks_icon = Snacks.util.icon
+    local devicons = require('nvim-web-devicons')
+
+    Snacks.util.icon = function(name, category, opts)
+        local icon, hl
+        if category == "filetype" then
+            icon, hl = devicons.get_icon_by_filetype(name, { default = false })
+        elseif category == "file" or category == "extension" then
+            local extension = category == "extension" and name or name:match("%.(%w+)$")
+            icon, hl = devicons.get_icon(name, extension, { default = false })
+        end
+
+        if icon then
+            return icon, hl
+        end
+        return snacks_icon(name, category, opts)
+    end
+end
+
 local open_lazygit_with_refresh = function ()
     Snacks.lazygit()
     local exclude_filetypes = {
@@ -234,6 +254,7 @@ function M.snacksConfig()
             },
         },
     })
+    prefer_devicons()
 
     Snacks.picker.actions.list_cycle_down = function(picker)
         -- local row = picker.list.cursor or 0

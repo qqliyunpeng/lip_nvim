@@ -381,7 +381,18 @@ function M.operatorsConfig()
 end
 
 function M.miniFileConfig()
+    local devicons = require('nvim-web-devicons')
+    local function file_prefix(entry)
+        if entry.fs_type == 'directory' then
+            return ' ', 'MiniFilesDirectory'
+        end
+
+        local icon, hl = devicons.get_icon(entry.name, nil, { default = false })
+        return (icon or '') .. ' ', hl or 'MiniFilesFile'
+    end
+
     require('mini.files').setup({
+        content = { prefix = file_prefix },
         windows = {
             preview = true,
             width_focus = 30,
