@@ -166,6 +166,7 @@ local avanteOpts = {
 }
 
 local max_avante_history_sessions = 50
+local avante_thinking_icon = require("configs.icons").use_ascii_icons() and "[?]" or "󱍋"
 
 local function set_avante_window_highlights()
     pcall(vim.api.nvim_set_hl, 0, "AvanteSidebarNormal", { link = "Normal" })
@@ -298,6 +299,20 @@ function M.avanteConfig()
         vim.g.lip_avante_configuring = false
         error(avante)
     end
+
+    local Utils = require("avante.utils")
+    if not rawget(Utils, "_lip_single_width_thinking_icon") then
+        local original_icon = Utils.icon
+        Utils.icon = function(icon, fallback)
+            if icon == "🤔 " then
+                icon = avante_thinking_icon .. " "
+                fallback = icon
+            end
+            return original_icon(icon, fallback)
+        end
+        rawset(Utils, "_lip_single_width_thinking_icon", true)
+    end
+
     avante.setup(avanteOpts)
     disable_avante_quitpre()
     vim.g.lip_avante_configured = true
