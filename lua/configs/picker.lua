@@ -32,7 +32,7 @@ function M.grep_word()
     if M.is_fff() then
         require('fff').live_grep_under_cursor()
     else
-        require('snacks').picker.grep_word()
+        require('snacks').picker.grep_word({ live = true })
     end
 end
 

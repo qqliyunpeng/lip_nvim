@@ -170,7 +170,7 @@ function M.snacksConfig()
             sources = {
                 files = { exclude = picker_exclude },
                 grep = { exclude = picker_exclude },
-                grep_word = { exclude = picker_exclude },
+                grep_word = { exclude = picker_exclude, args = {} },
             },
             win = snacksKeys,
             db  = { sqlite3_path = db_path .. '/snacks_history.sqlite3', }

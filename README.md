@@ -326,15 +326,44 @@ rm ~/.local/state/nvim/swap/*
 |-----|------|--------|
 | `<A-/>` | n/x | 搜索当前词或视觉选择内容 |
 | `<leader>fc` | n/x | picker 搜索当前词或视觉选择内容 |
+| `<leader>fw` | n/x | picker 搜索 |
 | `<leader>sr` | n/v | 打开 grug-far 查找替换 |
 | `m` | n/x/o | Flash jump |
 | `gl` | n/x/o | Flash 行首跳转 |
 | `]]` / `[[` | n/t | 下一个/上一个引用 |
 
-搜索当前光标下单词时：
 
-- 默认不是全词匹配。
-- 需要全词匹配时，可在搜索参数里把 `-F` 改成 `-w`。
+#### snacks picker 搜索参数
+
+`<leader>fw`、`<leader>fc` 这类 snacks grep picker 的输入框支持直接追加 ripgrep 参数：`--` 之前是搜索模式，`--` 之后原样传给 `rg`。
+
+```text
+malloc -- -i -g *.c -g *.h
+```
+
+| 参数 | 含义 | 示例 |
+|------|------|------|
+| `-i` | 忽略大小写 | `foo -- -i` |
+| `-s` | 区分大小写 | `Foo -- -s` |
+| `-F` | 按字面量匹配，不当正则 | `a.b -- -F` |
+| `-w` | 全词匹配 | `init -- -w` |
+| `-g *.c` | 只搜匹配的文件 | `-g *.c -g *.h` |
+| `-g !*.o` | 排除匹配的文件 | `-g !*.o` |
+| `-t cpp` | 按 rg 文件类型搜索 | `-t cpp` |
+| `-T python` | 排除文件类型 | `-T python` |
+| `-U` | 跨行匹配 | `-- -U` |
+| `--hidden` | 包含隐藏文件 | `-- --hidden` |
+| `--no-ignore` | 包含被 ignore 的文件 | `-- --no-ignore` |
+
+注意：
+
+- 默认忽略大小写：grep 走 `rg --smart-case`，即搜索词全为小写时忽略大小写，一旦出现大写字母就区分大小写；需要始终忽略大小写时在输入框加 `-i`。
+- files 等文件 picker 的 matcher 同样是 `smartcase` + `ignorecase`，行为与上面一致。
+- `--` 前后都要有空格。
+- 参数不要加引号：`-g '*.c'` 会把引号当成 glob 的一部分而匹配不到，写 `-g *.c`。
+- 只对 grep 类 picker 生效（`<leader>fw`、`<leader>fc`），`<leader>ff` 等文件 picker 不支持。
+- 常用参数也可以固化到配置里：`lua/configs/picker.lua` 的 `grep_word({ ... })`，或 `lua/configs/snacks.lua` 中 `sources.grep` / `sources.grep_word` 的 `args`、`glob`、`ft`、`hidden` 等字段。
+- 带 `--` 的输入会进入 picker 历史，可重复调用。
 
 ### LSP
 
