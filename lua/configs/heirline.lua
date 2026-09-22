@@ -276,6 +276,44 @@ local VisualSelection = {
     end,
 }
 
+local AvanteSubmitHint = {
+    condition = function()
+        return vim.bo.filetype == "AvanteInput" or vim.bo.filetype == "AvantePromptInput"
+    end,
+    provider = function()
+        local submit = require("avante.config").mappings.submit
+        local key = vim.fn.mode() == "i" and submit.insert or submit.normal
+        return key .. ": submit"
+    end,
+    hl = { fg = utils.get_highlight("AvantePopupHint").fg },
+    update = { "ModeChanged" },
+}
+
+local AvanteInputStatusLine = {
+    condition = function()
+        return conditions.is_active() and AvanteSubmitHint.condition()
+    end,
+    hl = { fg = "fg", bg = "bg" },
+    {
+        provider = function()
+            local winid = tonumber(vim.g.statusline_winid) or vim.api.nvim_get_current_win()
+            local win_col = vim.api.nvim_win_get_position(winid)[2]
+            local boundary = win_col + vim.api.nvim_win_get_width(winid)
+            return "%-" .. boundary .. "("
+        end,
+    },
+    { ViMode }, Space, Space,
+    ProjectName, Space, Space,
+    lib.component.git_branch(),
+    lib.component.git_diff(),
+    { FileNameBlock },
+    Align,
+    Space,
+    AvanteSubmitHint,
+    { provider = "%)" },
+    Align,
+}
+
 local AvanteState = {
     condition = function()
         return is_avante_buffer() and vim.g.avante_heirline_state ~= nil
@@ -421,7 +459,11 @@ function M.config()
     -- show one statusline in bottom
     vim.cmd("set laststatus=3")
     heirline.setup({
-        statusline = StatusLine,
+        statusline = {
+            fallthrough = false,
+            AvanteInputStatusLine,
+            StatusLine,
+        },
     })
 end
 

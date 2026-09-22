@@ -396,11 +396,18 @@ function M.avanteConfig()
     -- the sidebar opens. With Codex ACP this can restore the previous session
     -- and show "generating" immediately, so suppress only that empty submit.
     local ok_sidebar, Sidebar = pcall(require, "avante.sidebar")
-    if ok_sidebar and not Sidebar._lip_input_hint_at_bottom then
-        Sidebar.get_input_float_window_row = function(self)
-            return math.max(vim.api.nvim_win_get_height(self.containers.input.winid) - 1, 0)
+    if ok_sidebar and not Sidebar._lip_input_hint_in_heirline then
+        Sidebar.show_input_hint = function(self)
+            self:close_input_hint()
         end
-        Sidebar._lip_input_hint_at_bottom = true
+        Sidebar._lip_input_hint_in_heirline = true
+    end
+    local ok_prompt_input, PromptInput = pcall(require, "avante.ui.prompt_input")
+    if ok_prompt_input and not PromptInput._lip_input_hint_in_heirline then
+        PromptInput.show_shortcuts_hints = function(self)
+            self:close_shortcuts_hints()
+        end
+        PromptInput._lip_input_hint_in_heirline = true
     end
     if ok_sidebar and not Sidebar._lip_tab_enters_input_insert then
         local original_switch_window_focus = Sidebar.switch_window_focus
