@@ -26,8 +26,8 @@ function M.miniSurroundConfig()
             highlight = '',
             update_n_lines = '<leader>sn',
 
-            suffix_last = 'F',
-            suffix_next = 'f',
+            suffix_last = '',
+            suffix_next = '',
         },
         custom_surroundings = {
             ["("] = {
