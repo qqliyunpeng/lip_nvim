@@ -378,6 +378,14 @@ function M.operatorsConfig()
             prefix = 'gzs',
         }
     })
+
+    -- Visual 模式下直接使用括号或引号包裹选中内容
+    for _, char in ipairs({ "(", "'", '"', "`" }) do
+        vim.keymap.set("x", char, "<leader>sa" .. char, {
+            remap = true,
+            desc = "Surround selection with " .. char,
+        })
+    end
 end
 
 function M.miniFileConfig()
