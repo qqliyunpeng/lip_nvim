@@ -250,6 +250,35 @@ local function setup_avante_window_highlight_autocmds()
     })
 end
 
+local function disable_avante_quitpre()
+    -- Avante 默认按所有非侧栏窗口判断退出，会把浮动辅助窗口也计算在内；
+    -- 移除默认逻辑，改由下方的普通文件窗口数量决定是否关闭侧栏。
+    local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
+        group = "avante_autocmds",
+        event = "QuitPre",
+    })
+    if not ok then return end
+
+    for _, autocmd in ipairs(autocmds) do
+        pcall(vim.api.nvim_del_autocmd, autocmd.id)
+    end
+end
+
+local function count_file_windows()
+    local count = 0
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        -- sp/vs 创建的文件窗口分别计数，浮动窗口和无实际文件的辅助窗口不计。
+        if vim.api.nvim_win_get_config(win).relative == ""
+            and vim.bo[buf].buftype == ""
+            and vim.api.nvim_buf_get_name(buf) ~= ""
+        then
+            count = count + 1
+        end
+    end
+    return count
+end
+
 function M.avanteConfig()
     -- Lazy.nvim 可能在 Avante 模块仍处于加载状态时再次进入配置回调
     -- （例如上一次命令调用加载失败后）。保持回调幂等，避免重复进入
@@ -270,6 +299,7 @@ function M.avanteConfig()
         error(avante)
     end
     avante.setup(avanteOpts)
+    disable_avante_quitpre()
     vim.g.lip_avante_configured = true
     vim.g.lip_avante_configuring = false
     set_avante_window_highlights()
@@ -574,6 +604,7 @@ function M.avanteConfig()
         callback = function()
             local has_qf = false
             local has_avante = false
+            local file_window_count = count_file_windows()
 
             for _, win in ipairs(vim.api.nvim_list_wins()) do
                 local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
@@ -597,7 +628,11 @@ function M.avanteConfig()
                 end)
             end
 
-            if has_avante then
+            local current_buf = vim.api.nvim_get_current_buf()
+            if has_avante
+                and vim.bo[current_buf].buftype == ""
+                and file_window_count == 1
+            then
                 pcall(function()
                     vim.cmd("AvanteToggle")
                 end)
@@ -608,6 +643,8 @@ end
 
 M._test = {
     avante_winhighlight = avante_winhighlight,
+    count_file_windows = count_file_windows,
+    disable_avante_quitpre = disable_avante_quitpre,
     set_avante_window_highlights = set_avante_window_highlights,
 }
 
