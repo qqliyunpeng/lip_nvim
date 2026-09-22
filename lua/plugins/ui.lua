@@ -70,7 +70,7 @@ return {
         priority = 1000,
         lazy = false,
         keys = function ()
-            return require("configs.snacks").snacksKeys
+            return require("configs.snacks").keys
         end,
         init = function ()
             return require("configs.snacks").snacksInit()

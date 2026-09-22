@@ -61,7 +61,7 @@ local open_lazygit_with_refresh = function ()
 end
 
 
-M.snacksKeys = {
+M.keys = {
     { "<leader>gb", function() Snacks.git.blame_line() end,     desc = "View Git blame" },
     { "<leader>gl", function() Snacks.lazygit.log_file() end,   desc = "View Git log(current)" },
     { "<leader>gg", function() open_lazygit_with_refresh() end, desc = "Lazygit" },
@@ -143,12 +143,12 @@ local picker_layouts = {
     }
 }
 
-local snacksKeys = {
+local picker_win = {
     input = {
         keys = {
             ["<Down>"] = { "history_forward", mode = { "i", "n" } },
             ["<Up>"] = { "history_back", mode = { "i", "n" } },
-            ["<C-c>"] = { "close", mode = { "i", "n" } },
+            ["<C-c>"] = { "cancel", mode = { "i", "n" } },
             ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
             ["<C-j>"] = { "list_cycle_down", mode = { "i", "n" } },
             ["<C-k>"] = { "list_cycle_up", mode = { "i", "n" } },
@@ -156,7 +156,7 @@ local snacksKeys = {
     },
     list = {
         keys = {
-            ["<C-c>"] = { "close", mode = { "i", "n" } },
+            ["<C-c>"] = { "cancel", mode = { "i", "n" } },
             ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
             ["<c-j>"] = "list_cycle_down",
             ["<c-k>"] = "list_cycle_up",
@@ -164,7 +164,7 @@ local snacksKeys = {
     },
     preview = {
         keys = {
-            ["<C-c>"] = { "close", mode = { "i", "n" } },
+            ["<C-c>"] = { "cancel", mode = { "i", "n" } },
             ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
         }
     },
@@ -192,7 +192,7 @@ function M.snacksConfig()
                 grep = { exclude = picker_exclude },
                 grep_word = { exclude = picker_exclude, args = {} },
             },
-            win = snacksKeys,
+            win = picker_win,
             db  = { sqlite3_path = db_path .. '/snacks_history.sqlite3', }
         },
         scroll = {
