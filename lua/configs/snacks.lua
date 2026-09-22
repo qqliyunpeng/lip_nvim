@@ -53,7 +53,7 @@ M.snacksKeys = {
     { "<leader>S",   function() Snacks.scratch.select() end,   desc = "Select Scratch Buffer" },
     { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
     { "<leader>fu",  function() Snacks.picker.undo() end,      desc = "Find undo history" },
-    { "<leader>fc",  function() Snacks.picker.grep_word() end, desc = "Search cur word", mode = { "n", "x" } },
+    -- { "<leader>fc",  function() Snacks.picker.grep_word() end, desc = "Search cur word", mode = { "n", "x" } },
     { "<leader>fl",  function() Snacks.picker.lines() end,     desc = "Search Buffer linse" },
 }
 

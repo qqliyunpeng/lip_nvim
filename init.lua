@@ -112,6 +112,7 @@ hi! link IlluminatedWordWrite  HlSearchLens
 hi Normal guibg=black ctermbg=black
 "hi NormalNC guibg=black ctermbg=black
 hi LineNr guibg=NONE ctermbg=NONE
+hi SignColumn guibg=NONE ctermbg=NONE
 " 当前行
 hi CursorLine guibg=#2a2b3c ctermbg=235
 " 当前行号
@@ -199,6 +200,9 @@ hi TodoSignFIX  guifg=#e06c75 guibg=NONE
 hi TodoSignHACK guifg=#e5c07b guibg=NONE
 hi TodoSignTEST guifg=#e06c75 guibg=NONE
 hi TodoSignWARN guifg=#e5c07b guibg=NONE
+
+" FFF
+hi FFFPicerTitle guifg=#95C077 guibg=Black
 ]])
 
 vim.api.nvim_set_hl(0, "@keyword.conditional", { fg = "#BB8AFF" })
