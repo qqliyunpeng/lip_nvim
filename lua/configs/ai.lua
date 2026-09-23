@@ -1,4 +1,5 @@
 local M = {}
+local use_ascii_icons = require("configs.icons").use_ascii_icons()
 
 -- NOTE: Copilot config intentionally kept separate from llm.nvim and Avante.
 local copileOpts = {
@@ -142,6 +143,9 @@ local avanteOpts = {
         position = "left", -- the position of the sidebar
         wrap = true, -- similar to vim.o.wrap
         width = 40, -- default % based on available width
+        spinner = {
+            thinking = use_ascii_icons and { "?" } or { "󱍋" },
+        },
         sidebar_header = {
             enabled = false, -- true, false to enable/disable the header
             align = "left", -- left, center, right for title
@@ -166,7 +170,7 @@ local avanteOpts = {
 }
 
 local max_avante_history_sessions = 50
-local avante_thinking_icon = require("configs.icons").use_ascii_icons() and "[?]" or "󱍋"
+local avante_thinking_icon = use_ascii_icons and "[?]" or "󱍋"
 
 local function set_avante_window_highlights()
     pcall(vim.api.nvim_set_hl, 0, "AvanteSidebarNormal", { link = "Normal" })
