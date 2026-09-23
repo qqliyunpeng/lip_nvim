@@ -125,7 +125,11 @@ return {
                 providers = { 'lsp', 'treesitter', 'regex' },
                 delay = 100,
                 -- disable in below
-                filetypes_denylist = { 'dirbuf', 'dirvish', 'fugitive', 'NvimTree' },
+                filetypes_denylist = {
+                    'dirbuf', 'dirvish', 'fugitive', 'NvimTree',
+                    'Avante', 'AvanteSelectedFiles', 'AvanteInput', 'AvantePromptInput',
+                    'snacks_input', 'snacks_picker_input',
+                },
                 filetypes_allowlist = {'python', 'lua', 'c', 'cpp'},
                 large_file_cutoff = 10000,
                 should_enable = cursor_on_keyword,
