@@ -128,7 +128,7 @@ return {
                 filetypes_denylist = {
                     'dirbuf', 'dirvish', 'fugitive', 'NvimTree',
                     'Avante', 'AvanteSelectedFiles', 'AvanteInput', 'AvantePromptInput',
-                    'snacks_input', 'snacks_picker_input',
+                    'snacks_input', 'snacks_picker_input', 'snacks_terminal',
                 },
                 filetypes_allowlist = {'python', 'lua', 'c', 'cpp'},
                 large_file_cutoff = 10000,
