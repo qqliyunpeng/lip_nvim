@@ -642,7 +642,7 @@ return {
     },
     {
         ge("nvim_lip/avante.nvim.git"),
-        branch = 'main',
+        tag = "v0.3.1",
         build = vim.fn.has("win32") ~= 0
             and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
             or function(plugin)
