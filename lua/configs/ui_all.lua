@@ -364,6 +364,15 @@ function M.whichKeyConfig()
     local opts = {
         preset = "helix",
         defaults = {},
+        -- 仅对这些前缀显示 which-key，避免普通按键/鼠标事件误触发
+        triggers = {
+            { "<leader>", mode = { "n", "v" } },
+            { "'", mode = { "n", "v" } },
+            { '"', mode = { "n", "v" } },
+            { "`", mode = { "n", "v" } },
+            { "g", mode = { "n", "v" } },
+            { "z", mode = { "n", "v" } },
+        },
         spec = {
             {
                 mode = { "n", "v" },
