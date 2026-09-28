@@ -215,6 +215,9 @@ function M.snacksConfig()
             enabled = true,
             timeout = 4000,
             width = { min = 40, max = 0.7 },
+            -- Snacks 默认会在通知左右各增加一个真实的窗口单元格；
+            -- 右侧单元格会显示成“不是空格的灰色背景”。
+            padding = false,
         },
         dashboard = {
             enabled = true,

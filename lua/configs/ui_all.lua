@@ -233,11 +233,14 @@ function M.whitespaceConfig()
             'Avante',
             'AvanteInput',
             'AvantePromptInput',
+            'AvanteSelectedFiles',
+            'AvanteTodos',
             'grug-far',
         },
-        ignore_terimal = true,
+        ignore_terminal = true,
         return_cursor = true,
     })
+
     vim.keymap.set('n', '<leader><Space>', require('whitespace-nvim').trim)
 
     Snacks.toggle({
