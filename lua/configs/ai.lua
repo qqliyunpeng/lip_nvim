@@ -37,7 +37,7 @@ function M.copileConfig()
 end
 
 local avanteOpts = {
-    provider = "codex",
+    provider = "pi",
     session_recovery = {
         include_history_count = 1,
     },
@@ -53,6 +53,10 @@ local avanteOpts = {
             env = {
                 OPENAI_API_KEY = os.getenv("CHATGPT_API_KEY"),
             },
+        },
+        pi = {
+            command = "pi-acp",
+            args = {},
         },
     },
     providers = {

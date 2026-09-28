@@ -673,6 +673,7 @@ return {
             { "<leader>an", "<Plug>(AvanteAskNew)",  mode = { "n", "v" }, desc = "Avante new ask" },
             { "<leader>az", "<Plug>(AvanteZenMode)", mode = { "n", "v" }, desc = "Avante zen mode" },
             { "<leader>ae", "<Plug>(AvanteEdit)", mode = "v", desc = "Avante edit" },
+            { "<leader>ap", "<cmd>AvanteSwitchProvider pi<cr>", mode = "n", desc = "Avante use pi" },
         },
         version = false, -- 永远不要将此值设置为 "*"！永远不要！
         dependencies = {
