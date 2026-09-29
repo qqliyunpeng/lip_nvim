@@ -28,7 +28,10 @@ function M.setDefault()
     end
     persisted.setup({
         save_dir = vim.fn.expand(vim.fn.stdpath("data") .. "/sessions/"),
+        -- 仅对 .session_allowed_dirs.lua 中配置的工程自动恢复会话。
+        -- 未配置的目录（例如 lazy 插件目录）保持 Snacks dashboard。
         autoload = true,
+        allowed_dirs = allowed_dirs,
         use_git_branch = true,
         should_save = function ()
             return utils.dirs_match(vim.fn.getcwd(), allowed_dirs)
