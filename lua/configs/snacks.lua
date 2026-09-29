@@ -9,7 +9,7 @@ local picker_exclude = {
     "*.7z", "*.rar", "*.a1", "*.s1", "*.snalyzerinfo", "tags", "cscope.out",
 }
 
-local function prefer_devicons()
+function M.preferDevicons()
     local snacks_icon = Snacks.util.icon
     local devicons = require('nvim-web-devicons')
 
@@ -257,8 +257,6 @@ function M.snacksConfig()
             },
         },
     })
-    prefer_devicons()
-
     Snacks.picker.actions.list_cycle_down = function(picker)
         -- local row = picker.list.cursor or 0
         -- vim.print(string.format("%d/%d", row, picker.list:count()))

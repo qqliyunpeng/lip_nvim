@@ -73,6 +73,7 @@ end
 function M.treesitterConfig()
     local treesitter = require("nvim-treesitter")
     local disabled_filetypes = {
+        snacks_dashboard = true,
         AvanteInput = true,
         AvantePromptInput = true,
         AvanteSelectedFiles = true,

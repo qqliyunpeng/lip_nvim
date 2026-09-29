@@ -10,8 +10,10 @@ return {
     },
     {
         ge("nvim_lip/nvim-web-devicons.git"),
+        event = { "BufReadPost", "BufNewFile" },
         config = function ()
             require("configs.ui_all").deviconsConfig()
+            require("configs.snacks").preferDevicons()
         end
     },
     {

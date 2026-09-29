@@ -155,7 +155,7 @@ return {
         -- 语法高亮
         ge("nvim_lip/nvim-treesitter.git"),
         branch = "main",
-        lazy = false,
+        event = { "BufReadPost", "BufNewFile" },
         build = ":TSUpdate",
         config = function()
             require("configs.treesitter").treesitterConfig()
