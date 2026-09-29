@@ -1,6 +1,6 @@
 local M = {}
 
-local db_path = os.getenv('HOME') .. '/.local/share/nvim/databases'
+local db_path = vim.fn.stdpath('data') .. '/databases'
 
 local picker_exclude = {
     "*.d", "*.o", "*.zip", "*.tar", "*.tar.gz",
