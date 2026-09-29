@@ -425,13 +425,6 @@ function M.avanteConfig()
         end
         Sidebar._lip_input_hint_in_heirline = true
     end
-    local ok_prompt_input, PromptInput = pcall(require, "avante.ui.prompt_input")
-    if ok_prompt_input and not PromptInput._lip_input_hint_in_heirline then
-        PromptInput.show_shortcuts_hints = function(self)
-            self:close_shortcuts_hints()
-        end
-        PromptInput._lip_input_hint_in_heirline = true
-    end
     if ok_sidebar and not Sidebar._lip_tab_enters_input_insert then
         local original_switch_window_focus = Sidebar.switch_window_focus
         Sidebar.switch_window_focus = function(self, direction)
