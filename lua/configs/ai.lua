@@ -37,7 +37,7 @@ function M.copileConfig()
 end
 
 local avanteOpts = {
-    provider = "pi",
+    provider = "codex",
     session_recovery = {
         include_history_count = 1,
     },
