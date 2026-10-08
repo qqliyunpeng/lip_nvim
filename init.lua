@@ -1,5 +1,9 @@
 
 local map = vim.keymap.set
+
+-- 普通 :q/:qa 遇到未保存缓冲区时显示 Neovim 原生确认。
+vim.o.confirm = true
+
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 

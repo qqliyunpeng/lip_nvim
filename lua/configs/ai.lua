@@ -625,6 +625,14 @@ function M.avanteConfig()
 
     vim.api.nvim_create_autocmd("QuitPre", {
         callback = function()
+            -- 有未保存修改时交给 Neovim 原生退出确认（yes/no），
+            -- 不要先关闭窗口而打断确认流程。
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].modified then
+                    return
+                end
+            end
+
             local has_qf = false
             local has_avante = false
             local file_window_count = count_file_windows()
