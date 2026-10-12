@@ -642,7 +642,7 @@ return {
     },
     {
         ge("nvim_lip/avante.nvim.git"),
-        tag = "v0.3.1",
+        tag = "v0.4.0",
         build = vim.fn.has("win32") ~= 0
             and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
             or function(plugin)
@@ -680,6 +680,8 @@ return {
             ge("suyelu/plenary.nvim"),
             ge("nvim_lip/nui.nvim.git"),
             ge("nvim_lip/copilot.lua.git"), -- 用于 providers='copilot'
+            -- v0.4.0 起 :Avante 命令用 mega.cmdparse 解析参数
+            { require("lip.utils").gh("ColinKennedy/mega.cmdparse"), dependencies = { require("lip.utils").gh("ColinKennedy/mega.logging") } },
         },
         config = function()
             require("configs.ai").avanteConfig()
