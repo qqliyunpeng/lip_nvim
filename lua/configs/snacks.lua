@@ -189,7 +189,19 @@ function M.snacksConfig()
             formatters = { file = { filename_first = true, truncate = 40 } },
             sources = {
                 files = { exclude = picker_exclude },
-                grep = { exclude = picker_exclude },
+                grep = {
+                    exclude = picker_exclude,
+                    -- 默认按字面搜索（snacks 会据此给 rg 传 --fixed-strings），
+                    -- 需要正则时在 picker 里按 <a-r> 切回 regex 模式
+                    regex = false,
+                    filter = {
+                        -- 不 trim 输入框首尾空格：空格按普通字符参与匹配
+                        -- （picker:find() 默认会把 search 首尾空白去掉）
+                        transform = function(picker, filter)
+                            filter.search = picker.input.filter.search
+                        end,
+                    },
+                },
                 grep_word = { exclude = picker_exclude, args = {} },
             },
             win = picker_win,
