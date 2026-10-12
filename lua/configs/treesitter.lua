@@ -47,8 +47,79 @@ function M.textobjectsConfig()
     -- map_move("[d", move.goto_previous, "@conditional.outer")
 
     local has_last_move = false
+    -- 记录最近一次是否已跳到当前函数范围边界，下一次按键才执行函数间移动。
+    local range_boundary = nil
 
+    -- 查找光标所在的函数、方法、类或结构体节点。
+    local function enclosing_function_or_structure()
+        local node = vim.treesitter.get_node()
+        while node do
+            local node_type = node:type()
+            if node_type:find("function", 1, true)
+                or node_type:find("method", 1, true)
+                or node_type:find("class", 1, true)
+                or node_type:find("struct", 1, true)
+            then
+                return node
+            end
+            node = node:parent()
+        end
+        return nil
+    end
+
+    local function cursor_position()
+        local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return row - 1, col
+    end
+
+    local function before_position(row, col, target_row, target_col)
+        return row < target_row or (row == target_row and col < target_col)
+    end
+
+    -- 第一次按键时跳到当前范围的起点或终点。
+    local function move_to_range_boundary(direction)
+        local node = enclosing_function_or_structure()
+        if not node then
+            return false
+        end
+
+        local start_row, start_col, end_row, end_col = node:range()
+        local cursor_row, cursor_col = cursor_position()
+        local target_row, target_col
+        if direction == "next" then
+            if not before_position(start_row, start_col, cursor_row, cursor_col) then
+                return false
+            end
+            if not before_position(cursor_row, cursor_col, end_row, end_col) then
+                return false
+            end
+            target_row, target_col = end_row, math.max(end_col - 1, 0)
+        else
+            if not before_position(start_row, start_col, cursor_row, cursor_col) then
+                return false
+            end
+            target_row, target_col = start_row, start_col
+        end
+
+        vim.api.nvim_win_set_cursor(0, { target_row + 1, target_col })
+        range_boundary = { direction = direction, row = target_row, col = target_col }
+        return true
+    end
+
+    local function at_range_boundary(direction)
+        if not range_boundary or range_boundary.direction ~= direction then
+            return false
+        end
+        local row, col = cursor_position()
+        return row == range_boundary.row and col == range_boundary.col
+    end
+
+    -- 正向移动：函数内部先到当前范围末端，再到下一个函数起点。
     local function smart_repeat_next()
+        if not at_range_boundary("next") and move_to_range_boundary("next") then
+            return
+        end
+        range_boundary = nil
         if has_last_move then
             ts_repeat_move.repeat_last_move_next()
         else
@@ -57,7 +128,12 @@ function M.textobjectsConfig()
         end
     end
 
+    -- 反向移动：函数内部先到当前范围起点，再到上一个函数起点。
     local function smart_repeat_prev()
+        if not at_range_boundary("prev") and move_to_range_boundary("prev") then
+            return
+        end
+        range_boundary = nil
         if has_last_move then
             ts_repeat_move.repeat_last_move_previous()
         else
