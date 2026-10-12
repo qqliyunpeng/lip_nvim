@@ -383,20 +383,26 @@ local NeoComposerStatus = {
 local VisualSeparators = {
     provider = function()
         local mode = vim.fn.mode()
-        if not mode:match("[vV]") then
+        -- getregion() 只接受基础 Visual 模式，去掉 select 状态后缀。
+        local region_type = mode:sub(1, 1)
+        if region_type ~= "v" and region_type ~= "V" and region_type ~= "" then
             return ""
         end
-        local region = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
+        -- 获取当前 Visual 选区，并把多行内容拼接成一段文本。
+        local region = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = region_type })
         local text = table.concat(region, "\n")
         local count = 0
         local label = ","
         if text:find(",", 1, true) then
+            -- 包含逗号时，统计由逗号分隔出的段落数量。
             local _, matches = text:gsub(",", "")
             count = matches + 1
+            -- 末尾逗号不算作一个空段落。
             if text:match(",%s*$") then
                 count = count - 1
             end
         else
+            -- 不包含逗号时，统计由空白分隔出的非空段落数量。
             label = "s"
             for _ in text:gmatch("%S+") do
                 count = count + 1
