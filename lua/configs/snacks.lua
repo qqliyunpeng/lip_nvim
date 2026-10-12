@@ -170,6 +170,12 @@ local picker_win = {
     },
 }
 
+-- picker:find() 默认会 trim 输入框首尾空格，这里还原成输入框原文，
+-- 让空格按普通字符参与匹配（<leader>fw / <leader>fc 共用）
+local function keep_search_spaces(picker, filter)
+    filter.search = picker.input.filter.search
+end
+
 function M.snacksConfig()
     local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
@@ -194,15 +200,13 @@ function M.snacksConfig()
                     -- 默认按字面搜索（snacks 会据此给 rg 传 --fixed-strings），
                     -- 需要正则时在 picker 里按 <a-r> 切回 regex 模式
                     regex = false,
-                    filter = {
-                        -- 不 trim 输入框首尾空格：空格按普通字符参与匹配
-                        -- （picker:find() 默认会把 search 首尾空白去掉）
-                        transform = function(picker, filter)
-                            filter.search = picker.input.filter.search
-                        end,
-                    },
+                    filter = { transform = keep_search_spaces },
                 },
-                grep_word = { exclude = picker_exclude, args = {} },
+                grep_word = {
+                    exclude = picker_exclude,
+                    args = {},
+                    filter = { transform = keep_search_spaces },
+                },
             },
             win = picker_win,
             db  = { sqlite3_path = db_path .. '/snacks_history.sqlite3', }

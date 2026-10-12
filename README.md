@@ -357,7 +357,7 @@ malloc -- -i -g *.c -g *.h
 
 注意：
 
-- `<leader>fw` 默认按字面量搜索（`lua/configs/snacks.lua` 的 `sources.grep.regex = false`，等价于 `rg --fixed-strings`）：空格和 `.`、`(` 等字符都不再当正则，输入框首尾空格也会保留参与匹配。需要正则时在 picker 里按 `<a-r>` 切到 regex 模式。
+- `<leader>fw`、`<leader>fc` 默认按字面量搜索（`lua/configs/snacks.lua` 中 `sources.grep` / `sources.grep_word` 的 `regex = false`，等价于 `rg --fixed-strings`）：空格和 `.`、`(` 等字符都不再当正则，输入框首尾空格也会保留参与匹配。需要正则时在 picker 里按 `<a-r>` 切到 regex 模式。
 - 默认忽略大小写：grep 走 `rg --smart-case`，即搜索词全为小写时忽略大小写，一旦出现大写字母就区分大小写；需要始终忽略大小写时在输入框加 `-i`。
 - files 等文件 picker 的 matcher 同样是 `smartcase` + `ignorecase`，行为与上面一致。
 - `--` 前后都要有空格。
