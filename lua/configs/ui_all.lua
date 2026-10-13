@@ -992,4 +992,19 @@ function M.interestingwordsConfig()
     vim.keymap.set("n", "<A-k>", jump_backward, { silent = true, desc = "Prev matching highlight" })
 end
 
+-- flash 的 `f` 单字符搜索期间（等待输入目标字符，或跳到某个字符后继续重复查找），按 <CR> 直接退出（等同 <Esc>）
+function M.flashConfig()
+    local ns = vim.api.nvim_create_namespace("lip_flash_char_exit")
+    local esc = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
+    vim.on_key(function(key)
+        -- 仅在 flash 的单字符搜索处于活动状态时拦截，避免影响普通 <CR>
+        local char = package.loaded["flash.plugins.char"]
+        if key == "\r" and char and (char.jumping or char.visible()) then
+            -- 丢弃 <CR> 并回放 <Esc>，让 flash 退出单字符搜索
+            vim.api.nvim_feedkeys(esc, "n", false)
+            return ""
+        end
+    end, ns)
+end
+
 return M

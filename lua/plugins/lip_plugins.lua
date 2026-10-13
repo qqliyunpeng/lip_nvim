@@ -34,6 +34,10 @@ return {
         event = "VeryLazy",
         -- type Flash.Config
         opts = {},
+        config = function(_, opts)
+            require("flash").setup(opts)
+            require("configs.ui_all").flashConfig()
+        end,
         -- stylua: ignore
         keys = {
             { "m", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
