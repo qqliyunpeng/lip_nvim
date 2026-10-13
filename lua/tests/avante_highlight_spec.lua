@@ -4,6 +4,7 @@ local calls = {}
 
 _G.vim = {
     g = {},
+    env = {},
     bo = {
         [1] = { buftype = "" },
         [2] = { buftype = "" },
