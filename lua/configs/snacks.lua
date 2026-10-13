@@ -176,6 +176,9 @@ local function keep_search_spaces(picker, filter)
     filter.search = picker.input.filter.search
 end
 
+-- grep 类 picker 标题栏上的 rg 参数提示（<leader>fw / <leader>fc 共用）
+local grep_hint = "-- 后接 rg 参数：-s 区分大小写 · -w 全词"
+
 function M.snacksConfig()
     local icons = require('configs.icons').snacksIcons()
     require('snacks').setup({
@@ -201,11 +204,13 @@ function M.snacksConfig()
                     -- 需要正则时在 picker 里按 <a-r> 切回 regex 模式
                     regex = false,
                     filter = { transform = keep_search_spaces },
+                    title = "Grep · " .. grep_hint,
                 },
                 grep_word = {
                     exclude = picker_exclude,
                     args = {},
                     filter = { transform = keep_search_spaces },
+                    title = "Grep Word · " .. grep_hint,
                 },
             },
             win = picker_win,
