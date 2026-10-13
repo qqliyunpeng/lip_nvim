@@ -170,6 +170,7 @@ return {
     },
     {
         ge("nvim_lip/nvim-ufo.git"),
+        enabled = false, -- 关闭：ufo 每次重绘都会被 decoration provider 调用（要用折叠时改回 true）
         event = "VeryLazy",
         dependencies = {
             ge("yunduozhai/promise-async.git"),

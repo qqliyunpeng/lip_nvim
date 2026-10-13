@@ -111,6 +111,7 @@ end
 function M.noiceConfig()
     local enable_conceal = false          -- Hide command text if true
     require('noice').setup({
+        throttle = 100, -- 默认 1000/30（约 30fps）会一直空转唤醒；降到 10fps
         presets = {
             bottom_search = false, -- The kind of popup used for /
             command_palette = true, -- position the cmdline and popupmenu together

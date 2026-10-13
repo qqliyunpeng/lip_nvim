@@ -153,6 +153,33 @@ function M.setup_avante()
         return true
     end
     local ok, err = pcall(function()
+        -- B2: 状态行 spinner 自循环——只在“进行中”的状态才续期。
+        -- 上游 render_state 结尾是无条件 vim.defer_fn(..., 160)，终态（succeeded/failed/…）
+        -- 也会每 160ms 重建一条 virt_lines extmark，空闲时白白触发整窗重绘。
+        local Sidebar = require("avante.sidebar")
+        if not rawget(Sidebar, "_lip_state_timer_patched") then
+            local orig_render_state = rawget(Sidebar, "render_state")
+            -- 与上游 render_state 中 spinner_char 的判定保持一致；
+            -- 若 fork 新增了“进行中”状态，需要同步加到这里。
+            local active_states = {
+                generating = true,
+                ["tool calling"] = true,
+                thinking = true,
+                compacting = true,
+            }
+            rawset(Sidebar, "render_state", function(self, ...)
+                local ret = orig_render_state(self, ...)
+                if not active_states[self.current_state] and self.state_timer then
+                    pcall(function()
+                        self.state_timer:stop()
+                    end)
+                    self.state_timer = nil
+                end
+                return ret
+            end)
+            rawset(Sidebar, "_lip_state_timer_patched", true)
+        end
+
         local Utils = require("avante.utils")
         -- avante.utils 有 __index 元表：读取未知字段会 require("avante.utils.<字段>")。
         -- 因此必须用 rawget/rawset 存标记，不能直接下标访问。
