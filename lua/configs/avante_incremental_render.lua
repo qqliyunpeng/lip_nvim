@@ -13,10 +13,29 @@
 local M = {}
 
 --------------------------------------------------------------------------------
+-- 验证开关（改完需要重启 nvim 才生效）
+--------------------------------------------------------------------------------
+-- ENABLED.takeover_render = false
+--     关掉「我们自己接管渲染」这一层，回到上游每帧整段重写的渲染方式：
+--       - 顶部 B2：render-markdown 复用未变化的 extmark（否则是「清空全部 + 重建」）
+--       - 下方 B1：avante 只从「第一行不同处」往后写 buffer（否则整段重写）
+--       - B5：只写变化尾部时顺带做的 highlight namespace 清理
+--     副作用：流式输出的闪烁 / 重复解析会回来（B2 当初就是为消除闪烁做的）。
+--     其余与渲染方式无关的补丁（流式不进渲染缓存、侧栏 undolevels、
+--     spinner 定时器、ACP 分片合并、logo extmark）继续生效，避免这些既有的
+--     内存放大项污染这次对照。
+local ENABLED = {
+    takeover_render = false,
+}
+
+--------------------------------------------------------------------------------
 -- B2: render-markdown 增量渲染
 --------------------------------------------------------------------------------
 
 function M.setup_render_markdown()
+    if not ENABLED.takeover_render then
+        return false
+    end
     if M._rm_installed then
         return true
     end
@@ -145,6 +164,144 @@ function M.setup_render_markdown()
 end
 
 --------------------------------------------------------------------------------
+-- B6: ACP 流式分片合并
+--------------------------------------------------------------------------------
+
+--- 把「连续同类的文本分片」攒起来合并成一条 update 再交给上游 handler。
+---
+--- 上游 _stream_acp 每收到一个 agent_message_chunk 就做一次
+--- `content = content .. text`（agent_thought_chunk 的 thinking 字段同理），
+--- 而 codex-acp 的分片只有几十字节级，于是整条回答会被反复整段复制：
+--- O(分片数 × 回答长度)。实测 1MB 回答 / 32B 分片要拷贝约 16GB、主线程卡 5.1s、
+--- 峰值内存 +70MB；合并后同样内容只要 3ms。
+--- 上游语义本来就是把分片追加到最后一条 assistant 消息，所以合并后最终内容不变，
+--- 只是交付频率从「每个分片」降到「每 window_ms 一次」，与侧栏 50ms 的渲染节流对齐。
+---@param handler fun(update: table): nil
+---@param window_ms? integer
+---@return fun(update: table): nil
+function M.coalesce_session_update_handler(handler, window_ms)
+    window_ms = window_ms or 50
+    local pending = nil
+    local flush
+
+    local function deliver(update)
+        if update then
+            handler(update)
+        end
+    end
+
+    flush = function()
+        if not pending then
+            return
+        end
+        local update = pending
+        pending = nil
+        update.content.text = table.concat(update._lip_chunks)
+        update._lip_chunks = nil
+        deliver(update)
+    end
+
+    return function(update)
+        -- 与上游的判定保持一致：只有 agent 正文 / 思考正文分片可以合并
+        local kind = update and update.sessionUpdate
+        local text = nil
+        if update and type(update.content) == "table" and update.content.type == "text" then
+            text = update.content.text
+        end
+        local coalescable = (kind == "agent_message_chunk" or kind == "agent_thought_chunk")
+            and type(text) == "string"
+
+        if coalescable and pending and pending.sessionUpdate == kind then
+            pending._lip_chunks[#pending._lip_chunks + 1] = text
+            return
+        end
+
+        -- 换类或来了别的 update：先把攒着的交付出去，保证顺序
+        flush()
+        if not coalescable then
+            return deliver(update)
+        end
+
+        pending = update
+        update._lip_chunks = { text }
+        vim.defer_fn(flush, window_ms)
+    end
+end
+
+--- B6: 把上面这个 wrapper 挂到 ACPClient 上。
+--- 客户端是每次 _stream_acp 时新建的（ACPClient:new），在构造时包一层最省事：
+--- 不改插件目录，`:Lazy update` 之后依然有效。
+---@return boolean
+function M.setup_acp_coalesce()
+    if M._acp_coalesce_installed then
+        return true
+    end
+    local ok, err = pcall(function()
+        local ACPClient = require("avante.libs.acp_client")
+        if rawget(ACPClient, "_lip_session_update_coalesced") then
+            M._acp_coalesce_installed = true
+            return
+        end
+        rawset(ACPClient, "_lip_session_update_coalesced", true)
+
+        local orig_new = rawget(ACPClient, "new")
+        rawset(ACPClient, "new", function(self, config)
+            local handlers = config and config.handlers
+            if
+                handlers
+                and not rawget(handlers, "_lip_coalesced")
+                and type(handlers.on_session_update) == "function"
+            then
+                rawset(handlers, "_lip_coalesced", true)
+                handlers.on_session_update = M.coalesce_session_update_handler(handlers.on_session_update)
+            end
+            return orig_new(self, config)
+        end)
+
+        M._acp_coalesce_installed = true
+    end)
+    if not ok then
+        vim.notify("avante_incremental_render: ACP 分片合并补丁失败: " .. tostring(err), vim.log.levels.WARN)
+    end
+    return M._acp_coalesce_installed == true
+end
+
+--- B7: render_logo 每次 update_content 都会被调用，并重新给 logo 那几行加 extmark，
+--- 旧的同样不会被清掉（每帧 +N 个，流式时随输出线性堆积）。这里包一层：先把上一次
+--- 的 logo 区域清掉（正文的 extmark 都在 skip_line_count 之下，不受影响），再让上游照旧重建。
+---@return boolean
+function M.setup_logo_extmarks()
+    if M._logo_installed then
+        return true
+    end
+    local ok, err = pcall(function()
+        local Sidebar = require("avante.sidebar")
+        if rawget(Sidebar, "_lip_logo_patched") then
+            M._logo_installed = true
+            return
+        end
+        -- 同一个名字拿到的 namespace id 一定相同，可以直接按名字取。
+        local result_ns = vim.api.nvim_create_namespace("AVANTE_RESULT_BUF_HL")
+        local orig_render_logo = rawget(Sidebar, "render_logo")
+        local logo_lines = 0
+        rawset(Sidebar, "render_logo", function(self, ...)
+            local result = self.containers and self.containers.result
+            if logo_lines > 0 and result and result.bufnr and vim.api.nvim_buf_is_valid(result.bufnr) then
+                vim.api.nvim_buf_clear_namespace(result.bufnr, result_ns, 0, logo_lines)
+            end
+            logo_lines = orig_render_logo(self, ...) or 0
+            return logo_lines
+        end)
+        rawset(Sidebar, "_lip_logo_patched", true)
+        M._logo_installed = true
+    end)
+    if not ok then
+        vim.notify("avante_incremental_render: logo extmark 补丁失败: " .. tostring(err), vim.log.levels.WARN)
+    end
+    return M._logo_installed == true
+end
+
+--------------------------------------------------------------------------------
 -- B1: avante 最小化 buffer 写入
 --------------------------------------------------------------------------------
 
@@ -214,6 +371,9 @@ function M.setup_avante()
             rawset(Sidebar, "_lip_stream_cache_patched", true)
         end
 
+        M.setup_acp_coalesce()
+        M.setup_logo_extmarks()
+
         local Utils = require("avante.utils")
         -- avante.utils 有 __index 元表：读取未知字段会 require("avante.utils.<字段>")。
         -- 因此必须用 rawget/rawset 存标记，不能直接下标访问。
@@ -222,6 +382,24 @@ function M.setup_avante()
         end
 
         local orig = rawget(Utils, "update_buffer_lines")
+
+        if not ENABLED.takeover_render then
+            -- 不接管写入（交回上游整段重写），但仍保留与渲染方式无关的两项：
+            -- 侧栏 buffer 关掉 undo 记录（B4）、重写前清掉该区间的 highlight extmark（B5）。
+            Utils.update_buffer_lines = function(ns_id, bufnr, old_lines, new_lines, skip_line_count)
+                skip_line_count = skip_line_count or 0
+                if vim.api.nvim_buf_is_valid(bufnr) then
+                    if Utils.is_sidebar_buffer(bufnr) and vim.bo[bufnr].undolevels ~= -1 then
+                        vim.bo[bufnr].undolevels = -1
+                    end
+                    vim.api.nvim_buf_clear_namespace(bufnr, ns_id, skip_line_count, -1)
+                end
+                return orig(ns_id, bufnr, old_lines, new_lines, skip_line_count)
+            end
+            rawset(Utils, "_lip_incremental_update_buffer_lines", true)
+            M._avante_installed = true
+            return
+        end
 
         local function build(new_lines, skip_line_count)
             local cleaned, positions = {}, {}
@@ -264,14 +442,19 @@ function M.setup_avante()
             -- 关键：只写变化尾部，保持 boundary 以上的 extmark 不被破坏
             vim.api.nvim_buf_set_lines(bufnr, boundary, -1, false, vim.list_slice(cleaned, prefix + 1))
 
+            -- B5: 上游 Line:set_highlights 走的是 vim.highlight.range，它建的是非
+            -- ephemeral 的 extmark（不传 timeout 就不会自动清除），而 nvim_buf_set_lines
+            -- 只会把被替换区间里的 extmark 折叠到末尾、并不删除。上游每帧给整段历史重上色，
+            -- 于是这个 namespace 里的幽灵 extmark 一路堆积，且永远不会被回收
+            -- （实测 1500 行 ≈ 112 万个 / +265MB）。B1 之后每帧只重上尾部，残留降到
+            -- 「每行约 3 个」（同一行重渲染几次就多几个），这里再抹平：写尾部前先把
+            -- [boundary, 末尾) 整段清掉再重新上色，boundary 以上的 extmark 保持不动。
+            vim.api.nvim_buf_clear_namespace(bufnr, ns_id, boundary, -1)
+
             for i, line in ipairs(new_lines) do
                 local line_pos = positions[i] or (skip_line_count + i - 1)
                 local next_pos = positions[i + 1] or total
                 if next_pos > boundary then
-                    if line_pos < boundary then
-                        -- 跨越边界的行：先清掉它旧的 highlight，避免重复
-                        vim.api.nvim_buf_clear_namespace(bufnr, ns_id, line_pos, line_pos + 1)
-                    end
                     if type(line.set_highlights) == "function" then
                         line:set_highlights(ns_id, bufnr, line_pos)
                     end
