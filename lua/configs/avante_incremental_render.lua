@@ -180,6 +180,40 @@ function M.setup_avante()
             rawset(Sidebar, "_lip_state_timer_patched", true)
         end
 
+        -- B3: 流式输出的那条消息不进「消息 → 渲染行」缓存。
+        -- 上游 get_message_lines 的 LRU 键是 uuid:state:text_len（容量 100），流式时
+        -- text_len 每个 chunk 都变，于是每个 chunk 都会塞进一份「整条回答」的渲染结果；
+        -- 100 份 × 回答长度 → 内存随回答线性增长，而且答完也不会立刻释放。
+        -- 流式中的消息下次渲染键必然失效，缓存本来就没有收益，跳过写入即可。
+        if not rawget(Sidebar, "_lip_stream_cache_patched") then
+            local orig_get_message_lines = rawget(Sidebar, "get_message_lines")
+            -- 与上游状态判定保持一致：只有这些状态下「最后一条消息」才是增长中的
+            local streaming_states = {
+                generating = true,
+                ["tool calling"] = true,
+                thinking = true,
+            }
+            rawset(Sidebar, "get_message_lines", function(self, ctx, message, messages, ignore_record_prefix)
+                if
+                    message
+                    and streaming_states[self.current_state]
+                    and messages
+                    and messages[#messages] == message
+                    and message.state ~= "generating"
+                    and not message.is_calling
+                then
+                    -- 复刻上游「缓存未命中」路径，只是不回写缓存
+                    local lines = self:_get_message_lines(ctx, message, messages, ignore_record_prefix)
+                    while #lines > 0 and tostring(lines[#lines]) == "" do
+                        table.remove(lines)
+                    end
+                    return lines
+                end
+                return orig_get_message_lines(self, ctx, message, messages, ignore_record_prefix)
+            end)
+            rawset(Sidebar, "_lip_stream_cache_patched", true)
+        end
+
         local Utils = require("avante.utils")
         -- avante.utils 有 __index 元表：读取未知字段会 require("avante.utils.<字段>")。
         -- 因此必须用 rawget/rawset 存标记，不能直接下标访问。
@@ -251,6 +285,16 @@ function M.setup_avante()
         end
 
         Utils.update_buffer_lines = function(ns_id, bufnr, old_lines, new_lines, skip_line_count)
+            -- B4: 侧边栏结果 buffer 只读展示，undo 没有意义，但每次 set_lines 都会留下
+            -- undo 记录（上游整段重写时是 O(chunk²) 的内存）。只对 avante 自己的
+            -- 侧边栏 buffer 关掉 undolevels，避免误伤真正的代码 buffer。
+            if
+                vim.api.nvim_buf_is_valid(bufnr)
+                and Utils.is_sidebar_buffer(bufnr)
+                and vim.bo[bufnr].undolevels ~= -1
+            then
+                vim.bo[bufnr].undolevels = -1
+            end
             local ok2, err2 = pcall(patched, ns_id, bufnr, old_lines, new_lines, skip_line_count)
             if not ok2 then
                 vim.notify(
