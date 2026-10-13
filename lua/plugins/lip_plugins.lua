@@ -344,6 +344,9 @@ return {
         config = function ()
             require('configs.ui_all').markdownConfig()
 
+            -- Plan B：render-markdown 增量渲染（复用未变化的 extmark，不整段重绘）
+            require('configs.avante_incremental_render').setup_render_markdown()
+
             local group = vim.api.nvim_create_augroup("lip_avante_render_markdown", { clear = true })
             local function set_avante_rendering(enabled)
                 for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -355,13 +358,6 @@ return {
                 end
             end
 
-            vim.api.nvim_create_autocmd("User", {
-                group = group,
-                pattern = "AvanteInputSubmitted",
-                callback = function()
-                    set_avante_rendering(false)
-                end,
-            })
             vim.api.nvim_create_autocmd("User", {
                 group = group,
                 pattern = "AvanteViewBufferUpdated",

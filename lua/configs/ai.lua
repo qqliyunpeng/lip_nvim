@@ -322,6 +322,8 @@ function M.avanteConfig()
     end
 
     avante.setup(avanteOpts)
+    -- Plan B：让流式输出只重写 buffer 尾部，配合 render-markdown 增量渲染
+    require("configs.avante_incremental_render").setup_avante()
     disable_avante_quitpre()
     vim.g.lip_avante_configured = true
     vim.g.lip_avante_configuring = false
