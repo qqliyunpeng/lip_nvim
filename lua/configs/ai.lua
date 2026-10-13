@@ -173,7 +173,7 @@ local avanteOpts = {
     },
 }
 
-local max_avante_history_sessions = 50
+local max_avante_history_sessions = 10
 local avante_thinking_icon = use_ascii_icons and "[?]" or "󱍋"
 
 local function set_avante_window_highlights()
