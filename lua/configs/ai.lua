@@ -37,7 +37,7 @@ function M.copileConfig()
 end
 
 local avanteOpts = {
-    provider = "codex",
+    provider = "pi",
     session_recovery = {
         include_history_count = 1,
     },
@@ -288,6 +288,42 @@ local function count_file_windows()
     return count
 end
 
+-- Avante 会把 ACP 的 thinking 流(大量 agent_thought_chunk)累积成一条
+-- thinking 消息并逐行展开渲染。这里在渲染出口拦截该消息,只输出一行占位,
+-- 既保留完整思考过程(不改 thinkingLevel),又不让思考刷屏。
+-- thinking 消息只用于本地显示,不会进入发给 ACP 的 prompt,因此是纯显示层改动。
+-- 渲染出口 Render.message_to_lines 是 sidebar(含全屏视图)唯一的消息渲染入口。
+local avante_thinking_placeholder = "Thinking..."
+
+local function install_avante_thinking_placeholder()
+    local ok, Render = pcall(require, "avante.history.render")
+    if not ok or Render._lip_thinking_placeholder then
+        return
+    end
+
+    local Helpers = require("avante.history.helpers")
+    local Line = require("avante.ui.line")
+    local Utils = require("avante.utils")
+
+    local original_message_to_lines = Render.message_to_lines
+    local function is_thinking_message(message)
+        if type(message) ~= "table" or type(message.message) ~= "table" then
+            return false
+        end
+        local ok, result = pcall(Helpers.is_thinking_message, message)
+        return ok and result == true
+    end
+
+    Render.message_to_lines = function(message, messages, expanded)
+        if is_thinking_message(message) then
+            return { Line:new({ { Utils.icon("🤔 ") .. avante_thinking_placeholder } }) }
+        end
+        return original_message_to_lines(message, messages, expanded)
+    end
+
+    Render._lip_thinking_placeholder = true
+end
+
 function M.avanteConfig()
     -- Lazy.nvim 可能在 Avante 模块仍处于加载状态时再次进入配置回调
     -- （例如上一次命令调用加载失败后）。保持回调幂等，避免重复进入
@@ -324,6 +360,7 @@ function M.avanteConfig()
     avante.setup(avanteOpts)
     -- Plan B：让流式输出只重写 buffer 尾部，配合 render-markdown 增量渲染
     require("configs.avante_incremental_render").setup_avante()
+    install_avante_thinking_placeholder()
     disable_avante_quitpre()
     vim.g.lip_avante_configured = true
     vim.g.lip_avante_configuring = false
@@ -678,6 +715,7 @@ M._test = {
     avante_winhighlight = avante_winhighlight,
     count_file_windows = count_file_windows,
     disable_avante_quitpre = disable_avante_quitpre,
+    install_avante_thinking_placeholder = install_avante_thinking_placeholder,
     set_avante_window_highlights = set_avante_window_highlights,
 }
 
