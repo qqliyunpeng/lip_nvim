@@ -101,10 +101,11 @@ map("n", "d", '"_d', { desc = "Delete without yanking" })
 map("n", "D", '"_D', { desc = "Delete without yanking" })
 map("n", "x", '"_x', { desc = "Delete without yanking" })
 map("n", "X", '"_X', { desc = "Delete without yanking" })
--- visual paste: replace selection without yanking, reindent pasted text, then stay in normal mode
--- `"_dP` keeps the default register intact; `` `[v`]=`` indents the last changed text and exits visual mode
-map("x", "p", '"_dP`[v`]=', { desc = "Paste over selection and reindent" })
-map("x", "P", '"_dP`[v`]=', { desc = "Paste over selection and reindent" })
+-- visual paste: replace selection without yanking, then stay in normal mode
+-- (implemented via configs.edit.visual_paste_keys; see there for why not `"_dP`)
+local visual_paste_keys = require("configs.edit").visual_paste_keys
+map("x", "p", visual_paste_keys, { desc = "Paste over selection" })
+map("x", "P", visual_paste_keys, { desc = "Paste over selection" })
 
 -- map("n", "<leader>n", "<cmd> Noice<CR>", { desc = "Notification History" })
 

@@ -301,6 +301,11 @@ function M.visualMulConfig()
     })
 end
 
+-- 可视模式粘贴：替换选中内容，不写入剪切板，并保持在普通模式。
+-- `"_c` + `<C-r><C-r>"` 会从选区起点写入寄存器内容。对整行重新缩进会
+-- 删除行首空格，并使光标移动到粘贴内容之前。
+M.visual_paste_keys = '"_c<C-r><C-r>"<Esc>'
+
 function M.pasteSmart()
     local clipboard_content = vim.fn.getreg('"')
     local ends_with_newline = clipboard_content:sub(-1) == '\n'
