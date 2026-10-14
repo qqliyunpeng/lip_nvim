@@ -475,6 +475,25 @@ function M.avanteConfig()
         end
         Sidebar._lip_tab_enters_input_insert = true
     end
+    -- Avante 只把 Tab/<S-Tab> 绑定到 n/i 模式。在 visual/visual-line/visual-block
+    -- 下按 Tab 原本没有任何反应，这里补上 x 模式的窗口切换映射。
+    if ok_sidebar and not Sidebar._lip_switch_window_in_visual_mode then
+        local Config = require("avante.config")
+        local original_setup_window_navigation = Sidebar.setup_window_navigation
+        Sidebar.setup_window_navigation = function(self, container)
+            original_setup_window_navigation(self, container)
+
+            local buf = vim.api.nvim_win_get_buf(container.winid)
+            local map_opts = { buffer = buf, noremap = true, silent = true, nowait = true }
+            vim.keymap.set("x", Config.mappings.sidebar.switch_windows, function()
+                self:switch_window_focus("next")
+            end, map_opts)
+            vim.keymap.set("x", Config.mappings.sidebar.reverse_switch_windows, function()
+                self:switch_window_focus("previous")
+            end, map_opts)
+        end
+        Sidebar._lip_switch_window_in_visual_mode = true
+    end
     -- Avante 提交时会强制聚焦输出框。仅当请求来自输入框时
     -- 拦截这一次聚焦，并在提交后保持输入窗口的 Normal 模式。
     if ok_sidebar and not Sidebar._lip_keep_input_focus_on_submit then
