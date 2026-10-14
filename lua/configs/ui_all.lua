@@ -376,6 +376,8 @@ function M.whichKeyConfig()
             { "`", mode = { "n", "v" } },
             { "g", mode = { "n", "v" } },
             { "z", mode = { "n", "v" } },
+            { "[", mode = { "n", "v" } },
+            { "]", mode = { "n", "v" } },
         },
         spec = {
             {
