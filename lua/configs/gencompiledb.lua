@@ -38,6 +38,10 @@ local function pretty_print(json_str)
         elseif not in_str and ch == ":" then
             table.insert(res, ch .. " ")
             i = i + 1
+        elseif not in_str and (ch == " " or ch == "\t" or ch == "\n" or ch == "\r") then
+            -- 跳过结构空白：json_encode 已在 ":" "," 后自带空格，
+            -- 不跳过会导致换行后每行多出一个空格（缩进错位）
+            i = i + 1
         else
             table.insert(res, ch)
             i = i + 1
@@ -46,12 +50,25 @@ local function pretty_print(json_str)
     return table.concat(res)
 end
 
+-- 规范化目录为不带尾斜杠的绝对路径（根目录 "/" 除外）
+local function abs_dir(path)
+    local p = vim.fn.fnamemodify(path, ":p")
+    if #p > 1 then
+        p = p:gsub("/+$", "")
+    end
+    return p
+end
+
 -- 生成 compile_commands.json（扫描当前目录及子目录，不执行任何编译）
 function M.generate()
     local cwd = vim.fn.getcwd()
     local output = cwd .. "/compile_commands.json"
-    local compiler = "gcc"  -- 仅用于生成命令文本
-    local cflags = "-Iinclude -DDEBUG -std=c11"
+
+    -- ---- 可调整的编译参数 ----------------------------------------------
+    local defines = {}              -- 宏定义，如 { "-DDEBUG" }（默认不添加）
+    -- 额外头文件目录（相对项目根目录，不存在会被自动跳过）
+    local extra_includes = { "include" }
+    -- --------------------------------------------------------------------
 
     -- 递归扫描当前目录下所有 .c / .cpp 文件
     local files = vim.fn.glob("**/*.c", true, true)
@@ -65,18 +82,40 @@ function M.generate()
 
     local entries = {}
     for _, file in ipairs(files) do
-        local obj = {
+        -- 头文件目录：额外目录 + 源文件所在目录 + 项目根目录（去重）
+        local includes, seen = {}, {}
+        local function add_include(dir)
+            if not dir or dir == "" then
+                return
+            end
+            local abs = abs_dir(dir)
+            if not seen[abs] then
+                seen[abs] = true
+                includes[#includes + 1] = abs
+            end
+        end
+        for _, dir in ipairs(extra_includes) do
+            if vim.fn.isdirectory(dir) == 1 then
+                add_include(dir)
+            end
+        end
+        add_include(vim.fn.fnamemodify(file, ":h"))
+        add_include(cwd)
+
+        -- arguments 只放头文件目录 (-I) 和宏定义 (-D)
+        local arguments = {}
+        for _, dir in ipairs(includes) do
+            arguments[#arguments + 1] = "-I" .. dir
+        end
+        for _, define in ipairs(defines) do
+            arguments[#arguments + 1] = define
+        end
+
+        table.insert(entries, {
             directory = cwd,
-            command = string.format(
-            "%s %s -c %s -o build/%s.o",
-            compiler,
-            cflags,
-            file,
-            vim.fn.fnamemodify(file, ":t:r")
-            ),
+            arguments = arguments,
             file = file,
-        }
-        table.insert(entries, obj)
+        })
     end
 
     -- 先用 nvim 的 json_encode 生成紧凑 JSON，再用 pretty_print 美化
