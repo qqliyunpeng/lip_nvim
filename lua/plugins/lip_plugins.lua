@@ -7,6 +7,23 @@ return {
         priority = 1000, -- Ensure it loads first
     },
     {
+        -- https://github.com/catppuccin/nvim
+        -- 用插件版：插件的 colors/catppuccin.lua 会屏蔽 nvim 自带的 $VIMRUNTIME/colors/catppuccin.vim
+        ge("nvim_lip/catppuccin.nvim"),
+        name = "catppuccin",
+        lazy = false,
+        priority = 1000, -- 传置高，保证启动时就绪，:colorscheme catppuccin 才能命中
+        opts = {
+            flavour = "mocha", -- latte / frappe / macchiato / mocha
+            background = { light = "latte", dark = "mocha" },
+            transparent_background = false,
+            -- styles 不要写成 { italic = true }：catppuccin 编译时遍历的是 value，
+            -- 要写成数组 { "italic" }；不传则用默认（comments 已是 italic）。
+            -- integrations 也不传：auto_integrations 默认开启，会自动识别已装插件
+            -- 需手动干预时再写，如 blink_cmp = { style = "bordered" }。
+        },
+    },
+    {
         ge("yunduozhai/nvim-notify.git"),
         config = function()
             local function calculate_half_width()
