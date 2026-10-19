@@ -419,6 +419,34 @@ malloc -- -i -g *.c -g *.h
 
 普通模式下 `c`、`d`、`x` 默认不复制到剪贴板，避免删除动作覆盖 yank 内容。
 
+#### 删除/修改类按键与剪贴板（规则）
+
+`clipboard=unnamedplus` 下，任何写默认寄存器（`"`）的操作都会同步写系统剪贴板，因此改变/删除类按键统一用黑洞寄存器 `"_` 包了一层（见 `lua/mappings.lua`）：
+
+| 模式 | 不写剪贴板（走 `"_`） | 写入剪贴板 |
+|------|------|------|
+| normal | `c` `C` `d` `D` `x` `X` `s` `S` | `y`（以及 `"0p` 这类显式指定寄存器的操作） |
+| visual | `x` `c` | `s` `d` |
+
+visual 下 `X` 未做映射，保持内置语义（整行删除并写寄存器）。
+SSH 会话走 OSC 52（`vim.ui.clipboard.osc52`）时规则完全一致。
+
+#### 删除/修改类按键与剪贴板（实测）
+
+测试
+
+| 操作 | 写剪贴板 | 默认寄存器 |
+|------|---------|-----------|
+| n `ciw` / `cw` / `cc` / `diw` / `dw` / `dd` | 否 | 不变 |
+| n `x` / `X` / `s` / `S` | 否 | 不变 |
+| n `yiw` / `yw` / `yy` | 是 | 被 yank 文本 |
+| v `x`（`viwx`） | 否 | 不变 |
+| v `c`（`viwc`） | 否 | 不变 |
+| v `s`（`viws`） | 是 | 选中的文本 |
+| v `d`（`viwd`） | 是 | 选中的文本 |
+| `ciq`（vim-textobj-quotes） / `cif`（treesitter textobject） | 否 | 不变 |
+
+
 ### Text Objects
 
 | Key           | Mode  | Action                  |
@@ -630,6 +658,7 @@ malloc -- -i -g *.c -g *.h
 
 ## Known Issues
 
+- **lazy.nvim `keys` 占位映射会删掉自己定义的映射**：若插件 spec 用 `keys = { "c", "d", ... }`（纯字符串、无 rhs）来懒加载，lazy 为它们建的占位映射在插件加载完成后会被 `vim.keymap.del` 删除且不会恢复，于是把 `lua/mappings.lua` 里的 `c -> "_c` / `d -> "_d` 一起删掉。表现为“会话用一会儿之后 `ciw`/`diw` 又开始把删除内容写进剪贴板”。已把 `nvim-treesitter-textobjects`、`vim-textobj-quotes` 改成 `event = "VeryLazy"` 加载。排查办法：在会话里 `:nmap c` 看映射是否还在，或用 `debug.traceback()` 包一层 `vim.keymap.del` 抓调用栈。
 - persisted session 的 workspace select UI 里，`<C-c>` 可能不会关闭窗口，而是复制 session，需要手动关闭。
 - CRLF 类型的大文件打开时可能因为 treesitter 加载变慢。例如 5000 行 `.c` 文件启动可能需要数秒。
 

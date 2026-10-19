@@ -93,14 +93,20 @@ map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 
 -- c and d 删除操作不复制到剪切板
--- x 在 normal 模式下，不复制内容到剪切板
--- x 在 visual 模式下，复制内容到剪切板，我们可以当他是 + 来记忆
+-- normal 模式下 x/s 也不写寄存器
+-- visual 模式下 x/c 不写寄存器，s/d 照旧写入寄存器（可以当它是 + 来记忆）
+-- 注意：不要把这里的 c/d/x 等单字符按键写进任何插件的 lazy.nvim `keys` 列表，
+-- lazy 为它们建的占位映射在插件加载后会被删掉，会连带删掉下面的映射。
 map("n", "c", '"_c', { desc = "Change without yanking" })
 map("n", "C", '"_C', { desc = "Change without yanking" })
 map("n", "d", '"_d', { desc = "Delete without yanking" })
 map("n", "D", '"_D', { desc = "Delete without yanking" })
 map("n", "x", '"_x', { desc = "Delete without yanking" })
 map("n", "X", '"_X', { desc = "Delete without yanking" })
+map("n", "s", '"_s', { desc = "Substitute without yanking" })
+map("n", "S", '"_S', { desc = "Substitute without yanking" })
+map("x", "x", '"_x', { desc = "Delete selection without yanking" })
+map("x", "c", '"_c', { desc = "Change selection without yanking" })
 -- visual paste: replace selection without yanking, then stay in normal mode
 -- (implemented via configs.edit.visual_paste_keys; see there for why not `"_dP`)
 local visual_paste_keys = require("configs.edit").visual_paste_keys

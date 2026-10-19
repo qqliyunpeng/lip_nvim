@@ -185,12 +185,10 @@ return {
     {
         ge("yunduozhai/nvim-treesitter-textobjects.git"),
         branch = "main",
-        keys = {
-            "c", "d", "y", "v", "V", "<C-v>",
-            "]f", "]c", "]a", "]F", "]C", "]A",
-            "[f", "[c", "[a", "[F", "[C", "[A",
-            ";", "<a-;>",
-        },
+        -- 不要把这些操作符按键写进 keys 懒加载列表：lazy.nvim 会为它们创建占位映射，
+        -- 插件加载完成后删除占位映射时，会连 mappings.lua 里的 `c -> "_c` / `d -> "_d`
+        -- 一起删掉，之后 ciw/diw 就把删除内容写进了系统剪贴板。
+        event = "VeryLazy",
         config = function()
             require("configs.treesitter").textobjectsConfig()
         end,
@@ -198,7 +196,8 @@ return {
     {
         -- vaq/viq 选中单引号或者双引号等各种引号之间的内容
         ge("nvim_lip/vim-textobj-quotes.git"),
-        keys = { "c", "d", "y", "v", "V", "<C-v>" },
+        -- 同上：用 keys 懒加载操作符键会连带清掉 mappings.lua 的黑洞寄存器映射
+        event = "VeryLazy",
         dependencies = {
             ge("duyz1218/vim-textobj-user.git"),
             -- vaj/vij 向上查找最近的 '{[('
