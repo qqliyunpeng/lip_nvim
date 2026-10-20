@@ -129,7 +129,7 @@ map("n", "<A-b>", function()
     Snacks.terminal(nil, {
         auto_insert = false,
         start_insert = false,
-        win = { wo = { winhighlight = "Normal:Normal,NormalNC:NormalNC" } },
+        win = { height = 0.3, wo = { winhighlight = "Normal:Normal,NormalNC:NormalNC" } },
     })
     if vim.bo.buftype == "terminal" then
         vim.keymap.set("n", "q", hide_terminal, { buffer = true, desc = "Terminal Hide" })
