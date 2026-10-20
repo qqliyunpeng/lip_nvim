@@ -189,6 +189,9 @@ function M.snacksConfig()
         scope     = { enabled = false },
         quickfile = { enabled = true },
         statuscolumn = { enabled = true },
+        -- y 位置本来就随 cmd 变化（<A-b> 不传 cmd，Snacks.terminal 内部就是 "bottom"），
+        -- 这里改的只是高度（split 状态默认 0.4）
+        terminal  = { win = { height = 0.3 } },
         picker    = {
             enabled = true,
             layout  = smart_layout,

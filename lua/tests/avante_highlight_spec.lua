@@ -49,6 +49,10 @@ end
 
 eq(calls.AvanteSidebarNormal.link, "Normal", "Avante sidebar uses the active window background")
 eq(calls.AvantePromptInput.link, "Normal", "Avante input uses the active window background")
+helpers.set_avante_window_highlights(false)
+eq(calls.AvanteSidebarNormal.link, "NormalNC", "Avante sidebar dims after focus leaves")
+helpers.set_avante_window_highlights(true)
+eq(calls.AvanteSidebarNormal.link, "Normal", "Avante sidebar turns black again after focus enters")
 eq(calls.deleted_autocmd, 17, "Avante's window-counting QuitPre autocmd is disabled")
 eq(helpers.count_file_windows(), 2, "split file windows are counted separately")
 eq(
@@ -60,6 +64,11 @@ eq(
     helpers.avante_winhighlight("FloatBorder:AvantePromptInputBorder,Normal:NormalNC", "AvantePromptInput", true),
     "FloatBorder:AvantePromptInputBorder,Normal:AvantePromptInput",
     "Avante prompt input restores the active window background after entering"
+)
+eq(
+    helpers.avante_winhighlight("Normal:EdgyNormal,CursorLine:Normal,Normal:AvanteSidebarNormal", "Avante", true),
+    "CursorLine:Normal,Normal:AvanteSidebarNormal",
+    "duplicate Normal mappings collapse and the desired background is applied last"
 )
 
 print("avante_highlight_spec: ok")

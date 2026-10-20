@@ -198,9 +198,14 @@ function M.windowsConfig()
                 "snacks_terminal",
                 "Avante",
                 "AvanteInput",
+                "AvanteSelectedCode",
                 "AvanteSelectedFiles",
                 "AvanteTodos",
                 "grug-far",
+                -- edgy.nvim 接管的窗口：宽度由 edgebar 统一分配，别让 autowidth 再插手
+                "OverseerList",
+                "OverseerForm",
+                "OverseerTaskAction",
             },
         },
     })

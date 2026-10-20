@@ -1,5 +1,7 @@
 local M = {}
 local use_ascii_icons = require("configs.icons").use_ascii_icons()
+-- 边栏尺寸的唯一定义源（见 configs/edgy.lua 顶部注释）
+local edgy_cfg = require("configs.edgy")
 
 -- NOTE: Copilot config intentionally kept separate from llm.nvim and Avante.
 local copileOpts = {
@@ -144,9 +146,11 @@ local avanteOpts = {
     },
 
     windows = {
+        -- position 只在 edgy 没接管时生效；接管后窗口归左侧 edgebar（configs/edgy.lua 的 left）
         position = "left", -- the position of the sidebar
         wrap = true, -- similar to vim.o.wrap
-        width = 40, -- default % based on available width
+        -- 尺寸只有一个定义源：configs/edgy.lua 的 avante_width（接管后由 edgebar 实际分配）
+        width = math.floor(edgy_cfg.avante_width * 100),
         spinner = {
             thinking = use_ascii_icons and { "?" } or { "󱍋" },
         },
@@ -157,7 +161,9 @@ local avanteOpts = {
         },
         input = {
             prefix = "> ",
-            height = 10, -- Height of the input window in vertical layout
+            -- Height of the input window in vertical layout。
+            -- 必须和 edgebar 分给 AvanteInput 的行数一致，否则会跳动（见 configs/edgy.lua）。
+            height = edgy_cfg.avante_input_height,
         },
         edit = {
             border = "rounded",
@@ -176,8 +182,9 @@ local avanteOpts = {
 local max_avante_history_sessions = 10
 local avante_thinking_icon = use_ascii_icons and "[?]" or "󱍋"
 
-local function set_avante_window_highlights()
-    pcall(vim.api.nvim_set_hl, 0, "AvanteSidebarNormal", { link = "Normal" })
+local function set_avante_window_highlights(active)
+    local sidebar_link = active == false and "NormalNC" or "Normal"
+    pcall(vim.api.nvim_set_hl, 0, "AvanteSidebarNormal", { link = sidebar_link })
     pcall(vim.api.nvim_set_hl, 0, "AvantePromptInput", { link = "Normal" })
 end
 
@@ -191,18 +198,14 @@ local function avante_winhighlight(winhl, filetype, active)
     end
 
     local pieces = {}
-    local found_normal = false
     for piece in string.gmatch(winhl or "", "[^,]+") do
-        if piece:match("^Normal:") then
-            table.insert(pieces, "Normal:" .. normal_group)
-            found_normal = true
-        else
+        if not piece:match("^Normal:") then
             table.insert(pieces, piece)
         end
     end
-    if not found_normal then
-        table.insert(pieces, "Normal:" .. normal_group)
-    end
+    -- 放到最后：winhighlight 里同名的 Normal 以后出现的为准；
+    -- edgy 在 WinEnter 时还会追加视图自己的 Normal 映射，必须让焦点状态压过它。
+    table.insert(pieces, "Normal:" .. normal_group)
     return table.concat(pieces, ",")
 end
 
@@ -226,6 +229,7 @@ end
 local function sync_avante_window_highlights()
     local current_filetype = vim.bo.filetype
     local active = avante_window_filetypes[current_filetype] == true
+    set_avante_window_highlights(active)
 
     for _, winid in ipairs(vim.api.nvim_list_wins()) do
         if vim.api.nvim_win_is_valid(winid) then
@@ -572,6 +576,73 @@ function M.avanteConfig()
             return result
         end
         Sidebar._lip_skip_empty_open_submit = true
+    end
+    -- edgy 接管 avante 容器后（configs/edgy.lua 的 M.avante = true），高度只能有一个权威。
+    -- avante 的 adjust_layout() 按「整屏行数」算自己该多高
+    -- （sidebar.lua 的 get_result_container_height = lines - input.height - selected_code
+    --  - selected_files - todos），既不知道 tabline/statusline/cmdheight，
+    -- 也不知道自己只是 40% 宽边栏里的一列；它一 nvim_win_set_height，
+    -- nvim 只能从同列的 NvimTree / 选中代码 / todos 身上扣行（实测会被压成 1 行），
+    -- 接下来 edgy 再改回来 —— 两边来回抢就是高度抖动 / 底部留白。
+    -- 因此把那四个「avante 认为自己该有多高」的 getter 改成「读当前窗口高度」：
+    -- adjust_layout() 和 render_selected_files() 里的 set_height 就都变成同一个值（空转），
+    -- 尺寸完全交给 edgebar（configs/edgy.lua 里的绝对行数）。
+    -- 容器窗口还没建或已销毁时返回原值，保证首次 mount 仍能正常开窗。
+    if ok_sidebar and edgy_cfg.avante and not Sidebar._lip_edgy_owns_heights then
+        local function live_height(container)
+            if not container or type(container.winid) ~= "number" then
+                return nil
+            end
+            if not vim.api.nvim_win_is_valid(container.winid) then
+                return nil
+            end
+            return vim.api.nvim_win_get_height(container.winid)
+        end
+
+        for _, spec in ipairs({
+            { getter = "get_result_container_height", container = "result" },
+            { getter = "get_selected_code_container_height", container = "selected_code" },
+            { getter = "get_selected_files_container_height", container = "selected_files" },
+            { getter = "get_todos_container_height", container = "todos" },
+        }) do
+            local original = Sidebar[spec.getter]
+            Sidebar[spec.getter] = function(self, ...)
+                local height = live_height(self.containers and self.containers[spec.container])
+                if height then
+                    return height
+                end
+                return original(self, ...)
+            end
+        end
+        Sidebar._lip_edgy_owns_heights = true
+    end
+
+    -- edgy 的 BufWinEnter layout 是同步的，而 Avante 的 render() 会连续 mount
+    -- result / input / selected_files 等多个 nui Split。中途提前排版会让 input
+    -- 先占满整列，随后 nui 缩回 10 行时多出的行被塞进 cmdheight，heirline 就会
+    -- 停在上半屏。render 期间暂停 edgy layout，结束后再补一次排版；同时把
+    -- cmdheight 恢复成打开前的值，避免残留空白。
+    if ok_sidebar and edgy_cfg.avante and not Sidebar._lip_edgy_pause_render then
+        local original_render = Sidebar.render
+        Sidebar.render = function(self, opts)
+            local cmdheight = vim.o.cmdheight
+            vim.g.lip_edgy_pause = true
+            local ok_render, result = pcall(original_render, self, opts)
+            vim.g.lip_edgy_pause = nil
+            if vim.o.cmdheight ~= cmdheight then
+                vim.o.cmdheight = cmdheight
+            end
+            if not ok_render then
+                error(result)
+            end
+            vim.schedule(function()
+                pcall(function()
+                    require("edgy.layout").update()
+                end)
+            end)
+            return result
+        end
+        Sidebar._lip_edgy_pause_render = true
     end
 
     -- Avante 选择编辑会在构建提示词前创建新的 ACP 会话。

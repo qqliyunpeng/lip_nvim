@@ -43,6 +43,21 @@ return {
         end
     },
     {
+        -- 侧边栏 / 面板窗口统一布局：https://github.com/folke/edgy.nvim
+        -- 只接管 configs/edgy.lua 里登记过的 ft，其余插件窗口不受影响
+        ge("nvim_lip/edgy.nvim"),
+        branch = "main",
+        event = "VeryLazy",
+        init = function()
+            -- edgebar 只有在全局状态栏下才能整体折叠（heirline 已设 laststatus=3）；
+            -- 主窗口分裂时不再跟着跳动
+            vim.o.splitkeep = "screen"
+        end,
+        opts = function()
+            return require("configs.edgy").opts()
+        end,
+    },
+    {
         --  [better ui elements]
         ge("yunduozhai/dressing.nvim.git"),
         event = "VeryLazy",

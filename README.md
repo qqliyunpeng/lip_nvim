@@ -255,6 +255,55 @@ package.json
 <c-w> L
 ```
 
+### 侧边栏布局（edgy.nvim）
+
+`edgy.nvim` 把侧边栏 / 面板窗口固定到左右上下四条 edgebar：插件打开窗口时自动归位，不再把主编辑区拆得七零八落。
+
+它只接管 `lua/configs/edgy.lua` 里登记过的 filetype（白名单），其余窗口（snacks picker、lazygit 终端、noice、AI 浮窗）行为完全不变：
+
+| 位置 | 接管的窗口 | 尺寸 |
+|---|---|---|
+| left | `NvimTree`（`<F2>`）+ Avante：`Avante`（结果区，自适应）/ `AvanteSelectedCode` 25% / `AvanteSelectedFiles` 15% / `AvanteTodos` 8% / `AvanteInput` 20% | Avante 打开时 40% 屏宽（`M.avante_width`）；只有 NvimTree 时 30 列（`M.explorer_width`，最多 40% 屏宽）。两者**共用一个左侧 edgebar**，所以同时打开时 NvimTree 也是 40% 宽 |
+| bottom | `OverseerList` / `OverseerForm` / `OverseerTaskAction`（`<leader>ow`、`<leader>oo`） | 30% 行高 |
+| bottom | `qf`（`:copen`，或 overseer 任务失败自动填充的 quickfix） | 同上，和 Overseer 共用底部 edgebar |
+| bottom | `snacks_terminal`（`<A-b>`） | 同上 |
+
+底部 edgebar 同时有好几个窗口时会**左右并排**（这是 edgy 自己的布局规则，不按高度分）。
+
+#### Avante 侧栏交给 edgebar 后
+
+宽度只在 `configs/edgy.lua` 里定义：Avante 打开时 `M.avante_width = 0.4`，只有 NvimTree 时 `M.explorer_width = 30` 列；avante 的 `windows.width` 由前者推算，窗口的实际宽高由左 edgebar 分配，同时打开 NvimTree 时两者上下堆在同一列（所以两边的宽度一定相等）。
+
+但这层接管没有做额外 patch，而 avante 上游仍会在每次渲染 / 窗口变化时自己调 `nvim_win_set_width/height`（`adjust_*_layout`、`resize`、`toggle_code_window`），两套分配抢同一个窗口，已知会出现：
+
+| 现象 | 原因 / 补救 |
+|---|---|
+| 打开侧栏后底部多出一大块空白 | 容器窗口是 nui Split（默认 `winfixheight = true`），被搬进 edgebar 的瞬间 Neovim 无法把多余的行分给窗口，于是整块塞进 `'cmdheight'`。`configs/ai.lua` 在 Avante render 期间暂停 edgy layout，并在结束后恢复 `cmdheight`，已自动处理 |
+| 宽度偶尔抖动 / 被压扁 | avante 的 `resize`（`VimResized` 触发）和 edgebar 的 `size` 抢同一个窗口宽度 |
+| `<leader>az`（zen）退出后主窗口变成 0 宽 | 上游 zen 直接 `nvim_win_set_width(code.winid, 0)`、结果区设成 `columns - 1`，退出时恢复不回来。补救：`<c-w>=` |
+| edgebar 标题栏被清掉 | avante 建窗时会写 `winbar = ""`，需要等窗口挂稳后手动盖回去 |
+
+不想让 edgy 管 Avante 就把 `M.avante` 改回 `false`，`right` 里的 view 列表整个不注册，Avante 回到自己管布局。
+
+edgebar 窗口内的按键（edgy 默认）：
+
+| 按键 | 作用 |
+|---|---|
+| `q` | 关闭当前 edgebar 窗口 |
+| `<c-q>` | 隐藏当前 edgebar 窗口 |
+| `Q` | 关闭整条 edgebar |
+| `]w` / `[w` | 下一个 / 上一个可见 edgebar 窗口 |
+| `<c-w>>` / `<c-w><` | 加宽 / 收窄 edgebar |
+| `<c-w>+` / `<c-w>-` | 加高 / 压低 edgebar |
+| `<c-w>=` | 恢复默认尺寸 |
+
+注意：
+
+- edgebar 整体折叠依赖全局状态栏（`heirline` 里已经 `set laststatus=3`）。
+- `splitkeep=screen` 在 edgy 的 `init` 里设置，否则打开侧栏时主窗口内容会跟着跳。
+- 想临时让某个窗口不被接管：`:lua vim.b[buf].edgy_disable = true`（也可以提前写进对应 filetype 的 autocmd）。
+- `overseer` 的三个窗口和 `AvanteSelectedCode` 已加进 `configs/ui_all.lua` 中 `windows.nvim` 的 `ignore.filetype`（`NvimTree` 本来就在），避免 autowidth 和 edgebar 抢宽度。
+
 ### Clear Swap Files
 
 ```bash
@@ -661,6 +710,7 @@ SSH 会话走 OSC 52（`vim.ui.clipboard.osc52`）时规则完全一致。
 - **lazy.nvim `keys` 占位映射会删掉自己定义的映射**：若插件 spec 用 `keys = { "c", "d", ... }`（纯字符串、无 rhs）来懒加载，lazy 为它们建的占位映射在插件加载完成后会被 `vim.keymap.del` 删除且不会恢复，于是把 `lua/mappings.lua` 里的 `c -> "_c` / `d -> "_d` 一起删掉。表现为“会话用一会儿之后 `ciw`/`diw` 又开始把删除内容写进剪贴板”。已把 `nvim-treesitter-textobjects`、`vim-textobj-quotes` 改成 `event = "VeryLazy"` 加载。排查办法：在会话里 `:nmap c` 看映射是否还在，或用 `debug.traceback()` 包一层 `vim.keymap.del` 抓调用栈。
 - persisted session 的 workspace select UI 里，`<C-c>` 可能不会关闭窗口，而是复制 session，需要手动关闭。
 - CRLF 类型的大文件打开时可能因为 treesitter 加载变慢。例如 5000 行 `.c` 文件启动可能需要数秒。
+- **Avante 侧栏的宽高由 edgy edgebar 分配**（`configs/edgy.lua` 的 `M.avante = true`），但 avante 上游仍会自己 `nvim_win_set_width/height`，所以宽度会互相拉扯；已知副作用：`<leader>az` 退出 zen 后主窗口会留在 0 宽（`<c-w>=` 可解）、avante 自己建的 `winbar = ""` 会清掉 edgebar 标题栏；打开时 `cmdheight` 被撑大的问题已由 `configs/ai.lua` 的 render 包装处理。
 
 ## Notes
 
