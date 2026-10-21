@@ -71,9 +71,18 @@ local function avante_result_open()
 end
 
 local function left_edgebar_width()
-    if avante_result_open() then
-        return M.avante_width
+    local win = vim.t.lip_avante_width_win
+    -- edgy 的 close() 使用 noautocmd，不能仅依靠 BufWinLeave 清理。
+    if win and (not vim.api.nvim_win_is_valid(win)
+        or vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= "Avante") then
+        vim.t.lip_avante_width = nil
+        vim.t.lip_avante_width_win = nil
     end
+    if avante_result_open() then
+        return vim.t.lip_avante_width or M.avante_width
+    end
+    vim.t.lip_avante_width = nil
+    vim.t.lip_avante_width_win = nil
     local max_width = math.max(1, math.floor(vim.o.columns * M.avante_width))
     return math.min(M.explorer_width, max_width)
 end
@@ -149,12 +158,96 @@ function M.install_avante_layout_pause()
     end
     local original_update = Layout.update
     Layout.update = function(...)
-        if vim.g.lip_edgy_pause then
+        if vim.g.lip_edgy_pause or M._mouse_resizing then
             return
         end
         return original_update(...)
     end
     M._avante_layout_pause_installed = true
+end
+
+-- 临时宽度只放在当前 tab；关闭结果区后清除，不修改默认比例或持久化配置。
+local function avante_column()
+    if not avante_result_open() then
+        return
+    end
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "Avante" and not_float(nil, win) then
+            return win
+        end
+    end
+end
+
+function M.resize_avante(amount)
+    local win = avante_column()
+    if not win then
+        return
+    end
+    vim.t.lip_avante_width = math.max(1, math.min(vim.o.columns - 2, vim.api.nvim_win_get_width(win) + amount))
+    vim.t.lip_avante_width_win = win
+    require("edgy.layout").update()
+end
+
+function M.install_avante_resize()
+    if M._avante_resize_installed or not M.avante then
+        return
+    end
+    M._avante_resize_installed = true
+    for key, amount in pairs({ ["<C-S-Left>"] = -2, ["<C-S-Right>"] = 2 }) do
+        vim.keymap.set({ "n", "i", "v" }, key, function()
+            M.resize_avante(amount)
+        end, { desc = amount > 0 and "加宽 Avante 侧栏" or "缩窄 Avante 侧栏" })
+    end
+
+    -- 保留原生鼠标行为，只在拖动 Avante 列右侧分隔线时暂停 edgy。
+    local target
+    for _, key in ipairs({ "<LeftMouse>", "<LeftDrag>", "<LeftRelease>" }) do
+        local native = vim.api.nvim_replace_termcodes(key, true, false, true)
+        vim.keymap.set({ "n", "i", "v" }, key, function()
+            if key == "<LeftMouse>" then
+                target = nil
+                local win = avante_column()
+                if win then
+                    local pos = vim.fn.getmousepos()
+                    local col = vim.api.nvim_win_get_position(win)[2] + vim.api.nvim_win_get_width(win) + 1
+                    if pos.screencol == col then
+                        target = { win = win, tab = vim.api.nvim_get_current_tabpage() }
+                    end
+                end
+            elseif key == "<LeftDrag>" and target then
+                M._mouse_resizing = true
+            elseif key == "<LeftRelease>" then
+                local dragged = target
+                target = nil
+                if not M._mouse_resizing then
+                    return native
+                end
+                -- 原生 release 先处理完，再读取窗口的最终宽度。
+                vim.schedule(function()
+                    if M._mouse_resizing and dragged and vim.api.nvim_win_is_valid(dragged.win)
+                        and vim.api.nvim_get_current_tabpage() == dragged.tab and avante_result_open() then
+                        vim.t.lip_avante_width = vim.api.nvim_win_get_width(dragged.win)
+                        vim.t.lip_avante_width_win = dragged.win
+                    end
+                    M._mouse_resizing = false
+                    require("edgy.layout").update()
+                end)
+            end
+            return native
+        end, { expr = true, replace_keycodes = false, desc = "Avante 临时鼠标调宽（保留原生鼠标）" })
+    end
+
+    vim.api.nvim_create_autocmd("BufWinLeave", {
+        group = vim.api.nvim_create_augroup("LipEdgyAvanteResize", { clear = true }),
+        callback = function(ev)
+            if vim.bo[ev.buf].filetype == "Avante" then
+                vim.t.lip_avante_width = nil
+                vim.t.lip_avante_width_win = nil
+                M._mouse_resizing = false
+                target = nil
+            end
+        end,
+    })
 end
 
 function M.install_avante_reattach()
@@ -285,6 +378,7 @@ function M.opts()
             },
         })
         M.install_avante_layout_pause()
+        M.install_avante_resize()
         M.install_avante_reattach()
     end
 
