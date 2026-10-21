@@ -179,6 +179,35 @@ local avanteOpts = {
     },
 }
 
+-- 历史载入和 edgy 排版都可能延后执行；等挂载后的布局回调结束再定位末尾。
+-- 只在重新打开侧栏时调用，不干预用户随后向上翻阅历史。
+local function follow_avante_history(sidebar)
+    local result = sidebar.containers and sidebar.containers.result
+    if not result then
+        return
+    end
+    local winid, bufnr = result.winid, result.bufnr
+    vim.schedule(function()
+        vim.schedule(function()
+            local current = sidebar.containers and sidebar.containers.result
+            if
+                not sidebar:is_open()
+                or not current
+                or current.winid ~= winid
+                or current.bufnr ~= bufnr
+                or not vim.api.nvim_win_is_valid(winid)
+                or vim.api.nvim_win_get_buf(winid) ~= bufnr
+            then
+                return
+            end
+            sidebar.scroll = true
+            vim.api.nvim_win_call(winid, function()
+                vim.cmd("normal! Gzb")
+            end)
+        end)
+    end)
+end
+
 local max_avante_history_sessions = 10
 local avante_thinking_icon = use_ascii_icons and "[?]" or "󱍋"
 
@@ -575,6 +604,7 @@ function M.avanteConfig()
                 error(result)
             end
             if not was_open then
+                follow_avante_history(self)
                 vim.schedule(function()
                     if vim.bo.filetype == "AvanteInput" then
                         vim.cmd("noautocmd startinsert!")
@@ -827,6 +857,7 @@ function M.setup_quit_sidebars()
 end
 
 M._test = {
+    follow_avante_history = follow_avante_history,
     avante_winhighlight = avante_winhighlight,
     count_file_windows = count_file_windows,
     disable_avante_quitpre = disable_avante_quitpre,
