@@ -57,8 +57,14 @@ local avanteOpts = {
             },
         },
         pi = {
-            command = "pi-acp",
-            args = {},
+            -- pi-acp 的 SDK 启动路径没有初始化代理，通过包装脚本复用 Pi 的 HTTP dispatcher。
+            command = "node",
+            args = {
+                vim.fn.stdpath("config") .. "/scripts/pi-acp.mjs",
+                vim.fn.exepath("pi-acp"),
+            },
+            -- Avante 的 ACP 子进程默认只保留 PATH，需显式继承 Pi 配置、密钥和代理环境。
+            env = vim.fn.environ(),
         },
     },
     providers = {
