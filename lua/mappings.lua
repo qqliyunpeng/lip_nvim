@@ -11,7 +11,13 @@ map("i", "<C-l>", "<Right>",    { desc = "move right" })
 map("i", "<C-j>", "<Down>",     { desc = "move down" })
 map("i", "<C-k>", "<Up>",       { desc = "move up" })
 
-map("n", "<C-h>", function() require("smart-splits").move_cursor_left() end,  { desc = "switch window left" })
+local function move_cursor_left()
+    local previous_win = vim.api.nvim_get_current_win()
+    require("smart-splits").move_cursor_left()
+    require("configs.explorer").focus_list_on_return(previous_win)
+end
+
+map("n", "<C-h>", move_cursor_left, { desc = "switch window left" })
 map("n", "<C-l>", function() require("smart-splits").move_cursor_right() end, { desc = "switch window right" })
 map("n", "<C-j>", function() require("smart-splits").move_cursor_down() end,  { desc = "switch window down" })
 map("n", "<C-k>", function() require("smart-splits").move_cursor_up() end,    { desc = "switch window up" })
@@ -139,7 +145,7 @@ end, { desc = "Terminal Open" })
 map("t", "<A-b>", hide_terminal, { desc = "Terminal Hide" })
 map("t", "<C-k>", function() require("smart-splits").move_cursor_up() end,    { desc =  "Go to Upper Window" })
 map("t", "<C-j>", function() require("smart-splits").move_cursor_down() end,  { desc =  "Go to Lower Window" })
-map("t", "<C-h>", function() require("smart-splits").move_cursor_left() end,  { desc =  "Go to Left Window"  })
+map("t", "<C-h>", move_cursor_left, { desc = "Go to Left Window" })
 map("t", "<C-l>", function() require("smart-splits").move_cursor_right() end, { desc =  "Go to Right Window" })
 
 -- search

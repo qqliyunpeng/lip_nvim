@@ -15,6 +15,31 @@ local function get_explorer_pickers()
     return pickers or {}
 end
 
+-- 仅在窗口导航从外部返回 Explorer 时聚焦列表；主动进入搜索框不受影响。
+function M.focus_list_on_return(previous_win)
+    local current_win = vim.api.nvim_get_current_win()
+    if current_win == previous_win then
+        return
+    end
+    for _, picker in ipairs(get_explorer_pickers()) do
+        local function contains(win)
+            if picker.layout.root.win == win then
+                return true
+            end
+            for _, picker_win in pairs(picker.layout.wins) do
+                if picker_win.win == win then
+                    return true
+                end
+            end
+            return false
+        end
+        if contains(current_win) and not contains(previous_win) then
+            picker:focus("list")
+            return
+        end
+    end
+end
+
 function M.is_open()
     return #get_explorer_pickers() > 0
 end
