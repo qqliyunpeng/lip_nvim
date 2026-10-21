@@ -1,4 +1,4 @@
--- catppuccin 专用的 hi 覆盖 —— 目前留空（占位）
+-- catppuccin 专用的高亮覆盖
 --
 -- 设计：onedark 的所有 hi 定制都放在 configs/theme/onedark.lua，
 -- 用 catppuccin 时那些 hi 完全不生效，本文件就是你的 catppuccin 专属位置。
@@ -30,15 +30,11 @@ M.palette = {
 }
 
 function M.apply()
-    -- 暂时什么都不做：catppuccin 用自己的配色。
-    --
-    -- 以后要加就这样写（参考 configs/theme/onedark.lua 里那套 group）：
-    --
-    -- local C = M.palette
-    -- vim.api.nvim_set_hl(0, "CursorLine", { bg = C.surface0 })
-    -- vim.api.nvim_set_hl(0, "Search", { fg = C.crust, bg = C.blue })
-    -- vim.api.nvim_set_hl(0, "MatchParen", { fg = C.text, bg = C.surface2, bold = true })
-    -- vim.api.nvim_set_hl(0, "SnacksPickerBorder", { link = "FloatBorder" })
+    -- 与 onedark 一致：当前窗口用黑底，NormalNC 保留主题原生背景。
+    local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+    normal.bg = "#000000"
+    normal.ctermbg = 0
+    vim.api.nvim_set_hl(0, "Normal", normal)
 end
 
 return M

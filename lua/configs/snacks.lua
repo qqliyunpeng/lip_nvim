@@ -226,6 +226,12 @@ function M.snacksConfig()
                         input = { keys = { ["<esc>"] = false } },
                         list = { keys = { ["<esc>"] = false } },
                     },
+                    on_show = function(picker)
+                        require("configs.explorer").setup_highlights()
+                        require("configs.explorer").sync_highlights()
+                        -- 等挂载/布局的延迟回调结束后再同步一次，首次打开无需额外切焦点。
+                        vim.schedule(require("configs.explorer").sync_highlights)
+                    end,
                     -- 原 nvim-tree TreeClose 事件触发的 avante 刷新，改挂在 picker 的 on_close
                     on_close = function()
                         require("configs.avante_refresh").refresh({ require_explorer_closed = true })

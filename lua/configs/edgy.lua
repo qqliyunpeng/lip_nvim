@@ -335,6 +335,8 @@ function M.opts()
                 ft = "qf",
                 title = "QuickFix",
                 filter = not_float,
+                -- 不用 EdgyNormal（NormalFloat），随焦点切换当前/非当前窗口背景。
+                wo = { winhighlight = "Normal:Normal,NormalNC:NormalNC" },
             },
             -- snacks.terminal（<A-b>）：configs/snacks.lua 里已改成底部分屏；
             -- winbar 留给 snacks（显示终端标题），edgy 不写，避免互相覆盖

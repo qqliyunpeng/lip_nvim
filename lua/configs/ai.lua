@@ -220,7 +220,7 @@ local avante_thinking_icon = use_ascii_icons and "[?]" or "󱍋"
 local function set_avante_window_highlights(active)
     local sidebar_link = active == false and "NormalNC" or "Normal"
     pcall(vim.api.nvim_set_hl, 0, "AvanteSidebarNormal", { link = sidebar_link })
-    pcall(vim.api.nvim_set_hl, 0, "AvantePromptInput", { link = "Normal" })
+    pcall(vim.api.nvim_set_hl, 0, "AvantePromptInput", { link = sidebar_link })
 end
 
 local function avante_winhighlight(winhl, filetype, active)
@@ -234,13 +234,15 @@ local function avante_winhighlight(winhl, filetype, active)
 
     local pieces = {}
     for piece in string.gmatch(winhl or "", "[^,]+") do
-        if not piece:match("^Normal:") then
+        if not piece:match("^Normal:") and not piece:match("^NormalNC:") then
             table.insert(pieces, piece)
         end
     end
     -- 放到最后：winhighlight 里同名的 Normal 以后出现的为准；
     -- edgy 在 WinEnter 时还会追加视图自己的 Normal 映射，必须让焦点状态压过它。
+    -- 同组内非当前窗口也使用相同背景，不让 NormalNC 单独恢复主题底色。
     table.insert(pieces, "Normal:" .. normal_group)
+    table.insert(pieces, "NormalNC:" .. normal_group)
     return table.concat(pieces, ",")
 end
 
@@ -284,7 +286,7 @@ local function setup_avante_window_highlight_autocmds()
             vim.schedule(sync_avante_window_highlights)
         end,
     })
-    vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+    vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter", "ColorScheme" }, {
         group = group,
         callback = function()
             vim.schedule(sync_avante_window_highlights)
