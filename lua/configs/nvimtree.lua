@@ -1,5 +1,6 @@
 local use_ascii_icons = require("configs.icons").use_ascii_icons()
 local avante_refresh = require("configs.avante_refresh")
+require("configs.ai").setup_quit_sidebars()
 
 local function setup_avante_refresh_on_tree_events()
     if vim.g.lip_nvim_tree_avante_refresh_events then

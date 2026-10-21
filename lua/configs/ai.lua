@@ -279,17 +279,25 @@ end
 
 local function count_file_windows()
     local count = 0
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         local buf = vim.api.nvim_win_get_buf(win)
-        -- sp/vs 创建的文件窗口分别计数，浮动窗口和无实际文件的辅助窗口不计。
+        -- 仅统计当前标签页的普通窗口；未命名缓冲区也计入，sp/vs 分别计数。
         if vim.api.nvim_win_get_config(win).relative == ""
             and vim.bo[buf].buftype == ""
-            and vim.api.nvim_buf_get_name(buf) ~= ""
         then
             count = count + 1
         end
     end
     return count
+end
+
+local function close_nvimtree()
+    local ok, api = pcall(require, "nvim-tree.api")
+    if ok then
+        pcall(api.tree.close)
+        return
+    end
+    pcall(vim.cmd, "NvimTreeClose")
 end
 
 -- Avante 会把 ACP 的 thinking 流(大量 agent_thought_chunk)累积成一条
@@ -752,6 +760,15 @@ function M.avanteConfig()
         end,
     })
 
+    M.setup_quit_sidebars()
+end
+
+function M.setup_quit_sidebars()
+    if vim.g.lip_quit_sidebars_installed then
+        return
+    end
+    vim.g.lip_quit_sidebars_installed = true
+
     vim.api.nvim_create_autocmd("QuitPre", {
         callback = function()
             -- 有未保存修改时交给 Neovim 原生退出确认（yes/no），
@@ -764,9 +781,10 @@ function M.avanteConfig()
 
             local has_qf = false
             local has_avante = false
+            local has_tree = false
             local file_window_count = count_file_windows()
 
-            for _, win in ipairs(vim.api.nvim_list_wins()) do
+            for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
                 local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
                 if ok then
                     local bt = vim.bo[buf].buftype
@@ -779,6 +797,10 @@ function M.avanteConfig()
                     if ft == "Avante" or ft == "AvanteInput" then
                         has_avante = true
                     end
+
+                    if ft == "NvimTree" then
+                        has_tree = true
+                    end
                 end
             end
 
@@ -789,13 +811,16 @@ function M.avanteConfig()
             end
 
             local current_buf = vim.api.nvim_get_current_buf()
-            if has_avante
-                and vim.bo[current_buf].buftype == ""
-                and file_window_count == 1
-            then
-                pcall(function()
-                    vim.cmd("AvanteToggle")
-                end)
+            if vim.bo[current_buf].buftype == "" and file_window_count == 1 then
+                if has_avante then
+                    pcall(function()
+                        vim.cmd("AvanteToggle")
+                    end)
+                end
+
+                if has_tree then
+                    close_nvimtree()
+                end
             end
         end,
     })

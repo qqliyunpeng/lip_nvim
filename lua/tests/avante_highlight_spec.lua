@@ -20,7 +20,8 @@ _G.vim = {
         nvim_del_autocmd = function(id)
             calls.deleted_autocmd = id
         end,
-        nvim_list_wins = function()
+        nvim_tabpage_list_wins = function(tab)
+            assert(tab == 0, "counting must be scoped to the current tab")
             return { 101, 102, 103 }
         end,
         nvim_win_get_buf = function(win)
