@@ -289,6 +289,14 @@ local AvanteSubmitHint = {
     update = { "ModeChanged" },
 }
 
+local AvanteScrollHint = {
+    condition = function()
+        return vim.bo.filetype == "Avante" or vim.bo.filetype == "AvanteInput"
+    end,
+    provider = " <C-End>: bottom ",
+    hl = { fg = utils.get_highlight("AvantePopupHint").fg },
+}
+
 local AvanteInputStatusLine = {
     condition = function()
         return conditions.is_active() and AvanteSubmitHint.condition()
@@ -310,6 +318,7 @@ local AvanteInputStatusLine = {
     Align,
     Space,
     AvanteSubmitHint,
+    AvanteScrollHint,
     { provider = "%)" },
     Align,
 }
@@ -437,6 +446,7 @@ local StatusLine = {
         lib.component.cmd_info(),
     },
     NeoComposerStatus,
+    AvanteScrollHint,
     Align,
     -- lib.component.lsp(),
     {

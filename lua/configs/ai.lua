@@ -772,6 +772,26 @@ function M.avanteConfig()
     end
 
     vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "Avante", "AvanteInput" },
+        callback = function(ev)
+            vim.keymap.set({ "n", "i", "x" }, "<C-End>", function()
+                for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+                    local buf = vim.api.nvim_win_get_buf(win)
+                    if vim.bo[buf].filetype == "Avante" then
+                        vim.api.nvim_win_call(win, function()
+                            vim.cmd("normal! Gzb")
+                        end)
+                    end
+                end
+            end, {
+                buffer = ev.buf,
+                silent = true,
+                desc = "跳到 Avante 回答底部",
+            })
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
         pattern = { "AvanteSelectedFiles", "AvanteTodos", "AvanteInput" },
         callback = function(ev)
             local opts = { buffer = ev.buf, silent = true }
