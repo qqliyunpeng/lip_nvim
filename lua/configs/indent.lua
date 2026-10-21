@@ -13,7 +13,7 @@ local indentscopeDisableFileType = {
     "lazy",
     "mason",
     "neo-tree",
-    "NvimTree",
+    "snacks_layout_box",
     "cmp_menu",
     "noice",
     "notify",

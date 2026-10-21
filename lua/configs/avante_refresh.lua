@@ -1,23 +1,12 @@
 local M = {}
 
-local function has_nvim_tree_win()
-    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-        local buf = vim.api.nvim_win_get_buf(win)
-
-        if vim.bo[buf].filetype == "NvimTree" then
-            return true
-        end
-    end
-
-    return false
-end
-
 local function find_target_win()
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         local buf = vim.api.nvim_win_get_buf(win)
         local listed = vim.api.nvim_get_option_value("buflisted", { buf = buf })
 
-        if listed and vim.bo[buf].filetype ~= "NvimTree" and vim.bo[buf].buftype ~= "terminal" then
+        -- 跳过 picker 列表缓冲区
+        if listed and vim.bo[buf].filetype ~= "snacks_picker_list" and vim.bo[buf].buftype ~= "terminal" then
             return win
         end
     end
@@ -27,7 +16,7 @@ function M.refresh(opts)
     opts = opts or {}
 
     vim.defer_fn(function()
-        if opts.require_tree_closed and has_nvim_tree_win() then
+        if opts.require_explorer_closed and require("configs.explorer").is_open() then
             return
         end
 

@@ -51,13 +51,12 @@
 
 ### 🛠️ DevOps & Tools
 
--  [Snacks.nvim](https://github.com/folke/snacks.nvim) - files, buffers, grep, notifications, scratch, terminal, Lazygit
+-  [Snacks.nvim](https://github.com/folke/snacks.nvim) - files, buffers, grep, notifications, scratch, terminal, Lazygit, explorer 文件树（snacks.explorer 侧栏）
 -  [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) - 补充 picker 和 yank history 集成
 -  [flash.nvim](https://github.com/folke/flash.nvim) - 屏幕内快速跳转
 -  [project.nvim](https://github.com/ahmedkhalf/project.nvim) - 工程根目录识别和切换
 -  [harpoon](https://github.com/ThePrimeagen/harpoon) - quick file navigation
 -  [navimark.nvim](https://github.com/ZWindLOR/navimark.nvim) - 持久化 bookmark
--  [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua) - tree-style file explorer
 -  [mini.files](https://github.com/echasnovski/mini.files) - lightweight file manager
 -  [vim-visual-multi](https://github.com/mg979/vim-visual-multi) - multi-cursor editing
 
@@ -263,7 +262,7 @@ package.json
 
 | 位置 | 接管的窗口 | 尺寸 |
 |---|---|---|
-| left | `NvimTree`（`<F2>`）+ Avante：`Avante`（结果区，自适应）/ `AvanteSelectedCode` 25% / `AvanteSelectedFiles` 15% / `AvanteTodos` 8% / `AvanteInput` 20% | Avante 打开时 40% 屏宽（`M.avante_width`）；只有 NvimTree 时 30 列（`M.explorer_width`，最多 40% 屏宽）。两者**共用一个左侧 edgebar**，所以同时打开时 NvimTree 也是 40% 宽 |
+| left | Explorer（snacks.explorer，`<F2>`）+ Avante：`Avante`（结果区，自适应）/ `AvanteSelectedCode` 25% / `AvanteSelectedFiles` 15% / `AvanteTodos` 8% / `AvanteInput` 20% | Avante 打开时 40% 屏宽（`M.avante_width`）；只有 Explorer 时 30 列（`M.explorer_width`，最多 40% 屏宽）。两者**共用一个左侧 edgebar**，所以同时打开时 Explorer 也是 40% 宽 |
 | bottom | `OverseerList` / `OverseerForm` / `OverseerTaskAction`（`<leader>ow`、`<leader>oo`） | 30% 行高 |
 | bottom | `qf`（`:copen`，或 overseer 任务失败自动填充的 quickfix） | 同上，和 Overseer 共用底部 edgebar |
 | bottom | `snacks_terminal`（`<A-b>`） | 同上 |
@@ -272,7 +271,7 @@ package.json
 
 #### Avante 侧栏交给 edgebar 后
 
-宽度只在 `configs/edgy.lua` 里定义：Avante 打开时 `M.avante_width = 0.4`，只有 NvimTree 时 `M.explorer_width = 30` 列；avante 的 `windows.width` 由前者推算，窗口的实际宽高由左 edgebar 分配，同时打开 NvimTree 时两者上下堆在同一列（所以两边的宽度一定相等）。
+宽度只在 `configs/edgy.lua` 里定义：Avante 打开时 `M.avante_width = 0.4`，只有 Explorer 时 `M.explorer_width = 30` 列；avante 的 `windows.width` 由前者推算，窗口的实际宽高由左 edgebar 分配，同时打开 Explorer 时两者上下堆在同一列（所以两边的宽度一定相等）。
 
 但这层接管没有做额外 patch，而 avante 上游仍会在每次渲染 / 窗口变化时自己调 `nvim_win_set_width/height`（`adjust_*_layout`、`resize`、`toggle_code_window`），两套分配抢同一个窗口，已知会出现：
 
@@ -302,7 +301,7 @@ edgebar 窗口内的按键（edgy 默认）：
 - edgebar 整体折叠依赖全局状态栏（`heirline` 里已经 `set laststatus=3`）。
 - `splitkeep=screen` 在 edgy 的 `init` 里设置，否则打开侧栏时主窗口内容会跟着跳。
 - 想临时让某个窗口不被接管：`:lua vim.b[buf].edgy_disable = true`（也可以提前写进对应 filetype 的 autocmd）。
-- `overseer` 的三个窗口和 `AvanteSelectedCode` 已加进 `configs/ui_all.lua` 中 `windows.nvim` 的 `ignore.filetype`（`NvimTree` 本来就在），避免 autowidth 和 edgebar 抢宽度。
+- `overseer` 的三个窗口和 `AvanteSelectedCode` 已加进 `configs/ui_all.lua` 中 `windows.nvim` 的 `ignore.filetype`（explorer 侧栏本来就在），避免 autowidth 和 edgebar 抢宽度。
 
 ### Clear Swap Files
 
@@ -367,7 +366,7 @@ rm ~/.local/state/nvim/swap/*
 | <code>&lt;leader&gt;`</code> / <code>&lt;A-`&gt;</code> | n | 切回上一个 buffer |
 | `<leader>bd` | n | 删除当前 buffer |
 | `<leader>bo` | n | 删除其它 buffer |
-| `<F2>` | n | 打开/关闭 nvim-tree |
+| `<F2>` | n | 打开/关闭 snacks explorer |
 
 ### Search & Replace
 

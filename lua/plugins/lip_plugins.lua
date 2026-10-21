@@ -147,7 +147,7 @@ return {
                 delay = 100,
                 -- disable in below
                 filetypes_denylist = {
-                    'dirbuf', 'dirvish', 'fugitive', 'NvimTree',
+                    'dirbuf', 'dirvish', 'fugitive', 'snacks_picker_list',
                     'Avante', 'AvanteSelectedFiles', 'AvanteInput', 'AvantePromptInput',
                     'snacks_input', 'snacks_picker_input', 'snacks_terminal', 'snacks_dashboard',
                 },
@@ -248,14 +248,6 @@ return {
         event = "VeryLazy",
         opts = function()
             require("configs.gitsigns").config()
-        end,
-    },
-    {
-        -- file managing , picker etc
-        ge("oyaay/nvim-tree.lua.git"),
-        cmd = { "NvimTreeToggle", "NvimTreeFocus" },
-        opts = function()
-            return require "configs.nvimtree"
         end,
     },
     {

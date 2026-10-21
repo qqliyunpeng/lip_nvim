@@ -320,13 +320,8 @@ local function count_file_windows()
     return count
 end
 
-local function close_nvimtree()
-    local ok, api = pcall(require, "nvim-tree.api")
-    if ok then
-        pcall(api.tree.close)
-        return
-    end
-    pcall(vim.cmd, "NvimTreeClose")
+local function close_explorer()
+    require("configs.explorer").close()
 end
 
 -- Avante 会把 ACP 的 thinking 流(大量 agent_thought_chunk)累积成一条
@@ -620,7 +615,7 @@ function M.avanteConfig()
     -- （sidebar.lua 的 get_result_container_height = lines - input.height - selected_code
     --  - selected_files - todos），既不知道 tabline/statusline/cmdheight，
     -- 也不知道自己只是 40% 宽边栏里的一列；它一 nvim_win_set_height，
-    -- nvim 只能从同列的 NvimTree / 选中代码 / todos 身上扣行（实测会被压成 1 行），
+    -- nvim 只能从同列的 Explorer / 选中代码 / todos 身上扣行（实测会被压成 1 行），
     -- 接下来 edgy 再改回来 —— 两边来回抢就是高度抖动 / 底部留白。
     -- 因此把那四个「avante 认为自己该有多高」的 getter 改成「读当前窗口高度」：
     -- adjust_layout() 和 render_selected_files() 里的 set_height 就都变成同一个值（空转），
@@ -831,7 +826,7 @@ function M.setup_quit_sidebars()
 
             local has_qf = false
             local has_avante = false
-            local has_tree = false
+            local has_explorer = require("configs.explorer").is_open()
             local file_window_count = count_file_windows()
 
             for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
@@ -846,10 +841,6 @@ function M.setup_quit_sidebars()
 
                     if ft == "Avante" or ft == "AvanteInput" then
                         has_avante = true
-                    end
-
-                    if ft == "NvimTree" then
-                        has_tree = true
                     end
                 end
             end
@@ -868,8 +859,8 @@ function M.setup_quit_sidebars()
                     end)
                 end
 
-                if has_tree then
-                    close_nvimtree()
+                if has_explorer then
+                    close_explorer()
                 end
             end
         end,

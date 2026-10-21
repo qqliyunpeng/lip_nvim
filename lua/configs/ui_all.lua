@@ -190,7 +190,7 @@ function M.windowsConfig()
         ignore = {
             buftype = { "quickfix", "terminal" },
             filetype = {
-                "NvimTree",
+                "snacks_layout_box",
                 "snacks_dashboard",
                 "snacks_notif",
                 "snacks_picker_list",
@@ -223,7 +223,7 @@ function M.whitespaceConfig()
             'Trouble',
             'cmp_menu',
             'markdown',
-            'NvimTree',
+            'snacks_picker_list',
             'dashboard',
             'snacks_win',
             'snacks_notif',

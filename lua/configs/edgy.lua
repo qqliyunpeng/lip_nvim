@@ -20,11 +20,11 @@ end
 M.avante = true
 
 -- Avante 侧栏宽度（占屏宽比例）——这里是唯一的定义源：
--- Avante 打开时作为左 edgebar 的 size（和 NvimTree 共用同一列），
+-- Avante 打开时作为左 edgebar 的 size（和 Explorer 共用同一列），
 -- 也同步给 avante 的 windows.width（configs/ai.lua）。
 M.avante_width = 0.4
 
--- NvimTree 单独在左侧时的宽度（列数）。Avante 打开时两者共用同一列，
+-- Explorer 单独在左侧时的宽度（列数）。Avante 打开时两者共用同一列，
 -- 宽度以 avante_width 为准；否则固定列数比比例更稳（宽屏下不会越来越宽）。
 M.explorer_width = 30
 
@@ -46,7 +46,7 @@ M.avante_todos_height = 3
 -- 不一致的话 avante 建输入框时分的行数 ≠ edgebar 随后分配的行数，会跳动。
 M.avante_input_height = 10
 
--- Explorer（NvimTree）高度：有 Avante 结果区时给它一个上限，剩下的行全给结果区。
+-- Explorer（snacks.explorer）高度：有 Avante 结果区时给它一个上限，剩下的行全给结果区。
 -- edgy 的分配规则是「把剩余空间平均分给所有没有 size 的 auto 视图」
 -- （edgebar.lua:294-303），所以 Explorer 不写高度时会和结果区对半分
 -- —— 这就是「结果区只占一半」的原因。
@@ -278,8 +278,8 @@ function M.opts()
         -- winbar / winfixwidth / winhighlight / signcolumn…）都用 edgy 默认值，
         -- 只有下面这几条和默认值不同，所以只写这些。
         options = {
-            -- Avante 在左侧 edgebar，和 NvimTree 共用这一列的宽度；
-            -- 只有 NvimTree 时按 explorer_width 收窄
+            -- Avante 在左侧 edgebar，和 Explorer 共用这一列的宽度；
+            -- 只有 Explorer 时按 explorer_width 收窄
             left = { size = left_edgebar_width },
             -- 0.3 = 30% 行高。注意：底部 edgebar 里的所有 view 共用同一个高度，
             -- 这里才是真正的面板高度（view 自己的 size.height 只是最小值）
@@ -287,9 +287,20 @@ function M.opts()
         },
         left = {
             {
-                ft = "NvimTree",
+                -- snacks.explorer 侧栏：真 split 的根窗口 ft 是 snacks_layout_box，
+                -- 用 vim.w[].snacks_win.position 识别左侧那一个（输入/列表
+                -- 是叠在根窗口上的浮窗，edgy 只管根 split）
+                ft = "snacks_layout_box",
                 title = "Explorer",
-                filter = not_float,
+                filter = function(buf, win)
+                    if not not_float(buf, win) then
+                        return false
+                    end
+                    local meta = vim.w[win].snacks_win
+                    return meta ~= nil and meta.position == "left"
+                end,
+                -- 标题行由 snacks 自己的输入框边框显示，根窗口不要 winbar
+                wo = { winbar = false },
                 -- 有 Avante 结果区时限高，否则吃满整列（见上面 explorer_height_ratio 的注释）
                 size = {
                     height = function()

@@ -84,8 +84,8 @@ map("v", "<leader>cc", "gc",  { desc = "toggle comment", remap = true })
 map("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below"})
 map("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above"})
 
--- nvimtree
-map("n", "<F2>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
+-- snacks explorer
+map("n", "<F2>", function() require("configs.explorer").toggle() end, { desc = "snacks explorer toggle" })
 map("n", "z<CR>", "zt", { desc = "Cursor to top", remap = true })
 
 -- clipboard

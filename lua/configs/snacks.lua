@@ -33,7 +33,7 @@ local open_lazygit_with_refresh = function ()
     Snacks.lazygit()
     local exclude_filetypes = {
         "noice",
-        "NvimTree",
+        "snacks_picker_list",
         "snacks_notif",
         "snacks_terminal",
     }
@@ -212,6 +212,25 @@ function M.snacksConfig()
                     filter = { transform = keep_search_spaces },
                     title = "Grep Word · " .. grep_hint,
                 },
+                -- 替代原 nvim-tree：dotfiles 可见(hidden)、git ignored 可见(ignored)，
+                -- 仍过滤 .git/.vscode/build 等目录；宽度和 configs/edgy.lua 的
+                -- explorer_width 一致，edgy 捕获后由 edgebar 接管尺寸。
+                explorer = {
+                    hidden = true,
+                    ignored = true,
+                    exclude = { ".git", ".vscode", "build", ".gitignore", "*.out", "tags" },
+                    layout = { preset = "sidebar", preview = false, layout = { width = 30 } },
+                    -- Esc 不关闭 explorer（默认绑在 cancel 上会直接关掉侧栏）：
+                    -- 禁用后输入框里 Esc 回到 Normal 模式，关闭仍用 q / <C-c> / F2
+                    win = {
+                        input = { keys = { ["<esc>"] = false } },
+                        list = { keys = { ["<esc>"] = false } },
+                    },
+                    -- 原 nvim-tree TreeClose 事件触发的 avante 刷新，改挂在 picker 的 on_close
+                    on_close = function()
+                        require("configs.avante_refresh").refresh({ require_explorer_closed = true })
+                    end,
+                },
             },
             win = picker_win,
             db  = { sqlite3_path = db_path .. '/snacks_history.sqlite3', }
@@ -333,6 +352,10 @@ function M.snacksConfig()
             end)
         end,
     })
+
+    -- 原 configs/nvimtree.lua 加载时的副作用：注册 QuitPre 关侧栏逻辑。
+    -- snacks 是 lazy=false 常驻插件，放这里比原来（首次打开树才注册）更早生效。
+    require("configs.ai").setup_quit_sidebars()
 end
 
 return M
