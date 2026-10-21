@@ -108,7 +108,7 @@ require('mappings')
 -- 默认主题："onedark" 或 "catppuccin"
 -- 两个主题各自的高亮覆盖：lua/configs/theme/onedark.lua / lua/configs/theme/catppuccin.lua
 -- 切到哪个主题，就只生效它自己那份 hi，互不影响
-local colorscheme = "onedark"
+local colorscheme = "catppuccin"
 
 -- remember = true 时，:colorscheme 手动切换的结果会记下来，下次启动优先用它（会盖过上面的 colorscheme）
 require("configs.theme").setup({ default = colorscheme, remember = false })
