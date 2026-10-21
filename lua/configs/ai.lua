@@ -329,7 +329,7 @@ local function count_file_windows()
 end
 
 local function close_explorer()
-    require("configs.explorer").close()
+    require("configs.explorer").close({ wait = true })
 end
 
 -- Avante 会把 ACP 的 thinking 流(大量 agent_thought_chunk)累积成一条
@@ -824,6 +824,16 @@ function M.setup_quit_sidebars()
 
     vim.api.nvim_create_autocmd("QuitPre", {
         callback = function()
+            -- 先判断退出目标：cclose 会把焦点移回文件，不能之后才判断。
+            -- 关闭 Quickfix、其他辅助窗口或浮窗时不联动清理侧栏。
+            local current_win = vim.api.nvim_get_current_win()
+            local current_buf = vim.api.nvim_win_get_buf(current_win)
+            if vim.bo[current_buf].buftype ~= ""
+                or vim.api.nvim_win_get_config(current_win).relative ~= ""
+            then
+                return
+            end
+
             -- 有未保存修改时交给 Neovim 原生退出确认（yes/no），
             -- 不要先关闭窗口而打断确认流程。
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -859,8 +869,7 @@ function M.setup_quit_sidebars()
                 end)
             end
 
-            local current_buf = vim.api.nvim_get_current_buf()
-            if vim.bo[current_buf].buftype == "" and file_window_count == 1 then
+            if file_window_count == 1 then
                 if has_avante then
                     pcall(function()
                         vim.cmd("AvanteToggle")

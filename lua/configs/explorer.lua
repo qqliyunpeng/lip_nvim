@@ -100,11 +100,32 @@ function M.is_open()
     return #get_explorer_pickers() > 0
 end
 
-function M.close()
+---@param opts? { wait?: boolean }
+function M.close(opts)
+    local windows = {}
     for _, picker in ipairs(get_explorer_pickers()) do
+        if opts and opts.wait then
+            -- close() 会在下一轮事件循环销毁 layout，提前记录实际窗口。
+            if picker.layout.root.win then
+                windows[picker.layout.root.win] = true
+            end
+            for _, win in pairs(picker.layout.wins) do
+                if win.win then windows[win.win] = true end
+            end
+        end
         pcall(function()
             picker:close()
         end)
+    end
+    if opts and opts.wait and next(windows) then
+        -- QuitPre 必须等侧栏真正消失再继续 :q，否则文件窗口会被留下。
+        -- 普通 F2/toggle 仍使用异步关闭；仅等待本次 Explorer 的窗口。
+        return vim.wait(1000, function()
+            for win in pairs(windows) do
+                if vim.api.nvim_win_is_valid(win) then return false end
+            end
+            return true
+        end, 10)
     end
 end
 
