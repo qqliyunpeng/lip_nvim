@@ -664,6 +664,40 @@ function M.avanteConfig()
     -- 停在上半屏。render 期间暂停 edgy layout，结束后再补一次排版；同时把
     -- cmdheight 恢复成打开前的值，避免残留空白。
     if ok_sidebar and edgy_cfg.avante and not Sidebar._lip_edgy_pause_render then
+        local ok_snacks_layout, SnacksLayout = pcall(require, "snacks.layout")
+        if ok_snacks_layout and not SnacksLayout._lip_avante_render_pause then
+            local original_layout_update = SnacksLayout.update
+            SnacksLayout.update = function(self, ...)
+                if vim.g.lip_edgy_pause then
+                    local ok_picker, Picker = pcall(require, "snacks.picker")
+                    if ok_picker then
+                        for _, picker in ipairs(Picker.get({ source = "explorer" }) or {}) do
+                            if picker.layout == self then
+                                return
+                            end
+                        end
+                    end
+                end
+                return original_layout_update(self, ...)
+            end
+            SnacksLayout._lip_avante_render_pause = true
+        end
+
+        local original_result_width = Sidebar.get_result_container_width
+        Sidebar.get_result_container_width = function(self, ...)
+            if vim.g.lip_edgy_pause then
+                for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+                    local config = vim.api.nvim_win_get_config(win)
+                    local meta = vim.w[win].snacks_win
+                    if config.relative == "" and meta ~= nil and meta.position == "left"
+                        and vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "snacks_layout_box" then
+                        return vim.api.nvim_win_get_width(win)
+                    end
+                end
+            end
+            return original_result_width(self, ...)
+        end
+
         local original_render = Sidebar.render
         Sidebar.render = function(self, opts)
             local cmdheight = vim.o.cmdheight
@@ -676,6 +710,9 @@ function M.avanteConfig()
             if not ok_render then
                 error(result)
             end
+            pcall(function()
+                require("edgy.layout").update()
+            end)
             vim.schedule(function()
                 pcall(function()
                     require("edgy.layout").update()
