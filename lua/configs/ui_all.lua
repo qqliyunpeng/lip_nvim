@@ -297,6 +297,7 @@ function M.lspsagaConfig()
             }
         },
         outline = {
+            auto_preview = false,
             keys = {
                 toggle_or_jump = "<CR>",
             }
@@ -320,6 +321,8 @@ function M.lspsagaConfig()
             end)
         end,
     })
+
+    require("configs.outline_follow").setup()
 
     map("n", "gf"        , "<cmd>Lspsaga finder def+ref+imp<CR>", { desc = "Show LSP methods search result"} )
     map("n", "<A-h>"     , "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover Documentation"} )

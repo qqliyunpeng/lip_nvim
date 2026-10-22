@@ -1,0 +1,179 @@
+-- F3（Lspsaga Outline）增强逻辑：
+--
+-- 1. 光标跟随：在源文件中移动光标时，将 Outline 光标同步到当前函数或符号；
+--    在函数之间的空白区域，则定位到前一个可见符号，避免列表停留在旧位置。
+-- 2. 窗口分组：将源文件窗口和 Outline 视为同一组窗口。焦点位于源文件
+--    或 Outline 时，两者使用黑色背景；焦点切换到 Quickfix、Explorer 等其他
+--    窗口时，两者同步恢复为非活动窗口背景。
+-- 3. 关闭预览：配合 Lspsaga 配置关闭 Outline 的自动代码预览，只保留函数列表。
+-- 4. 生命周期管理：关闭最后一个源文件时，同时关闭 Outline，避免留下孤立的
+--    函数列表窗口；关闭 Outline 时恢复源文件原有的窗口高亮设置。
+--
+-- 该模块不负责生成符号列表，符号数据和列表窗口仍由 Lspsaga 管理。
+local M = {}
+local source_winhighlight = {}
+
+local function set_winhighlight(win, active_group)
+    local parts = {}
+    for mapping in vim.wo[win].winhighlight:gmatch("[^,]+") do
+        if not mapping:match("^Normal:") and not mapping:match("^NormalNC:") then
+            parts[#parts + 1] = mapping
+        end
+    end
+    parts[#parts + 1] = "Normal:" .. active_group
+    parts[#parts + 1] = "NormalNC:" .. active_group
+    vim.wo[win].winhighlight = table.concat(parts, ",")
+end
+
+local function restore_source_highlights()
+    for win, value in pairs(source_winhighlight) do
+        if vim.api.nvim_win_is_valid(win) then
+            vim.wo[win].winhighlight = value
+        end
+        source_winhighlight[win] = nil
+    end
+end
+
+function M.setup()
+    restore_source_highlights()
+    require("configs.ai").setup_quit_sidebars()
+    local api = vim.api
+    local group = api.nvim_create_augroup("SagaOutlineFollow", { clear = true })
+
+    local function follow()
+        local outline = package.loaded["lspsaga.symbol.outline"]
+        if not outline or not outline.winid or not api.nvim_win_is_valid(outline.winid) then
+            return
+        end
+        local source_win = api.nvim_get_current_win()
+        if source_win == outline.winid or api.nvim_get_current_buf() ~= outline.main_buf then
+            return
+        end
+
+        local cursor = api.nvim_win_get_cursor(source_win)
+        local row = cursor[1] - 1
+        local node, target = outline.list, nil
+        local preceding, preceding_line, first_visible = nil, -1, nil
+        while node and node.value do
+            local value = node.value
+            local range = value.range or (value.location and value.location.range) or value.selectionRange
+            if range and value.winline and value.winline > 0 then
+                local first, last = range.start, range["end"]
+                first_visible = first_visible or value
+                if first.line <= row and first.line >= preceding_line then
+                    preceding, preceding_line = value, first.line
+                end
+                local after_start = row >= first.line
+                local before_end = row < last.line or (row == last.line and last.character > 0)
+                if after_start and before_end then
+                    -- Prefer the deepest visible symbol; collapsed children have winline = -1.
+                    if not target or (value.inlevel or 0) >= (target.inlevel or 0) then
+                        target = value
+                    end
+                end
+            end
+            node = node.next
+        end
+
+        -- Between symbols, follow the preceding declaration instead of keeping a stale cursor.
+        target = target or preceding or first_visible
+        outline.callerwinid = source_win
+        vim.wo[outline.winid].cursorline = true
+        vim.wo[outline.winid].cursorlineopt = "line"
+        if target and target.winline <= api.nvim_buf_line_count(outline.bufnr) then
+            api.nvim_win_set_cursor(outline.winid, { target.winline, target.inlevel or 0 })
+        end
+    end
+
+    api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
+        group = group,
+        callback = follow,
+        desc = "Follow the current source symbol in the F3 outline without changing focus",
+    })
+    api.nvim_create_autocmd("User", {
+        group = group,
+        pattern = "SagaSymbolUpdate",
+        callback = function()
+            -- Lspsaga schedules its outline refresh before this callback.
+            vim.schedule(follow)
+        end,
+    })
+    local function set_outline_background(win, active)
+        if not api.nvim_win_is_valid(win) then
+            return
+        end
+        local normal = api.nvim_get_hl(0, { name = "Normal", link = false })
+        api.nvim_set_hl(0, "SagaOutlineNormal", {
+            fg = normal.fg,
+            bg = "#000000",
+        })
+        set_winhighlight(win, active and "SagaOutlineNormal" or "NormalNC")
+    end
+
+    local function sync_group_background()
+        local outline = package.loaded["lspsaga.symbol.outline"]
+        restore_source_highlights()
+        if not outline or not outline.winid or not api.nvim_win_is_valid(outline.winid) then
+            return
+        end
+        local source_win = outline.callerwinid
+        if not source_win or not api.nvim_win_is_valid(source_win)
+            or api.nvim_win_get_buf(source_win) ~= outline.main_buf
+        then
+            set_outline_background(outline.winid, false)
+            return
+        end
+        local current = api.nvim_get_current_win()
+        local active = current == outline.winid or current == source_win
+        set_outline_background(outline.winid, active)
+        if active then
+            source_winhighlight[source_win] = vim.wo[source_win].winhighlight
+            set_winhighlight(source_win, "SagaOutlineNormal")
+        end
+    end
+
+    api.nvim_create_autocmd({ "WinEnter", "WinClosed", "BufWinEnter" }, {
+        group = group,
+        callback = function()
+            -- Run after the plugin/window-enter handlers finish setting window options.
+            vim.schedule(function()
+                follow()
+                sync_group_background()
+            end)
+        end,
+    })
+    api.nvim_create_autocmd("ColorScheme", {
+        group = group,
+        callback = sync_group_background,
+    })
+    api.nvim_create_autocmd("FileType", {
+        group = group,
+        pattern = "sagaoutline",
+        callback = function()
+            local win = api.nvim_get_current_win()
+            vim.schedule(function()
+                if api.nvim_win_is_valid(win) and vim.bo[api.nvim_win_get_buf(win)].filetype == "sagaoutline" then
+                    sync_group_background()
+                    vim.wo[win].cursorline = true
+                    vim.wo[win].cursorlineopt = "line"
+                end
+            end)
+        end,
+    })
+end
+
+function M.is_open()
+    local outline = package.loaded["lspsaga.symbol.outline"]
+    return outline ~= nil and outline.winid ~= nil and vim.api.nvim_win_is_valid(outline.winid)
+end
+
+function M.close()
+    local outline = package.loaded["lspsaga.symbol.outline"]
+    if M.is_open() and vim.api.nvim_win_get_tabpage(outline.winid) == vim.api.nvim_get_current_tabpage() then
+        -- Use the plugin's toggle-close path so its context and autocmds are cleaned too.
+        restore_source_highlights()
+        outline:outline()
+    end
+end
+
+return M

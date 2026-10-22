@@ -870,6 +870,10 @@ function M.setup_quit_sidebars()
             end
 
             if file_window_count == 1 then
+                local outline = package.loaded["configs.outline_follow"]
+                if outline then
+                    outline.close()
+                end
                 if has_avante then
                     pcall(function()
                         vim.cmd("AvanteToggle")
