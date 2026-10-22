@@ -147,7 +147,7 @@ return {
                 delay = 100,
                 -- disable in below
                 filetypes_denylist = {
-                    'dirbuf', 'dirvish', 'fugitive', 'snacks_picker_list',
+                    'dirbuf', 'dirvish', 'fugitive', 'snacks_picker_list', 'sagaoutline',
                     'Avante', 'AvanteSelectedFiles', 'AvanteInput', 'AvantePromptInput',
                     'snacks_input', 'snacks_picker_input', 'snacks_terminal', 'snacks_dashboard',
                 },

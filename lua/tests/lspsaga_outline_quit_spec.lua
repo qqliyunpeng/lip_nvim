@@ -1,4 +1,4 @@
--- Run: nvim --headless -u NONE -l lua/tests/outline_quit_spec.lua
+-- Run: nvim --headless -u NONE -l lua/tests/lspsaga_outline_quit_spec.lua
 local scenario = vim.env.LIP_OUTLINE_QUIT_SCENARIO
 local script = vim.fn.fnamemodify(debug.getinfo(1, "S").source:sub(2), ":p")
 local root = vim.fn.fnamemodify(script, ":h:h:h")
@@ -20,7 +20,7 @@ vim.opt.swapfile = false
 vim.opt.hidden = false
 require("lspsaga").setup({ lightbulb = { enable = false }, symbol_in_winbar = { enable = false },
     beacon = { enable = false }, outline = { auto_preview = false } })
-require("configs.outline_follow").setup()
+require("configs.lspsaga_outline").setup()
 local api = vim.api
 local editor, buf = api.nvim_get_current_win(), api.nvim_get_current_buf()
 api.nvim_buf_set_name(buf, "/tmp/outline-quit-source")

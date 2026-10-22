@@ -2,6 +2,7 @@
 --
 -- 1. 光标跟随：在源文件中移动光标时，将 Outline 光标同步到当前函数或符号；
 --    在函数之间的空白区域，则定位到前一个可见符号，避免列表停留在旧位置。
+--    关闭列表自身的光标行背景，仅用独立的深灰色行高亮标记源文件当前符号。
 -- 2. 窗口分组：将源文件窗口和 Outline 视为同一组窗口。焦点位于源文件
 --    或 Outline 时，两者使用黑色背景；焦点切换到 Quickfix、Explorer 等其他
 --    窗口时，两者同步恢复为非活动窗口背景。
@@ -12,6 +13,7 @@
 -- 该模块不负责生成符号列表，符号数据和列表窗口仍由 Lspsaga 管理。
 local M = {}
 local source_winhighlight = {}
+local current_symbol_ns = vim.api.nvim_create_namespace("SagaOutlineCurrentSymbol")
 
 local function set_winhighlight(win, active_group)
     local parts = {}
@@ -78,10 +80,14 @@ function M.setup()
         -- Between symbols, follow the preceding declaration instead of keeping a stale cursor.
         target = target or preceding or first_visible
         outline.callerwinid = source_win
-        vim.wo[outline.winid].cursorline = true
-        vim.wo[outline.winid].cursorlineopt = "line"
+        -- 不使用 cursorline：它会把列表实际光标所在行显示成深色条。
+        vim.wo[outline.winid].cursorline = false
+        api.nvim_buf_clear_namespace(outline.bufnr, current_symbol_ns, 0, -1)
         if target and target.winline <= api.nvim_buf_line_count(outline.bufnr) then
             api.nvim_win_set_cursor(outline.winid, { target.winline, target.inlevel or 0 })
+            api.nvim_buf_set_extmark(outline.bufnr, current_symbol_ns, target.winline - 1, 0, {
+                line_hl_group = "SagaOutlineCurrentSymbol",
+            })
         end
     end
 
@@ -107,6 +113,11 @@ function M.setup()
             fg = normal.fg,
             bg = "#000000",
         })
+        api.nvim_set_hl(0, "SagaOutlineCurrentSymbol", {
+            fg = normal.fg,
+            bg = "#45475A",
+        })
+        vim.wo[win].cursorline = false
         set_winhighlight(win, active and "SagaOutlineNormal" or "NormalNC")
     end
 
@@ -154,8 +165,7 @@ function M.setup()
             vim.schedule(function()
                 if api.nvim_win_is_valid(win) and vim.bo[api.nvim_win_get_buf(win)].filetype == "sagaoutline" then
                     sync_group_background()
-                    vim.wo[win].cursorline = true
-                    vim.wo[win].cursorlineopt = "line"
+                    vim.wo[win].cursorline = false
                 end
             end)
         end,

@@ -1,4 +1,4 @@
--- Run: nvim --headless -u NONE -l lua/tests/outline_follow_spec.lua
+-- Run: nvim --headless -u NONE -l lua/tests/lspsaga_outline_spec.lua
 vim.opt.runtimepath:append(vim.fn.getcwd())
 vim.opt.runtimepath:append(vim.fn.expand("~/.local/share/nvim/lazy/lspsaga.nvim"))
 local api = vim.api
@@ -8,7 +8,7 @@ require("lspsaga").setup({
     beacon = { enable = false },
     outline = { auto_preview = false },
 })
-require("configs.outline_follow").setup()
+require("configs.lspsaga_outline").setup()
 local source, editor = api.nvim_get_current_buf(), api.nvim_get_current_win()
 local original_highlights = "CursorLine:CursorLine,NormalNC:NormalNC"
 vim.wo[editor].winhighlight = original_highlights
@@ -31,6 +31,12 @@ local function check(row, expected)
     assert(api.nvim_win_get_cursor(outline.winid)[1] == expected,
         "outline did not follow source row " .. row .. ": " .. vim.inspect(api.nvim_win_get_cursor(outline.winid)))
     assert(api.nvim_get_current_win() == editor, "focus stolen")
+    local marks = api.nvim_buf_get_extmarks(outline.bufnr,
+        api.nvim_create_namespace("SagaOutlineCurrentSymbol"), 0, -1, { details = true })
+    assert(#marks == 1 and marks[1][2] == expected - 1,
+        "exactly one current-function highlight must follow the source cursor")
+    assert(marks[1][4].line_hl_group == "SagaOutlineCurrentSymbol", "dedicated line highlight must be used")
+    assert(not vim.wo[outline.winid].cursorline, "list cursor must not add a second background")
 end
 check(5, 1)
 check(25, 2)
@@ -51,6 +57,13 @@ assert(mappings:find("NormalNC:SagaOutlineNormal", 1, true), "inactive outline m
 assert(api.nvim_get_hl(0, {}).SagaOutlineNormal.bg == 0, "outline background must be black")
 api.nvim_set_current_win(outline.winid)
 vim.wait(20)
+api.nvim_win_set_cursor(outline.winid, { 1, 4 })
+api.nvim_exec_autocmds("CursorMoved", { buffer = outline.bufnr })
+local symbol_marks = api.nvim_buf_get_extmarks(outline.bufnr,
+    api.nvim_create_namespace("SagaOutlineCurrentSymbol"), 0, -1, {})
+assert(#symbol_marks == 1 and symbol_marks[1][2] == 1,
+    "moving the list cursor must not change the source function highlight")
+assert(not vim.wo[outline.winid].cursorline, "focused list must not show a cursorline bar")
 assert(vim.wo[editor].winhighlight:find("NormalNC:SagaOutlineNormal", 1, true),
     "source editor must remain black while outline has focus")
 assert(vim.wo[editor].winhighlight:find("CursorLine:CursorLine", 1, true),
@@ -95,7 +108,11 @@ api.nvim_set_current_win(editor)
 vim.wait(20)
 assert(vim.wo[outline.winid].winhighlight:find("NormalNC:SagaOutlineNormal", 1, true),
     "returning to editor must reactivate outline background")
-assert(vim.wo[outline.winid].cursorline, "current symbol stripe must remain visible")
+assert(not vim.wo[outline.winid].cursorline, "outline cursorline must stay disabled")
+local current_marks = api.nvim_buf_get_extmarks(outline.bufnr, api.nvim_create_namespace("SagaOutlineCurrentSymbol"), 0, -1, {})
+assert(#current_marks > 0, "current symbol must have a dedicated highlight mark")
+assert(api.nvim_get_hl(0, {}).SagaOutlineCurrentSymbol.bg == 0x45475A,
+    "current symbol highlight must use #45475A")
 api.nvim_set_hl(0, "SagaOutlineNormal", { bg = 0xffffff })
 api.nvim_exec_autocmds("ColorScheme", {})
 assert(api.nvim_get_hl(0, {}).SagaOutlineNormal.bg == 0, "theme changes must restore black")

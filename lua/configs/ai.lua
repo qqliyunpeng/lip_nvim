@@ -870,7 +870,7 @@ function M.setup_quit_sidebars()
             end
 
             if file_window_count == 1 then
-                local outline = package.loaded["configs.outline_follow"]
+                local outline = package.loaded["configs.lspsaga_outline"]
                 if outline then
                     outline.close()
                 end
