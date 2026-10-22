@@ -70,6 +70,16 @@ local function avante_result_open()
     return false
 end
 
+local function explorer_column()
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local meta = vim.w[win].snacks_win
+        if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "snacks_layout_box"
+            and not_float(nil, win) and meta ~= nil and meta.position == "left" then
+            return win
+        end
+    end
+end
+
 local function left_edgebar_width()
     local win = vim.t.lip_avante_width_win
     -- edgy 的 close() 使用 noautocmd，不能仅依靠 BufWinLeave 清理。
@@ -83,7 +93,16 @@ local function left_edgebar_width()
     end
     vim.t.lip_avante_width = nil
     vim.t.lip_avante_width_win = nil
+    local explorer_win = explorer_column()
+    if vim.t.lip_explorer_width_win
+        and (not explorer_win or vim.t.lip_explorer_width_win ~= explorer_win) then
+        vim.t.lip_explorer_width = nil
+        vim.t.lip_explorer_width_win = nil
+    end
     local max_width = math.max(1, math.floor(vim.o.columns * M.avante_width))
+    if vim.t.lip_explorer_width and explorer_win then
+        return math.max(1, math.min(vim.t.lip_explorer_width, vim.o.columns - 2))
+    end
     return math.min(M.explorer_width, max_width)
 end
 
@@ -199,14 +218,14 @@ function M.install_avante_resize()
         end, { desc = amount > 0 and "加宽 Avante 侧栏" or "缩窄 Avante 侧栏" })
     end
 
-    -- 保留原生鼠标行为，只在拖动 Avante 列右侧分隔线时暂停 edgy。
+    -- 保留原生鼠标行为，只在拖动左侧栏右侧分隔线时暂停 edgy。
     local target
     for _, key in ipairs({ "<LeftMouse>", "<LeftDrag>", "<LeftRelease>" }) do
         local native = vim.api.nvim_replace_termcodes(key, true, false, true)
         vim.keymap.set({ "n", "i", "v" }, key, function()
             if key == "<LeftMouse>" then
                 target = nil
-                local win = avante_column()
+                local win = avante_result_open() and avante_column() or explorer_column()
                 if win then
                     local pos = vim.fn.getmousepos()
                     local col = vim.api.nvim_win_get_position(win)[2] + vim.api.nvim_win_get_width(win) + 1
@@ -225,16 +244,25 @@ function M.install_avante_resize()
                 -- 原生 release 先处理完，再读取窗口的最终宽度。
                 vim.schedule(function()
                     if M._mouse_resizing and dragged and vim.api.nvim_win_is_valid(dragged.win)
-                        and vim.api.nvim_get_current_tabpage() == dragged.tab and avante_result_open() then
-                        vim.t.lip_avante_width = vim.api.nvim_win_get_width(dragged.win)
-                        vim.t.lip_avante_width_win = dragged.win
+                        and vim.api.nvim_get_current_tabpage() == dragged.tab then
+                        local width = math.max(
+                            1,
+                            math.min(vim.api.nvim_win_get_width(dragged.win), vim.o.columns - 2)
+                        )
+                        if avante_result_open() then
+                            vim.t.lip_avante_width = width
+                            vim.t.lip_avante_width_win = dragged.win
+                        elseif explorer_column() == dragged.win then
+                            vim.t.lip_explorer_width = width
+                            vim.t.lip_explorer_width_win = dragged.win
+                        end
                     end
                     M._mouse_resizing = false
                     require("edgy.layout").update()
                 end)
             end
             return native
-        end, { expr = true, replace_keycodes = false, desc = "Avante 临时鼠标调宽（保留原生鼠标）" })
+        end, { expr = true, replace_keycodes = false, desc = "左侧栏临时鼠标调宽（保留原生鼠标）" })
     end
 
     vim.api.nvim_create_autocmd("BufWinLeave", {
