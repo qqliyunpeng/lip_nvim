@@ -126,7 +126,7 @@ function M.noiceConfig()
             view = "cmdline_popup",                 -- The kind of popup used for :
             format = {
                 cmdline = { conceal = enable_conceal },
-                search_down = { conceal = enable_conceal },
+                search_down = { conceal = enable_conceal, title = " Search · 全词 \\<word\\> " },
                 search_up = { conceal = enable_conceal },
                 filter = { conceal = enable_conceal },
                 lua = { conceal = enable_conceal },
