@@ -190,6 +190,7 @@ function M.windowsConfig()
         ignore = {
             buftype = { "quickfix", "terminal" },
             filetype = {
+                "sagaoutline",
                 "snacks_layout_box",
                 "snacks_dashboard",
                 "snacks_notif",

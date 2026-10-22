@@ -14,6 +14,44 @@
 local M = {}
 local source_winhighlight = {}
 local current_symbol_ns = vim.api.nvim_create_namespace("SagaOutlineCurrentSymbol")
+local autowidth_disabled_by_outline = false
+
+local function disable_windows_autowidth()
+    if autowidth_disabled_by_outline then
+        return
+    end
+    local ok, config = pcall(require, "windows.config")
+    if not ok or not config.autowidth.enable then
+        return
+    end
+    local loaded, autowidth = pcall(require, "windows.autowidth")
+    if not loaded or type(autowidth.disable) ~= "function" then
+        return
+    end
+    autowidth.disable()
+    autowidth_disabled_by_outline = true
+end
+
+local function has_outline_window()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_is_valid(win)
+            and vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "sagaoutline"
+        then
+            return true
+        end
+    end
+    return false
+end
+
+local function restore_windows_autowidth()
+    if autowidth_disabled_by_outline and not has_outline_window() then
+        local ok, autowidth = pcall(require, "windows.autowidth")
+        if ok and type(autowidth.enable) == "function" then
+            autowidth.enable()
+        end
+        autowidth_disabled_by_outline = false
+    end
+end
 
 local function set_winhighlight(win, active_group)
     local parts = {}
@@ -148,6 +186,11 @@ function M.setup()
         callback = function()
             -- Run after the plugin/window-enter handlers finish setting window options.
             vim.schedule(function()
+                if has_outline_window() then
+                    disable_windows_autowidth()
+                else
+                    restore_windows_autowidth()
+                end
                 follow()
                 sync_group_background()
             end)
@@ -164,6 +207,7 @@ function M.setup()
             local win = api.nvim_get_current_win()
             vim.schedule(function()
                 if api.nvim_win_is_valid(win) and vim.bo[api.nvim_win_get_buf(win)].filetype == "sagaoutline" then
+                    disable_windows_autowidth()
                     sync_group_background()
                     vim.wo[win].cursorline = false
                 end
