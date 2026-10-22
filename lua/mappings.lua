@@ -6,8 +6,8 @@ map({ "x", "n", "o" }, "H", "^" ,  { noremap = true, silent = true, desc = "To b
 map({ "x", "n", "o" }, "J", "<cmd>normal!5j<cr>",  { desc = "line down 5" })
 map({ "x", "n", "o" }, "K", "<cmd>normal!5k<cr>",  { desc = "line up 5" })
 
-map("i", "<C-h>", "<Left>",     { desc = "move left" })
-map("i", "<C-l>", "<Right>",    { desc = "move right" })
+map({ "i", "c" }, "<C-h>", "<Left>",  { desc = "move left" })
+map({ "i", "c" }, "<C-l>", "<Right>", { desc = "move right" })
 map("i", "<C-j>", "<Down>",     { desc = "move down" })
 map("i", "<C-k>", "<Up>",       { desc = "move up" })
 
