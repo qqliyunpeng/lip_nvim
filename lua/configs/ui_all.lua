@@ -99,6 +99,10 @@ function M.scrollbarConfig()
         "AvanteSelectedFiles",
     })
     require("scrollbar").setup({
+        handle = {
+            color = "#585b70",
+            blend = 15,
+        },
         marks = {
             GitAdd = { text = "▐" },
             GitChange = { text = "▐" },
