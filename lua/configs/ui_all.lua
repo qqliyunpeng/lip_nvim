@@ -305,6 +305,7 @@ function M.lspsagaConfig()
             auto_preview = false,
             keys = {
                 toggle_or_jump = "<CR>",
+                jump = { "e", "<2-LeftMouse>" },
             }
         },
         rename = {
