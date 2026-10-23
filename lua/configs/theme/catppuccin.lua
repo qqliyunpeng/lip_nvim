@@ -42,6 +42,12 @@ function M.apply()
         highlight.cterm = nil
         vim.api.nvim_set_hl(0, group, highlight)
     end
+
+    vim.api.nvim_set_hl(0, "MatchParen", {
+        fg = M.palette.pink,
+        bg = M.palette.surface2,
+        bold = true,
+    })
 end
 
 return M
