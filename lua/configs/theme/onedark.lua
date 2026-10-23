@@ -53,18 +53,18 @@ function M.apply()
     hi FlashMatch    guifg=#b4befe
     hi FlashLabel    cterm=bold gui=bold guifg=#a6e3a1 guibg=#1e1e2e
     hi! link FlashPrompt NormalFloat
-    
+
     " hi LspReferenceRead  guibg=#45475a
     " hi LspReferenceText  guibg=#45475a
     " hi LspReferenceWrite guibg=#45475a
     hi LspReferenceText guifg=NONE guibg=NONE
-    
+
     hi IlluminatedWordText  guibg=#45475a
     hi IlluminatedWordWrite guibg=#45475a
     hi IlluminatedWordRead  guibg=#45475a
-    
+
     hi BlinkCmpKindYank  guifg=#8957E5
-    
+
     hi TelescopeNormal        guibg=black ctermbg=black
     hi TelescopePromptNormal  guibg=Black
     hi TelescopePreviewLine   guibg=Black
@@ -77,7 +77,7 @@ function M.apply()
     hi! link TelescopeTitle        TelescopeNormal
     hi! link TelescopePreviewLine  CursorLine
     hi! link TelescopePromptPrefix TelescopePromptTitle
-    
+
     hi! link SnacksPicker                  TelescopeNormal
     hi! link SnacksPickerBorder            TelescopeBorder
     hi! link SnacksPickerTotals            TelescopePromptCounter
@@ -91,7 +91,7 @@ function M.apply()
     hi! link SnacksPickerCol               TelescopePromptCounter
     hi! link SnacksPickerRow               TelescopePromptCounter
     hi! link SnacksPickerDelim             TelescopePromptCounter
-    
+
     " todo-comments
     hi TodoSignTODO guifg=#61afef guibg=NONE
     hi TodoSignPERF guifg=#e06c75 guibg=NONE
@@ -100,11 +100,11 @@ function M.apply()
     hi TodoSignHACK guifg=#e5c07b guibg=NONE
     hi TodoSignTEST guifg=#e06c75 guibg=NONE
     hi TodoSignWARN guifg=#e5c07b guibg=NONE
-    
+
     " FFF
     hi FFFPicerTitle guifg=#95C077 guibg=Black
     ]])
-    
+
     vim.api.nvim_set_hl(0, "@keyword.conditional", { fg = "#BB8AFF" })
     vim.api.nvim_set_hl(0, "@conditional", { fg = "#BB8AFF" })
     vim.api.nvim_set_hl(0, "Function", { fg = "#39A6FF" })
