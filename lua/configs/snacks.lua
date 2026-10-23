@@ -320,13 +320,15 @@ function M.snacksConfig()
         end
     end
 
-    -- In lazygit terminal, remap <C-j>/<C-k> to j / k
+    -- In lazygit terminal, pass <C-h>/<C-j>/<C-k>/<C-l> to lazygit
     vim.api.nvim_create_autocmd("TermOpen", {
         pattern = "*lazygit*",
         callback = function(args)
             local buf = args.buf
-            vim.keymap.set("t", "<C-j>", "j", { buffer = buf, noremap = true, silent = true })
-            vim.keymap.set("t", "<C-k>", "k", { buffer = buf, noremap = true, silent = true })
+            vim.keymap.set("t", "<C-j>", "<C-j>", { buffer = buf, noremap = true, silent = true })
+            vim.keymap.set("t", "<C-k>", "<C-k>", { buffer = buf, noremap = true, silent = true })
+            vim.keymap.set("t", "<C-l>", "<C-l>", { buffer = buf, noremap = true, silent = true })
+            vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = buf, noremap = true, silent = true })
         end,
     })
 
