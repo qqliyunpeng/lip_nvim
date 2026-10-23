@@ -5,6 +5,8 @@ local normal = { fg = 0xcdd6f4, bg = 0x1e1e2e }
 local inactive = { fg = 0xcdd6f4, bg = 0x1e1e2e }
 vim.api.nvim_set_hl(0, "Normal", normal)
 vim.api.nvim_set_hl(0, "NormalNC", inactive)
+vim.api.nvim_set_hl(0, "Comment", { fg = 0x9399b2, italic = true })
+vim.api.nvim_set_hl(0, "Conditional", { fg = 0xcba6f7, italic = true })
 
 local theme = require("configs.theme.catppuccin")
 for _ = 1, 2 do
@@ -14,6 +16,10 @@ for _ = 1, 2 do
     assert(active.fg == normal.fg, "the theme foreground must be preserved")
     assert(vim.deep_equal(vim.api.nvim_get_hl(0, { name = "NormalNC", link = false }), inactive),
         "inactive windows must keep the theme background")
+    assert(vim.api.nvim_get_hl(0, { name = "Comment", link = false }).italic ~= true,
+        "comments must not be italic")
+    assert(vim.api.nvim_get_hl(0, { name = "Conditional", link = false }).italic ~= true,
+        "conditionals must not be italic")
 end
 
 print("catppuccin_highlight_spec: ok")

@@ -35,6 +35,13 @@ function M.apply()
     normal.bg = "#000000"
     normal.ctermbg = 0
     vim.api.nvim_set_hl(0, "Normal", normal)
+
+    for _, group in ipairs({ "Comment", "Conditional" }) do
+        local highlight = vim.api.nvim_get_hl(0, { name = group, link = false })
+        highlight.italic = false
+        highlight.cterm = nil
+        vim.api.nvim_set_hl(0, group, highlight)
+    end
 end
 
 return M
