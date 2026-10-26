@@ -157,8 +157,21 @@ return {
                 disable_keymaps = true,
             })
 
-            -- vim.keymap.set('n', '<a-j>', require('illuminate').goto_next_reference, { desc = "Move to next reference" })
-            -- vim.keymap.set('n', '<a-k>', require('illuminate').goto_prev_reference, { desc = "Move to previous reference" })
+            -- ]] / [[ 走 illuminate 自己的引用表（原先走 Snacks.words.jump，它读的是
+            -- document_highlight 落下的 extmark；snacks 的 words 模块已关，那条路会静默失效）
+            local function goto_reference(forward)
+                local illu = require('illuminate')
+                for _ = 1, vim.v.count1 do
+                    if forward then
+                        illu.goto_next_reference()
+                    else
+                        illu.goto_prev_reference()
+                    end
+                end
+            end
+
+            vim.keymap.set('n', ']]', function() goto_reference(true) end, { desc = "Next Reference" })
+            vim.keymap.set('n', '[[', function() goto_reference(false) end, { desc = "Prev Reference" })
         end
     },
     {

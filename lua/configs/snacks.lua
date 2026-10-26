@@ -67,8 +67,6 @@ M.keys = {
     { "<leader>gg", function() open_lazygit_with_refresh() end, desc = "Lazygit" },
     { "<leader>gL", function() Snacks.lazygit.log() end,        desc = "View Git log" },
     { "<leader>un", function() Snacks.notifier.hide() end,      desc = "Dismiss All Notifications" },
-    { "]]", function() Snacks.words.jump(vim.v.count1) end,  desc = "Next Reference", mode = { "n", "t" } },
-    { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
     { "<leader>.",   function() Snacks.scratch() end,          desc = "Open Scratch Buffer" },
     { "<leader>S",   function() Snacks.scratch.select() end,   desc = "Select Scratch Buffer" },
     { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
@@ -185,7 +183,10 @@ function M.snacksConfig()
         indent    = { enabled = false },
         bigfile   = { enabled = true },
         image     = { enabled = false },
-        words     = { enabled = true },
+        -- 关闭：引用高亮统一由 vim-illuminate 负责（IlluminatedWord* 组 + 光标在关键字上才亮）。
+        -- 原来 snacks.words 会在 CursorMoved 后调 document_highlight()，与 illuminate 重复请求、
+        -- 双重高亮，且它自己不判断光标是否在标识符上（clangd 会回退到前一个表达式）。
+        words     = { enabled = false },
         scope     = { enabled = false },
         quickfile = { enabled = true },
         statuscolumn = { enabled = true },

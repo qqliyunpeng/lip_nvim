@@ -121,60 +121,6 @@ function M.defaults()
     mason_lspconfig.setup_handlers(handlers)
 end
 
---- 只在光标停在标识符（关键字字符）上时才显示 LSP 引用高亮。
----
---- 起因：Snacks.words（snacks 配置里 words = { enabled = true }）会在 CursorMoved /
---- CursorMovedI 之后调用 vim.lsp.buf.document_highlight()，它本身不判断光标停在什么字符上。
---- clangd 对“光标不在任何 token 上”的位置会回落到前一个表达式，例如
----     if(Ss.main_aux_display_mode == MODE_MAIN_REAL_AUX_PAUSE){
----                                     ^光标停在 ')' 上
---- 此时 clangd 依然把 MODE_MAIN_REAL_AUX_PAUSE 这份引用报回来，nvim 就给这段标识符
---- 整段刷上 LspReferenceText 的背景色（catppuccin 下是实心背景），看起来像“右括号前面的
---- 宏莫名其妙亮了”。
----
---- 另外 Snacks.words 自己的判断也有问题：M.get() 拿 extmark 的 end_col（非包含语义）当
---- 包含端点来判“光标是否还在这个词里”（`cursor[2] <= w.to[2]`），所以光标从标识符最后一个
---- 字符右移到紧跟的 ')' 时，它认为还在词内，于是跳过 M.update()、也就不会清掉旧高亮，
---- 旧背景色就会一直残留到光标离开。这种“已经不需要了但没人清”的情况，用拦
---- document_highlight 拦不住（因为压根没再调用），所以额外挂一个 CursorMoved 钩子：
---- 光标落到非关键字字符上就主动把引用高亮抹掉。
-function M.gateDocumentHighlight()
-    if vim.g.lip_document_highlight_gated then
-        return
-    end
-    vim.g.lip_document_highlight_gated = true
-
-    --- 光标是否落在关键字字符上（\k 走 'iskeyword'，`(`, `)`, `{`, 空格、行尾等都不算）
-    local function cursor_on_keyword()
-        local ok, cursor = pcall(vim.api.nvim_win_get_cursor, 0)
-        if not ok then
-            return false
-        end
-        local char = vim.api.nvim_get_current_line():sub(cursor[2] + 1, cursor[2] + 1)
-        return char ~= "" and vim.fn.match(char, [[\k]]) == 0
-    end
-
-    local original = vim.lsp.buf.document_highlight
-
-    vim.lsp.buf.document_highlight = function()
-        if not cursor_on_keyword() then
-            vim.lsp.buf.clear_references()
-            return
-        end
-        return original()
-    end
-
-    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-        group = vim.api.nvim_create_augroup("lip_document_highlight_gate", { clear = true }),
-        callback = function()
-            if cursor_on_keyword() then
-                return
-            end
-            vim.lsp.buf.clear_references()
-        end,
-    })
-end
-
 local lspkind_nerd_icons = {
     Array         = "󰅪",
     Boolean       = "⊨",
