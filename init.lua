@@ -132,6 +132,10 @@ require("configs.num_change").tg_dot_array()
 require("configs.num_change").tg_format_array()
 require("configs.gencompiledb")
 
+-- 只在光标停在标识符上时才高亮 LSP 引用，避免停在 ')' / '{' 上时前面的宏被打上背景色
+-- （原因说明见 lua/configs/lspconfig.lua 里的 gateDocumentHighlight）
+require("configs.lspconfig").gateDocumentHighlight()
+
 -- avante.nvim 兼容老 nvim 版本
 vim.text = vim.text or {}
 vim.text.diff = vim.diff
