@@ -164,8 +164,89 @@ function M.setup_render_markdown()
 end
 
 --------------------------------------------------------------------------------
--- B6: ACP 流式分片合并
+-- B6: ACP 流式分片合并 + B8: 工具输出合并与裁剪
 --------------------------------------------------------------------------------
+
+--- 工具输出的累积 payload 上限（头 / 尾）。
+---
+--- pi-acp 这类 ACP agent 每次 tool_call_update 都重发「到目前为止的全部输出」：
+--- rawOutput.aggregated_output 一份、content[].content.text 再来一份。上游会把它们
+--- 深合并进消息并长期保留，于是单条命令就能让内存、save_history 的 json.encode 和
+--- 侧栏重绘都跟着 MB 级文本一起涨。渲染其实只读 rawOutput.metadata.preview，
+--- 折叠视图也只看得到开头几行，所以这里只留头尾，中间用一行标记代替。
+local ACP_TOOL_TEXT_HEAD = 32 * 1024
+local ACP_TOOL_TEXT_TAIL = 8 * 1024
+local ACP_TOOL_UPDATE_WINDOW_MS = 200
+
+local function trim_tool_text(text)
+    if type(text) ~= "string" then
+        return text
+    end
+    -- 已经裁过（头 + 尾 + 标记不超过这个长度），避免重复裁剪把标记也切掉
+    if #text <= ACP_TOOL_TEXT_HEAD + ACP_TOOL_TEXT_TAIL + 128 then
+        return text
+    end
+    local omitted = #text - ACP_TOOL_TEXT_HEAD - ACP_TOOL_TEXT_TAIL
+    return text:sub(1, ACP_TOOL_TEXT_HEAD)
+        .. string.format("\n... [%d bytes omitted by avante] ...\n", omitted)
+        .. text:sub(-ACP_TOOL_TEXT_TAIL)
+end
+
+--- 原地裁掉一条 tool_call / tool_call_update 里无界增长的字段。
+---@param update table
+---@return table
+function M.trim_acp_tool_payload(update)
+    if type(update) ~= "table" then
+        return update
+    end
+
+    -- 只用于展示的是 metadata.preview，aggregated_output 上游从不读取；
+    -- stdout / formatted_output 是别的 ACP adapter 对同一份工具输出的另外两个命名。
+    -- 三者都可能累积到 MB 级，统一按文本规则收敛。
+    local raw_output = update.rawOutput
+    local content = update.content
+    if type(raw_output) == "table" then
+        raw_output.aggregated_output = nil
+        for _, key in ipairs({ "stdout", "formatted_output" }) do
+            if type(raw_output[key]) == "string" then
+                raw_output[key] = trim_tool_text(raw_output[key])
+            end
+        end
+        -- 图片类工具会把同一张图存两份：rawOutput.result 与 content[].content.data。
+        -- 只在这个前提下丢掉 result（无损去重）。
+        local result = raw_output.result
+        if type(result) == "string" and #result > 1024 and type(content) == "table" then
+            for _, item in ipairs(content) do
+                local inner = type(item) == "table" and item.content
+                if type(inner) == "table" and inner.data == result then
+                    raw_output.result = nil
+                    break
+                end
+            end
+        end
+    end
+
+    if type(content) == "string" then
+        update.content = trim_tool_text(content)
+    elseif type(content) == "table" then
+        for idx, item in ipairs(content) do
+            if type(item) == "string" then
+                content[idx] = trim_tool_text(item)
+            elseif type(item) == "table" then
+                if type(item.text) == "string" then
+                    item.text = trim_tool_text(item.text)
+                end
+                local inner = item.content
+                if type(inner) == "string" then
+                    item.content = trim_tool_text(inner)
+                elseif type(inner) == "table" and type(inner.text) == "string" then
+                    inner.text = trim_tool_text(inner.text)
+                end
+            end
+        end
+    end
+    return update
+end
 
 --- 把「连续同类的文本分片」攒起来合并成一条 update 再交给上游 handler。
 ---
@@ -176,13 +257,25 @@ end
 --- 峰值内存 +70MB；合并后同样内容只要 3ms。
 --- 上游语义本来就是把分片追加到最后一条 assistant 消息，所以合并后最终内容不变，
 --- 只是交付频率从「每个分片」降到「每 window_ms 一次」，与侧栏 50ms 的渲染节流对齐。
+---
+--- B8: 同一个 wrapper 顺带处理 tool_call_update：
+---   1. 裁掉累积输出（见 trim_acp_tool_payload）；
+---   2. 同一个 toolCallId 在 200ms 窗口内只留最新一条——payload 本来就是累积的，
+---      中间态不含任何最终态没有的信息。终态（completed/failed/cancelled）立即交付。
+--- 这样一条长命令从「N 次深合并 + N 次整体重渲染 + N 次落盘」降到「每 200ms 一次」。
 ---@param handler fun(update: table): nil
 ---@param window_ms? integer
 ---@return fun(update: table): nil
 function M.coalesce_session_update_handler(handler, window_ms)
     window_ms = window_ms or 50
-    local pending = nil
-    local flush
+
+    -- 文本分片（B6）
+    local pending_text = nil
+    local flush_text
+    -- 工具更新（B8），按 toolCallId 只留最新一条，按首次出现顺序交付
+    local pending_tools, tool_order = {}, {}
+    local tool_timer = nil
+    local flush_tools
 
     local function deliver(update)
         if update then
@@ -190,45 +283,105 @@ function M.coalesce_session_update_handler(handler, window_ms)
         end
     end
 
-    flush = function()
-        if not pending then
+    flush_text = function()
+        if not pending_text then
             return
         end
-        local update = pending
-        pending = nil
+        local update = pending_text
+        pending_text = nil
         update.content.text = table.concat(update._lip_chunks)
         update._lip_chunks = nil
         deliver(update)
     end
 
+    flush_tools = function()
+        if tool_timer then
+            pcall(function()
+                tool_timer:stop()
+            end)
+            tool_timer = nil
+        end
+        if #tool_order == 0 then
+            return
+        end
+        local order, pending = tool_order, pending_tools
+        tool_order, pending_tools = {}, {}
+        for _, id in ipairs(order) do
+            local update = pending[id]
+            if update then
+                deliver(update)
+            end
+        end
+    end
+
+    local function queue_tool(update)
+        local id = update.toolCallId
+        if not id then
+            -- 没有 id 就无法合并，直接交付
+            deliver(update)
+            return
+        end
+        if pending_tools[id] == nil then
+            tool_order[#tool_order + 1] = id
+        end
+        pending_tools[id] = update
+        -- 终态立即交付，让侧栏马上落定
+        if update.status == "completed" or update.status == "failed" or update.status == "cancelled" then
+            flush_tools()
+            return
+        end
+        if not tool_timer then
+            tool_timer = vim.defer_fn(flush_tools, ACP_TOOL_UPDATE_WINDOW_MS)
+        end
+    end
+
     return function(update)
+        if not update then
+            return
+        end
+        local kind = update.sessionUpdate
+
+        if kind == "tool_call" or kind == "tool_call_update" then
+            M.trim_acp_tool_payload(update)
+        end
+
+        if kind == "tool_call_update" then
+            -- 攒着的文本比这条工具更新更早，先交付
+            flush_text()
+            queue_tool(update)
+            return
+        end
+
         -- 与上游的判定保持一致：只有 agent 正文 / 思考正文分片可以合并
-        local kind = update and update.sessionUpdate
         local text = nil
-        if update and type(update.content) == "table" and update.content.type == "text" then
+        if type(update.content) == "table" and update.content.type == "text" then
             text = update.content.text
         end
         local coalescable = (kind == "agent_message_chunk" or kind == "agent_thought_chunk")
             and type(text) == "string"
 
-        if coalescable and pending and pending.sessionUpdate == kind then
-            pending._lip_chunks[#pending._lip_chunks + 1] = text
+        if coalescable then
+            -- 先交付更早攒下的工具更新，保证顺序
+            flush_tools()
+            if pending_text and pending_text.sessionUpdate == kind then
+                pending_text._lip_chunks[#pending_text._lip_chunks + 1] = text
+                return
+            end
+            flush_text()
+            pending_text = update
+            update._lip_chunks = { text }
+            vim.defer_fn(flush_text, window_ms)
             return
         end
 
         -- 换类或来了别的 update：先把攒着的交付出去，保证顺序
-        flush()
-        if not coalescable then
-            return deliver(update)
-        end
-
-        pending = update
-        update._lip_chunks = { text }
-        vim.defer_fn(flush, window_ms)
+        flush_text()
+        flush_tools()
+        deliver(update)
     end
 end
 
---- B6: 把上面这个 wrapper 挂到 ACPClient 上。
+--- B6 + B8: 把上面这个 wrapper 挂到 ACPClient 上。
 --- 客户端是每次 _stream_acp 时新建的（ACPClient:new），在构造时包一层最省事：
 --- 不改插件目录，`:Lazy update` 之后依然有效。
 ---@return boolean
@@ -255,6 +408,18 @@ function M.setup_acp_coalesce()
                 rawset(handlers, "_lip_coalesced", true)
                 handlers.on_session_update = M.coalesce_session_update_handler(handlers.on_session_update)
             end
+            if
+                handlers
+                and type(handlers.on_request_permission) == "function"
+                and not rawget(handlers, "_lip_permission_trimmed")
+            then
+                rawset(handlers, "_lip_permission_trimmed", true)
+                local orig_permission = handlers.on_request_permission
+                handlers.on_request_permission = function(tool_call, ...)
+                    M.trim_acp_tool_payload(tool_call)
+                    return orig_permission(tool_call, ...)
+                end
+            end
             return orig_new(self, config)
         end)
 
@@ -264,6 +429,116 @@ function M.setup_acp_coalesce()
         vim.notify("avante_incremental_render: ACP 分片合并补丁失败: " .. tostring(err), vim.log.levels.WARN)
     end
     return M._acp_coalesce_installed == true
+end
+
+--------------------------------------------------------------------------------
+-- B9: ACP stdout 读取改成「按行拼接」
+--------------------------------------------------------------------------------
+
+--- 上游 transport.start 里是这么读 stdout 的：
+---     buffer = buffer .. data
+---     local lines = vim.split(buffer, "\n", { plain = true })
+--- 每 64KB 分片都把「到目前为止的整行」重新拼一遍、再整段切一遍。工具输出累积到
+--- 几 MB 时，同一条 JSON-RPC 行会被复制 O(n²) 次（实测 3MB 行、49 个分片：33ms → 14ms）。
+--- 这里在 transport.start 之后接管读回调：先攒分片，遇到换行才 concat 一次。
+---
+--- 做法：调完原 start 后立刻 read_stop 掉它挂的回调，再用自己的 read_start 续读。
+--- 两者在同一个 tick 内完成，libuv 还不会投递数据，所以不会丢字节；如果上游结构
+--- 变了（没有 read_stop / start 不再是函数），就静默回退到原实现，功能不受影响。
+---@return boolean
+function M.setup_acp_stdout_reader()
+    if M._acp_reader_installed then
+        return true
+    end
+    local ok = pcall(function()
+        local ACPClient = require("avante.libs.acp_client")
+        if rawget(ACPClient, "_lip_stdout_reader") then
+            M._acp_reader_installed = true
+            return
+        end
+        local orig_create = rawget(ACPClient, "_create_stdio_transport")
+        if type(orig_create) ~= "function" then
+            return
+        end
+
+        rawset(ACPClient, "_create_stdio_transport", function(self, ...)
+            local transport = orig_create(self, ...)
+            if type(transport) ~= "table" or type(transport.start) ~= "function" then
+                return transport
+            end
+
+            local orig_start = transport.start
+            transport.start = function(transport_self, on_message)
+                local ret = orig_start(transport_self, on_message)
+
+                local stdout = transport_self.stdout
+                if not stdout or stdout:is_closing() then
+                    return ret
+                end
+                if type(stdout.read_stop) ~= "function" or type(stdout.read_start) ~= "function" then
+                    return ret
+                end
+                if not pcall(stdout.read_stop, stdout) then
+                    return ret
+                end
+
+                local chunks = {}
+                local function dispatch(line)
+                    line = vim.trim(line)
+                    if line == "" then
+                        return
+                    end
+                    local decoded, message = pcall(vim.json.decode, line)
+                    if decoded then
+                        on_message(message)
+                    else
+                        local preview = line:sub(1, 200)
+                        vim.schedule(function()
+                            vim.notify("ACP: failed to parse JSON-RPC message: " .. preview, vim.log.levels.WARN)
+                        end)
+                    end
+                end
+
+                local started = pcall(stdout.read_start, stdout, function(_, data)
+                    if not data then
+                        return
+                    end
+                    chunks[#chunks + 1] = data
+                    -- chunks 里不含换行，所以看不到换行的分片凑不成完整消息
+                    if not data:find("\n", 1, true) then
+                        return
+                    end
+                    local payload = table.concat(chunks)
+                    chunks = {}
+                    -- 最后一个换行之前是完整消息，之后是下一条的开头
+                    local last_newline = payload:find("\n[^\n]*$")
+                    if last_newline then
+                        local rest = payload:sub(last_newline + 1)
+                        payload = payload:sub(1, last_newline)
+                        if rest ~= "" then
+                            chunks[1] = rest
+                        end
+                    end
+                    for line in payload:gmatch("[^\n]+") do
+                        dispatch(line)
+                    end
+                end)
+
+                if not started then
+                    -- 已经 stop 掉旧回调却挂不上新的，等于读不到任何数据：必须报出来
+                    vim.schedule(function()
+                        vim.notify("ACP: failed to re-attach stdout reader", vim.log.levels.ERROR)
+                    end)
+                end
+                return ret
+            end
+
+            return transport
+        end)
+        rawset(ACPClient, "_lip_stdout_reader", true)
+        M._acp_reader_installed = true
+    end)
+    return M._acp_reader_installed == true
 end
 
 --- B7: render_logo 每次 update_content 都会被调用，并重新给 logo 那几行加 extmark，
@@ -372,6 +647,7 @@ function M.setup_avante()
         end
 
         M.setup_acp_coalesce()
+        M.setup_acp_stdout_reader()
         M.setup_logo_extmarks()
 
         local Utils = require("avante.utils")
