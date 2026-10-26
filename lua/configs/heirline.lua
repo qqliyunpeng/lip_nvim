@@ -32,10 +32,26 @@ end
 
 
 ----lip 1----
+-- 项目名显示层数（2 = 父目录/项目目录）与最大宽度（字符）
+local PROJECT_NAME_DEPTH = 2
+local PROJECT_NAME_MAX = 24
+
 local function project_name()
-    local root = vim.fs.root(0, ".git") or vim.fn.getcwd()
-    local name = vim.fs.basename(vim.fs.normalize(root))
-    return vim.fn.strcharpart(name, 0, 10)
+    local root = vim.fs.normalize(vim.fs.root(0, ".git") or vim.fn.getcwd())
+    local parts = {}
+    for _ = 1, PROJECT_NAME_DEPTH do
+        local base = vim.fs.basename(root)
+        if base == "" then break end
+        table.insert(parts, 1, base)
+        root = vim.fs.dirname(root)
+    end
+    local name = table.concat(parts, "/")
+    -- 超长时保留尾部（叶子目录信息量更大），前面用省略号
+    local len = vim.fn.strchars(name)
+    if len > PROJECT_NAME_MAX then
+        name = "…" .. vim.fn.strcharpart(name, len - PROJECT_NAME_MAX + 1)
+    end
+    return name
 end
 
 local ProjectName = {
