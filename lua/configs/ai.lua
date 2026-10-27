@@ -954,6 +954,7 @@ function M.setup_quit_sidebars()
             local has_avante = false
             local has_explorer = require("configs.explorer").is_open()
             local file_window_count = count_file_windows()
+            local terminal_windows = {}
 
             for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
                 local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
@@ -968,6 +969,10 @@ function M.setup_quit_sidebars()
                     if ft == "Avante" or ft == "AvanteInput" then
                         has_avante = true
                     end
+                    if bt == "terminal" and ft == "snacks_terminal"
+                        and vim.api.nvim_win_get_config(win).relative == "" then
+                        table.insert(terminal_windows, win)
+                    end
                 end
             end
 
@@ -978,6 +983,11 @@ function M.setup_quit_sidebars()
             end
 
             if file_window_count == 1 then
+                for _, win in ipairs(terminal_windows) do
+                    if vim.api.nvim_win_is_valid(win) then
+                        pcall(vim.api.nvim_win_close, win, false)
+                    end
+                end
                 local outline = package.loaded["configs.lspsaga_outline"]
                 if outline then
                     outline.close()

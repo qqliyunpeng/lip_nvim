@@ -108,6 +108,41 @@ local function smart_layout()
     end
 end
 
+-- :q 关闭最后一个普通文件窗口时，不能只留下 snacks.terminal 窗口/后台 job。
+-- 平时切换终端仍保留它，只有编辑窗口即将全部退出时才清理。
+local function close_orphaned_snacks_terminals()
+    local current_win = vim.api.nvim_get_current_win()
+    if vim.api.nvim_win_get_config(current_win).relative ~= ""
+        or vim.bo[vim.api.nvim_win_get_buf(current_win)].buftype ~= ""
+    then
+        return
+    end
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].modified then
+            return
+        end
+    end
+    local normal_windows = 0
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local config = vim.api.nvim_win_get_config(win)
+        local buf = vim.api.nvim_win_get_buf(win)
+        if config.relative == "" and vim.bo[buf].buftype == "" then
+            normal_windows = normal_windows + 1
+        end
+    end
+
+    if normal_windows ~= 1 then
+        return
+    end
+
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.bo[buf].buftype == "terminal" and vim.bo[buf].filetype == "snacks_terminal" then
+            pcall(vim.api.nvim_win_close, win, true)
+        end
+    end
+end
+
 local picker_layouts = {
     wide_85 = {
         layout = {
@@ -331,6 +366,11 @@ function M.snacksConfig()
             vim.keymap.set("t", "<C-l>", "<C-l>", { buffer = buf, noremap = true, silent = true })
             vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = buf, noremap = true, silent = true })
         end,
+    })
+
+    vim.api.nvim_create_autocmd("QuitPre", {
+        group = vim.api.nvim_create_augroup("LipSnacksTerminalCleanup", { clear = true }),
+        callback = close_orphaned_snacks_terminals,
     })
 
     vim.api.nvim_create_autocmd("User", {

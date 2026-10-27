@@ -72,6 +72,21 @@ vim.bo[file_buf].modified = true
 eq(quit_pre(), 0, "unsaved changes preserve explorer")
 vim.bo[file_buf].modified = false
 
+vim.cmd("split")
+local terminal_win = vim.api.nvim_get_current_win()
+local terminal_buf = vim.api.nvim_create_buf(false, true)
+vim.api.nvim_win_set_buf(terminal_win, terminal_buf)
+vim.bo[terminal_buf].filetype = "snacks_terminal"
+vim.fn.termopen({ "sh", "-c", "exec sleep 60" })
+vim.api.nvim_set_current_win(file_win)
+vim.bo[file_buf].modified = true
+quit_pre()
+assert(vim.api.nvim_win_is_valid(terminal_win), "unsaved file preserves terminal")
+vim.bo[file_buf].modified = false
+quit_pre()
+assert(not vim.api.nvim_win_is_valid(terminal_win), "last file closes snacks terminal window")
+vim.api.nvim_buf_delete(terminal_buf, { force = true })
+
 explorer_open = false
 eq(quit_pre(), 0, "nothing to close when explorer is closed")
 
