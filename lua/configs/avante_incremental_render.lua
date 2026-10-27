@@ -646,8 +646,6 @@ function M.setup_avante()
             rawset(Sidebar, "_lip_stream_cache_patched", true)
         end
 
-        M.setup_acp_coalesce()
-        M.setup_acp_stdout_reader()
         M.setup_logo_extmarks()
 
         local Utils = require("avante.utils")

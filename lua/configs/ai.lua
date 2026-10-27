@@ -121,9 +121,11 @@ local avanteOpts = {
         codex = {
             command = "codex-acp",
             args = {},
-            env = {
-                OPENAI_API_KEY = os.getenv("CHATGPT_API_KEY"),
-            },
+            -- Avante ACP 只默认传 PATH；Codex 还需要 HOME 才能读取
+            -- ~/.codex/config.toml、认证文件和模型目录。
+            env = vim.tbl_extend("force", vim.fn.environ(), {
+                OPENAI_API_KEY = os.getenv("CHATGPT_API_KEY") or os.getenv("OPENAI_API_KEY"),
+            }),
         },
         pi = {
             -- pi-acp 的 SDK 启动路径没有初始化代理，通过包装脚本复用 Pi 的 HTTP dispatcher。
