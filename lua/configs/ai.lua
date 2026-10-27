@@ -101,9 +101,16 @@ function M.copileConfig()
 end
 
 local avanteOpts = {
-    provider = "pi",
+    provider = "codex",
     session_recovery = {
         include_history_count = 1,
+        -- 会话恢复的历史截断参数：最多保留 4 条消息，每条最多 4000 字符。
+        max_history_messages = 4,
+        max_message_length = 4000,
+    },
+    -- 不将输入提示记录到磁盘，避免额外的日志写入和缓存。
+    prompt_logger = {
+        enabled = false,
     },
     -- Disable diff-based apply flow and diff view as much as possible.
     -- (Keeps Avante usable for chat/ask without opening diff UIs.)
