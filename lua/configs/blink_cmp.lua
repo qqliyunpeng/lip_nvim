@@ -159,7 +159,7 @@ function M.blinkConfig()
                     local buf = vim.api.nvim_get_current_buf()
 
                     -- 1) Copilot LSP NES: accept pending suggestion first.
-                    if vim.b[buf].nes_state then
+                    if vim.g.copilot_enabled and vim.b[buf].nes_state then
                         local ok, nes = pcall(require, "copilot-lsp.nes")
                         if ok and nes then
                             bcmp.hide()
@@ -171,7 +171,7 @@ function M.blinkConfig()
                     -- 2) When blink.cmp menu is NOT visible, accept Copilot inline suggestion
                     -- (virtual text) with <Tab>.
                     local menu_visible = type(bcmp.is_visible) == "function" and bcmp.is_visible() or false
-                    if not menu_visible then
+                    if vim.g.copilot_enabled and not menu_visible then
                         local ok, suggestion = pcall(require, "copilot.suggestion")
                         if ok and suggestion and type(suggestion.is_visible) == "function" and suggestion.is_visible() then
                             bcmp.hide()
@@ -271,7 +271,16 @@ function M.blinkConfig()
         snippets = { preset = 'luasnip' },
         sources = {
             -- NOTE: Put ripgrep at the end so it has the lowest priority among sources.
-            default = { 'lsp', 'path', 'at_file', 'snippets', 'buffer', "insert_yanky", "ripgrep" , "copilot"},
+            -- copilot 用函数动态拼接：blink 会先 require 源模块再判断 enabled()，
+            -- 只有不在 default 里才真正避免在 C/C++ 等文件类型下拉起 copilot-language-server
+            -- （常驻 ~700MB）。见 configs/ai.lua 的 copilot_buffer_enabled。
+            default = function()
+                local sources = { 'lsp', 'path', 'at_file', 'snippets', 'buffer', "insert_yanky", "ripgrep" }
+                if require("configs.ai").copilot_buffer_enabled() then
+                    sources[#sources + 1] = "copilot"
+                end
+                return sources
+            end,
             providers = {
                 insert_yanky = {
                     name = "InsertYanky",
@@ -305,6 +314,9 @@ function M.blinkConfig()
                     module = "blink-cmp-copilot",
                     score_offset = 100,
                     async = true,
+                    enabled = function()
+                        return require("configs.ai").copilot_buffer_enabled()
+                    end,
                 },
                 ripgrep = {
                     name = "Ripgrep",

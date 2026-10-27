@@ -3,17 +3,24 @@ local use_ascii_icons = require("configs.icons").use_ascii_icons()
 -- 边栏尺寸的唯一定义源（见 configs/edgy.lua 顶部注释）
 local edgy_cfg = require("configs.edgy")
 
--- NOTE: Copilot config intentionally kept separate from llm.nvim and Avante.
-local copileOpts = {
-    suggestion = { enabled = true, auto_trigger = vim.g.blink_enable_copilot or false }, -- 自动补全
+-- Copilot 总开关由 init.lua 的 COPILOT_AUTO_TRIGGER 决定，运行时用 <leader>uc 切换。
+-- 关键点：copilot.lua 的 setup() 会无条件启动 copilot-language-server（Node 进程，
+-- 实测常驻约 700-800MB）。所以：
+--   1) 关闭时连 setup 都不调用，并用 command.disable() 停掉进程；只设
+--      suggestion.auto_trigger=false 并不能省内存。
+--   2) 只在 copilot_filetypes 里才把 copilot 源交给 blink（见 configs/blink_cmp.lua）。
+--      blink 会先 require 源模块再调 enabled()，所以不能只靠 provider.enabled 拦截，
+--      否则在 C/C++ 里也会白拉起一个 700MB 的 Node。
+--   3) 给 Node 限一个 V8 老生代堆上限，避免长时间使用后堆无上限增长；
+--      可用 COPILOT_MAX_HEAP_MB 覆盖（太小会 OOM，实测 512 启动即崩）。
+local copilot_filetypes = { lua = true, python = true, markdown = true }
+local copilot_heap_mb = tonumber(os.getenv("COPILOT_MAX_HEAP_MB") or "") or 1024
+
+local copilotOpts = {
+    copilot_node_command = { "node", "--max-old-space-size=" .. copilot_heap_mb },
+    suggestion = { enabled = true, auto_trigger = true }, -- 自动补全（总开关开启时才有意义）
     panel = { enabled = true }, -- Copilot 面板
-    filetypes = { -- 启用 Copilot 的文件类型
-        lua = true,
-        python = true,
-        javascript = false,
-        typescript = false,
-        markdown = true,
-    },
+    filetypes = vim.deepcopy(copilot_filetypes), -- 启用 Copilot 的文件类型
     keymap = { -- 快捷键映射
         accept = "<Tab>",
         -- accept = "<M-j>",
@@ -23,19 +30,74 @@ local copileOpts = {
     },
 }
 
-function M.copileConfig()
-    require("copilot").setup(copileOpts)
+--- 当前 buffer 是否该使用 Copilot（总开关 + filetype 双重判断）。
+--- blink 的 sources.default 用它决定要不要把 copilot 源加进来。
+---@param bufnr? integer
+---@return boolean
+function M.copilot_buffer_enabled(bufnr)
+    if vim.g.copilot_enabled ~= true then
+        return false
+    end
+    return copilot_filetypes[vim.bo[bufnr or 0].filetype] == true
+end
 
-    Snacks.toggle({
-        name = "copilot",
-        get = function()
-            return vim.g.blink_enable_copilot or false
+-- 兜底：退出前强制结束 LSP 子进程。copilot.lua 自己会在 VimLeavePre 里 stop()，
+-- 但那是异步的（先发 shutdown 再等回复）；这里用 stop(true) 直接断管道，
+-- 保证异常/卡住的情况下也不会留下 copilot-language-server。
+local function install_copilot_exit_guard()
+    if vim.g.lip_copilot_exit_guard then
+        return
+    end
+    vim.g.lip_copilot_exit_guard = true
+
+    vim.api.nvim_create_autocmd("VimLeavePre", {
+        group = vim.api.nvim_create_augroup("LipCopilotExit", { clear = true }),
+        callback = function()
+            for _, client in ipairs(vim.lsp.get_clients({ name = "copilot" })) do
+                pcall(function()
+                    client:stop(true)
+                end)
+            end
         end,
-        set = function(state)
-            vim.g.blink_enable_copilot = state
-            vim.b.copilot_suggestion_auto_trigger = state
-        end,
-    }):map("<leader>uc")
+        desc = "退出时强制结束 copilot-language-server",
+    })
+end
+
+--- 开/关 Copilot。关闭会清掉 autocmd 并停掉 LSP 进程。
+---@param state boolean
+function M.setCopilotEnabled(state)
+    vim.g.copilot_enabled = state == true
+    if vim.g.copilot_enabled then
+        install_copilot_exit_guard()
+        require("lazy").load({ plugins = { "blink-cmp-copilot", "copilot.lua" } })
+        local copilot = require("copilot")
+        if copilot.setup_done then
+            -- 首次 setup 之后这个标志一直是 true，disable() 不会复位它；
+            -- 此时必须走 command.enable() 才能真正重新启动 LSP。
+            if not require("copilot.client").is_disabled() then
+                return
+            end
+            require("copilot.command").enable()
+        else
+            copilot.setup(copilotOpts)
+        end
+        return
+    end
+
+    if package.loaded["copilot"] then
+        require("copilot.command").disable()
+    end
+    -- 不论模块是否加载过，都强制停掉可能存在的客户端进程
+    for _, client in ipairs(vim.lsp.get_clients({ name = "copilot" })) do
+        client:stop(true)
+    end
+end
+
+function M.copileConfig()
+    -- 关闭状态下连 setup 都不调用，否则 Node 进程会立刻被拉起
+    if vim.g.copilot_enabled then
+        M.setCopilotEnabled(true)
+    end
 end
 
 local avanteOpts = {

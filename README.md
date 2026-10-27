@@ -161,7 +161,8 @@ nvim
 | 变量 | 默认 | 作用 |
 |------|------|------|
 | `CLANGD_USE_GITHUB=1` | 关闭 | 使用 GitHub 官方 clangd 下载源 |
-| `COPILOT_AUTO_TRIGGER=1` | 关闭 | 开启 Copilot 自动补全触发 |
+| `COPILOT_AUTO_TRIGGER=1` | 关闭 | 启动 Copilot（含语言服务器与自动补全），运行时可用 `<leader>uc` 切换 |
+| `COPILOT_MAX_HEAP_MB` | `1024` | copilot-language-server 的 V8 堆上限（MB）。语言服务器常驻约 700-800MB，只在 lua/python/markdown 下启动；设太小会 OOM（实测 512 启动即崩） |
 
 示例：
 在 ~/.bashrc 中 export

@@ -15,11 +15,13 @@ else
     vim.g.use_custom_clangd = true
 end
 
-local copilot_auto_trigger = (os.getenv("COPILOT_AUTO_TRIGGER") or ""):lower()
-vim.g.blink_enable_copilot = copilot_auto_trigger == "1"
-    or copilot_auto_trigger == "true"
-    or copilot_auto_trigger == "yes"
-    or copilot_auto_trigger == "on"
+-- Copilot 总开关：COPILOT_AUTO_TRIGGER=1 时才启动 Copilot（含 copilot-language-server 的 Node 进程）。
+-- 运行时可用 <leader>uc 切换；关闭会停掉 Node 进程并释放 600-800MB 内存。
+local copilot_enabled = (os.getenv("COPILOT_AUTO_TRIGGER") or ""):lower()
+vim.g.copilot_enabled = copilot_enabled == "1"
+    or copilot_enabled == "true"
+    or copilot_enabled == "yes"
+    or copilot_enabled == "on"
 
 -- system
 map("n", " ", ":", { desc = "CMD enter command mode" })
@@ -101,6 +103,10 @@ local lazy_config = require "configs.lazy"
 require("lazy").setup({
     { import = "plugins" },
 }, lazy_config)
+
+if vim.g.copilot_enabled then
+    require("configs.ai").setCopilotEnabled(true)
+end
 
 require('mappings')
 

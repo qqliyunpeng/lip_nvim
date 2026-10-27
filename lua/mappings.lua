@@ -37,6 +37,12 @@ map("n", "<BS>", "<Nop>", { desc = "disable backspace" })
 
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
+-- Copilot 总开关：关闭会停掉 copilot-language-server 并释放内存
+map("n", "<leader>uc", function()
+    require("configs.ai").setCopilotEnabled(not vim.g.copilot_enabled)
+    vim.notify("Copilot " .. (vim.g.copilot_enabled and "已开启" or "已关闭"))
+end, { desc = "Toggle Copilot" })
+
 -- telescope
 -- map("n", "<leader>r", "<cmd>Telescope oldfiles<CR>",    { desc = "telescope find oldfiles" })
 -- map("n", "<leader>p", "<cmd>Telescope find_files<CR>",  { desc = "telescope find files" })

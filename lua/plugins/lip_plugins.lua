@@ -577,7 +577,6 @@ return {
     {
         ge("nvim_lip/blink.cmp.git"),
         dependencies = {
-            { ge("nvim_lip/blink-cmp-copilot.git") },
             { ge("nvim_lip/blink-ripgrep.nvim"), version = "*", },
             { ge("nvim_lip/at-file.nvim") },
             { ge("nvim_lip/blink-insert-yanky.nvim") },
@@ -589,6 +588,10 @@ return {
         config = function()
             require("configs.blink_cmp").blinkConfig()
         end
+    },
+    {
+        ge("nvim_lip/blink-cmp-copilot.git"),
+        lazy = true,
     },
     {
         ge("nvim_lip/overseer.nvim.git"),
@@ -643,6 +646,7 @@ return {
     },
     {
         ge("nvim_lip/copilot.lua.git"), -- 用于 providers='copilot'
+        lazy = true,
         dependencies = {
             ge("nvim_lip/copilot-lsp.nvim.git"), -- (optional) for NES functionality
         },
@@ -650,9 +654,6 @@ return {
             local v = vim.version()
             return (v.major == 0 and v.minor >= 11)
         end,
-        config = function()
-            require("configs.ai").copileConfig()
-        end
     },
     {
         require("lip.utils").gh("mawkler/modicator.nvim"),
@@ -700,7 +701,6 @@ return {
         dependencies = {
             ge("suyelu/plenary.nvim"),
             ge("nvim_lip/nui.nvim.git"),
-            ge("nvim_lip/copilot.lua.git"), -- 用于 providers='copilot'
             -- v0.4.0 起 :Avante 命令用 mega.cmdparse 解析参数
             { require("lip.utils").gh("ColinKennedy/mega.cmdparse"), dependencies = { require("lip.utils").gh("ColinKennedy/mega.logging") } },
         },
