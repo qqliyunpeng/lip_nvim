@@ -108,9 +108,11 @@ local avanteOpts = {
         max_history_messages = 4,
         max_message_length = 4000,
     },
-    -- 不将输入提示记录到磁盘，避免额外的日志写入和缓存。
+    -- AvanteInput 的上下键历史由 prompt logger 提供。
+    -- 日志保存在 stdpath("cache")，由 Avante 的 max_entries 自动限制数量。
     prompt_logger = {
-        enabled = false,
+        enabled = true,
+        max_entries = 10,
     },
     -- Disable diff-based apply flow and diff view as much as possible.
     -- (Keeps Avante usable for chat/ask without opening diff UIs.)
@@ -186,12 +188,6 @@ local avanteOpts = {
         provider_opts = {
             title = "Avante Input",
             icon = " ",
-            win = {
-                keys = {
-                    i_up = { "<Up>", "<Up>", mode = { "i", "n" }, expr = true },
-                    i_down = { "<Down>", "<Down>", mode = { "i", "n" }, expr = true },
-                },
-            },
         },
     },
     mappings = {
@@ -255,6 +251,113 @@ local avanteOpts = {
         },
     },
 }
+
+-- AvanteInput 使用 prompt logger，不是 Snacks input。Avante 自带的 logger
+-- 用取模运算遍历历史，导致在最旧/最新记录处按方向键会循环；另外箭头键
+-- 在某些 NUI/edgy 布局下会被窗口导航映射抢走。这里在 AvanteInput buffer
+-- 创建后提供一个不循环的 buffer-local 历史实现。
+local function install_avante_prompt_history()
+    local group = vim.api.nvim_create_augroup("LipAvantePromptHistory", { clear = true })
+
+    local function load_prompts()
+        local file = io.open(vim.fs.joinpath(vim.fn.stdpath("cache"), "avante_prompts.log"), "r")
+        if not file then
+            return {}
+        end
+
+        local prompts = {}
+        for line in file:lines() do
+            local ok, entry = pcall(vim.fn.json_decode, line)
+            if ok and type(entry) == "table" and type(entry.input) == "string" and entry.input ~= "" then
+                table.insert(prompts, entry.input)
+            end
+        end
+        file:close()
+        return prompts
+    end
+
+    local function set_input(bufnr, text)
+        if not vim.api.nvim_buf_is_valid(bufnr) then
+            return
+        end
+        vim.bo[bufnr].modifiable = true
+        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, vim.split(text or "", "\n", { plain = true }))
+        local win = vim.fn.bufwinid(bufnr)
+        if win ~= -1 and vim.api.nvim_win_is_valid(win) then
+            local line_count = vim.api.nvim_buf_line_count(bufnr)
+            local last_line = vim.api.nvim_buf_get_lines(bufnr, line_count - 1, line_count, false)[1] or ""
+            vim.api.nvim_win_set_cursor(win, { line_count, #last_line })
+        end
+    end
+
+    local function history_move(bufnr, direction)
+        local prompts = load_prompts()
+        if #prompts == 0 then
+            return
+        end
+
+        local index = vim.b[bufnr].lip_avante_prompt_history_index
+        if type(index) ~= "number" then
+            if direction > 0 then
+                return
+            end
+            vim.b[bufnr].lip_avante_prompt_history_draft = table.concat(
+                vim.api.nvim_buf_get_lines(bufnr, 0, -1, false),
+                "\n"
+            )
+            index = #prompts + 1 -- 当前正在编辑的空白输入
+        end
+
+        index = math.max(1, math.min(#prompts + 1, index + direction))
+        vim.b[bufnr].lip_avante_prompt_history_index = index
+
+        -- 到达边界后保持不动，不循环到另一端。
+        if index <= #prompts then
+            set_input(bufnr, prompts[index])
+        elseif index == #prompts + 1 then
+            -- 从历史的最新一条继续按 Down，恢复进入历史前的当前输入。
+            set_input(bufnr, vim.b[bufnr].lip_avante_prompt_history_draft or "")
+            vim.b[bufnr].lip_avante_prompt_history_index = nil
+            vim.b[bufnr].lip_avante_prompt_history_draft = nil
+        end
+    end
+
+    local function map_input(bufnr)
+        if vim.bo[bufnr].filetype ~= "AvanteInput" then
+            return
+        end
+
+        vim.keymap.set("i", "<Up>", function()
+            history_move(bufnr, -1)
+        end, { buffer = bufnr, silent = true, noremap = true, desc = "Avante previous prompt" })
+
+        vim.keymap.set("i", "<Down>", function()
+            history_move(bufnr, 1)
+        end, { buffer = bufnr, silent = true, noremap = true, desc = "Avante next prompt" })
+    end
+
+    vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        pattern = "AvanteInput",
+        callback = function(args)
+            vim.schedule(function()
+                map_input(args.buf)
+            end)
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("User", {
+        group = group,
+        pattern = "AvanteInputSubmitted",
+        callback = function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            if vim.bo[bufnr].filetype == "AvanteInput" then
+                vim.b[bufnr].lip_avante_prompt_history_index = nil
+                vim.b[bufnr].lip_avante_prompt_history_draft = nil
+            end
+        end,
+    })
+end
 
 -- 历史载入和 edgy 排版都可能延后执行；等挂载后的布局回调结束再定位末尾。
 -- 只在重新打开侧栏时调用，不干预用户随后向上翻阅历史。
@@ -472,6 +575,7 @@ function M.avanteConfig()
         rawset(Utils, "_lip_single_width_thinking_icon", true)
     end
 
+    install_avante_prompt_history()
     avante.setup(avanteOpts)
     -- Plan B：让流式输出只重写 buffer 尾部，配合 render-markdown 增量渲染
     require("configs.avante_incremental_render").setup_avante()
