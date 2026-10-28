@@ -296,9 +296,49 @@ end
 -- Avante 容器统一用 Normal 背景（当前主题为黑色）。edgy 默认的 EdgyNormal
 -- 链接 NormalFloat，并在 WinEnter 时追加到 winhighlight 末尾，会把当前窗口
 -- 变成非黑背景；这里给 Avante 视图单独指定，避免它追加 EdgyNormal。
-local avante_wo = { winhighlight = "Normal:AvanteSidebarNormal" }
+local avante_wo = {
+    winhighlight = table.concat({
+        "WinBar:AvanteWinBar",
+        "WinBarNC:AvanteWinBarNC",
+        "WinSeparator:AvanteWinSeparator",
+        "WinSeparatorNC:AvanteWinSeparatorNC",
+        "Normal:AvanteSidebarNormal",
+    }, ","),
+}
+
+-- 只给 Avante 的 winbar 使用独立高亮组，不修改 edgy 全局标题栏颜色。
+local function setup_avante_winbar_highlights()
+    local is_catppuccin = (vim.g.colors_name or ""):match("^catppuccin") ~= nil
+    if not is_catppuccin then
+        vim.api.nvim_set_hl(0, "AvanteWinBar", { link = "EdgyWinBar" })
+        vim.api.nvim_set_hl(0, "AvanteWinBarNC", { link = "EdgyWinBarNC" })
+        vim.api.nvim_set_hl(0, "AvanteWinSeparator", { link = "WinSeparator" })
+        vim.api.nvim_set_hl(0, "AvanteWinSeparatorNC", { link = "WinSeparator" })
+        return
+    end
+
+    local ok, edgy_winbar = pcall(vim.api.nvim_get_hl, 0, { name = "EdgyWinBar", link = false })
+    if not ok or not next(edgy_winbar) then
+        edgy_winbar = vim.api.nvim_get_hl(0, { name = "Title", link = false })
+    end
+    edgy_winbar.bg = "#1E1E2E"
+    vim.api.nvim_set_hl(0, "AvanteWinBar", edgy_winbar)
+    vim.api.nvim_set_hl(0, "AvanteWinBarNC", edgy_winbar)
+
+    -- 仅在 Catppuccin 下保留较亮的 Avante 分割线，背景与标题栏一致。
+    local separator = { fg = "#7F849C", bg = "#1E1E2E" }
+    vim.api.nvim_set_hl(0, "AvanteWinSeparator", separator)
+    vim.api.nvim_set_hl(0, "AvanteWinSeparatorNC", separator)
+end
 
 function M.opts()
+    setup_avante_winbar_highlights()
+    vim.api.nvim_create_autocmd("ColorScheme", {
+        group = vim.api.nvim_create_augroup("LipAvanteWinBarHighlights", { clear = true }),
+        callback = function()
+            vim.schedule(setup_avante_winbar_highlights)
+        end,
+    })
     local opts = {
         -- edgebar 展开/收起不播放动画（默认是开）
         animate = { enabled = false },
