@@ -20,6 +20,9 @@ for _ = 1, 2 do
         "comments must not be italic")
     assert(vim.api.nvim_get_hl(0, { name = "Conditional", link = false }).italic ~= true,
         "conditionals must not be italic")
+    local separator = vim.api.nvim_get_hl(0, { name = "SagaOutlineSeparator", link = false })
+    assert(separator.fg == 0x7f849c and separator.bg == 0x1e1e2e,
+        "outline separator must use a dark theme background")
 end
 
 print("catppuccin_highlight_spec: ok")

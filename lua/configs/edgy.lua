@@ -314,6 +314,8 @@ local function setup_avante_winbar_highlights()
         vim.api.nvim_set_hl(0, "AvanteWinBarNC", { link = "EdgyWinBarNC" })
         vim.api.nvim_set_hl(0, "AvanteWinSeparator", { link = "WinSeparator" })
         vim.api.nvim_set_hl(0, "AvanteWinSeparatorNC", { link = "WinSeparator" })
+        vim.api.nvim_set_hl(0, "TodoQuickFixSeparator", { link = "WinSeparator" })
+        vim.api.nvim_set_hl(0, "SagaOutlineSeparator", { link = "WinSeparator" })
         return
     end
 
@@ -333,6 +335,97 @@ end
 
 function M.opts()
     setup_avante_winbar_highlights()
+    -- Edgy 在创建 qf 窗口后会再次合并 winhighlight；在窗口真正出现后
+    -- 再补一次，确保 Todo/QuickFix 这类通过 :copen 打开的列表也命中。
+    local qf_group = vim.api.nvim_create_augroup("LipQuickFixHighlights", { clear = true })
+    local qf_separator_windows = {}
+
+    local function set_qf_separator(win)
+        if not vim.api.nvim_win_is_valid(win) then
+            return
+        end
+        if qf_separator_windows[win] == nil then
+            qf_separator_windows[win] = vim.wo[win].winhighlight
+        end
+        local mappings = {}
+        for mapping in vim.wo[win].winhighlight:gmatch("[^,]+") do
+            local source = mapping:match("^([^:]+):")
+            if source ~= "WinSeparator" and source ~= "WinSeparatorNC" then
+                mappings[#mappings + 1] = mapping
+            end
+        end
+        mappings[#mappings + 1] = "WinSeparator:TodoQuickFixSeparator"
+        mappings[#mappings + 1] = "WinSeparatorNC:TodoQuickFixSeparator"
+        vim.wo[win].winhighlight = table.concat(mappings, ",")
+    end
+
+    local function ensure_qf_separator_highlight()
+        if (vim.g.colors_name or ""):match("^catppuccin") then
+            vim.api.nvim_set_hl(0, "TodoQuickFixSeparator", {
+                fg = "#B4BEFE",
+                bg = "#1E1E2E",
+            })
+        end
+    end
+
+    local function restore_qf_separators()
+        for win, value in pairs(qf_separator_windows) do
+            if vim.api.nvim_win_is_valid(win) then
+                vim.wo[win].winhighlight = value
+            end
+            qf_separator_windows[win] = nil
+        end
+    end
+
+    local function refresh_qf_separators()
+        local qf_windows = {}
+        for _, candidate in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+            if vim.api.nvim_win_is_valid(candidate)
+                and vim.bo[vim.api.nvim_win_get_buf(candidate)].filetype == "qf"
+            then
+                qf_windows[#qf_windows + 1] = candidate
+            end
+        end
+
+        if #qf_windows == 0 then
+            restore_qf_separators()
+            return
+        end
+
+        for _, qf_win in ipairs(qf_windows) do
+            set_qf_separator(qf_win)
+            local qf_row = vim.api.nvim_win_get_position(qf_win)[1]
+            for _, candidate in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+                if candidate ~= qf_win and vim.api.nvim_win_is_valid(candidate) then
+                    local buf = vim.api.nvim_win_get_buf(candidate)
+                    local filetype = vim.bo[buf].filetype
+                    local row = vim.api.nvim_win_get_position(candidate)[1]
+                    local height = vim.api.nvim_win_get_height(candidate)
+                    -- 这条边界由 qf 上方窗口绘制；Outline 自己有独立的
+                    -- SagaOutlineSeparator，不能被 TodoQuickFixSeparator 覆盖。
+                    if filetype ~= "qf" and filetype ~= "sagaoutline"
+                        and (row + height == qf_row or row + height + 1 == qf_row)
+                    then
+                        set_qf_separator(candidate)
+                    end
+                end
+            end
+        end
+    end
+
+    vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter", "WinEnter", "WinClosed" }, {
+        group = qf_group,
+        callback = function()
+            vim.schedule(function()
+                ensure_qf_separator_highlight()
+                refresh_qf_separators()
+                -- Edgy 的 resize/layout 可能在本回调之后再次移动 qf，
+                -- 因此在布局稳定后再补一次，覆盖由上方窗口绘制的边界线。
+                vim.defer_fn(refresh_qf_separators, 80)
+                vim.defer_fn(refresh_qf_separators, 250)
+            end)
+        end,
+    })
     vim.api.nvim_create_autocmd("ColorScheme", {
         group = vim.api.nvim_create_augroup("LipAvanteWinBarHighlights", { clear = true }),
         callback = function()
@@ -404,7 +497,16 @@ function M.opts()
                 title = "QuickFix",
                 filter = not_float,
                 -- 不用 EdgyNormal（NormalFloat），随焦点切换当前/非当前窗口背景。
-                wo = { winhighlight = "Normal:Normal,NormalNC:NormalNC" },
+                -- 复用 Avante 的标题栏和分割线；其他主题下这些组回退到默认值。
+                wo = { winhighlight = table.concat({
+                    "WinBar:AvanteWinBar",
+                    "WinBarNC:AvanteWinBarNC",
+                    "EdgyTitle:AvanteWinBar",
+                    "WinSeparator:AvanteWinSeparator",
+                    "WinSeparatorNC:AvanteWinSeparatorNC",
+                    "Normal:Normal",
+                    "NormalNC:NormalNC",
+                }, ",") },
             },
             -- snacks.terminal（<A-b>）：configs/snacks.lua 里已改成底部分屏；
             -- winbar 留给 snacks（显示终端标题），edgy 不写，避免互相覆盖

@@ -16,6 +16,13 @@ vim.cmd("copen")
 local quickfix = vim.api.nvim_get_current_win()
 require("edgy.layout").update()
 vim.wait(100)
+assert(vim.wo[quickfix].winhighlight:find("WinSeparator:TodoQuickFixSeparator", 1, true),
+    "quickfix must map its separator to the brighter highlight")
+assert(vim.wo[editor].winhighlight:find("WinSeparator:TodoQuickFixSeparator", 1, true),
+    "the window above quickfix must map its separator to the brighter highlight")
+local separator = vim.api.nvim_get_hl(0, { name = "TodoQuickFixSeparator", link = false })
+assert(separator.fg == 0xb4befe and separator.bg == 0x1e1e2e,
+    "quickfix separator must be bright with a dark background")
 
 local function background(win, source)
     local target = source

@@ -80,6 +80,14 @@ local function assert_inactive_outline(label)
     assert(vim.wo[editor].winhighlight == original_highlights, label .. ": editor must also be inactive")
 end
 assert_inactive_outline("unrelated window")
+vim.bo[api.nvim_win_get_buf(unrelated)].filetype = "Avante"
+api.nvim_exec_autocmds("WinEnter", {})
+vim.wait(50)
+local avante_source_hl = vim.wo[editor].winhighlight
+assert(avante_source_hl:find("WinSeparator:SagaOutlineSeparator", 1, true),
+    "Avante focus must preserve the outline separator")
+assert(not avante_source_hl:find("Normal:SagaOutlineNormal", 1, true),
+    "Avante focus must leave the source background inactive")
 api.nvim_win_close(unrelated, true)
 vim.fn.setqflist({ { bufnr = source, lnum = 1, text = "outline highlight test" } })
 vim.cmd("copen")

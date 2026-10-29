@@ -48,6 +48,33 @@ function M.apply()
         bg = M.palette.surface2,
         bold = true,
     })
+
+    -- Avante、QuickFix 和 F3 Outline 共用的标题栏/分割线颜色。
+    -- 使用独立组，避免改变 Catppuccin 下其他普通窗口的分割线。
+    local separator = { fg = M.palette.overlay1, bg = M.palette.base }
+    vim.api.nvim_set_hl(0, "AvanteWinSeparator", separator)
+    vim.api.nvim_set_hl(0, "AvanteWinSeparatorNC", separator)
+    -- TodoQuickFix 的分割线单独提高亮度，避免在底部面板中被背景吞掉。
+    vim.api.nvim_set_hl(0, "TodoQuickFixSeparator", {
+        fg = M.palette.lavender,
+        bg = M.palette.base,
+    })
+    vim.api.nvim_set_hl(0, "SagaOutlineSeparator", {
+        fg = M.palette.overlay1,
+        bg = M.palette.base,
+    })
+    vim.api.nvim_set_hl(0, "AvanteWinBar", {
+        fg = M.palette.text,
+        bg = M.palette.base,
+    })
+    vim.api.nvim_set_hl(0, "AvanteWinBarNC", {
+        fg = M.palette.text,
+        bg = M.palette.base,
+    })
+    vim.api.nvim_set_hl(0, "EdgyTitle", {
+        fg = M.palette.text,
+        bg = M.palette.base,
+    })
 end
 
 return M

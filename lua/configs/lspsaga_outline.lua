@@ -53,15 +53,38 @@ local function restore_windows_autowidth()
     end
 end
 
-local function set_winhighlight(win, active_group)
+local function set_winhighlight(win, active_group, is_outline)
     local parts = {}
+    local seen = {}
     for mapping in vim.wo[win].winhighlight:gmatch("[^,]+") do
         if not mapping:match("^Normal:") and not mapping:match("^NormalNC:") then
             parts[#parts + 1] = mapping
+            local name = mapping:match("^([^:]+):")
+            if name then seen[name] = true end
         end
+    end
+    -- Outline 是真实分屏，复用 Avante 的分割线；其他主题下回退到默认值。
+    if is_outline and not seen.WinSeparator then
+        parts[#parts + 1] = "WinSeparator:SagaOutlineSeparator"
+    end
+    if is_outline and not seen.WinSeparatorNC then
+        parts[#parts + 1] = "WinSeparatorNC:SagaOutlineSeparator"
     end
     parts[#parts + 1] = "Normal:" .. active_group
     parts[#parts + 1] = "NormalNC:" .. active_group
+    vim.wo[win].winhighlight = table.concat(parts, ",")
+end
+
+local function set_outline_separator(win)
+    local parts = {}
+    for mapping in vim.wo[win].winhighlight:gmatch("[^,]+") do
+        local source = mapping:match("^([^:]+):")
+        if source ~= "WinSeparator" and source ~= "WinSeparatorNC" then
+            parts[#parts + 1] = mapping
+        end
+    end
+    parts[#parts + 1] = "WinSeparator:SagaOutlineSeparator"
+    parts[#parts + 1] = "WinSeparatorNC:SagaOutlineSeparator"
     vim.wo[win].winhighlight = table.concat(parts, ",")
 end
 
@@ -156,28 +179,43 @@ function M.setup()
             bg = "#45475A",
         })
         vim.wo[win].cursorline = false
-        set_winhighlight(win, active and "SagaOutlineNormal" or "NormalNC")
+        set_winhighlight(win, active and "SagaOutlineNormal" or "NormalNC", true)
     end
 
     local function sync_group_background()
         local outline = package.loaded["lspsaga.symbol.outline"]
-        restore_source_highlights()
         if not outline or not outline.winid or not api.nvim_win_is_valid(outline.winid) then
+            restore_source_highlights()
             return
         end
         local source_win = outline.callerwinid
         if not source_win or not api.nvim_win_is_valid(source_win)
             or api.nvim_win_get_buf(source_win) ~= outline.main_buf
         then
+            restore_source_highlights()
             set_outline_background(outline.winid, false)
             return
         end
         local current = api.nvim_get_current_win()
         local active = current == outline.winid or current == source_win
+        local current_ft = vim.bo[api.nvim_win_get_buf(current)].filetype
+        local avante_focus = current_ft == "Avante"
+            or current_ft == "AvanteInput"
+            or current_ft == "AvanteSelectedCode"
+            or current_ft == "AvanteSelectedFiles"
+            or current_ft == "AvanteTodos"
+        restore_source_highlights()
         set_outline_background(outline.winid, active)
+        -- 分割线实际可能由源文件窗口绘制。焦点进入 Avante 时保留
+        -- Outline 的专用分割线，避免 Avante 的 WinEnter 覆盖它。
+        if active or avante_focus then
+            if source_winhighlight[source_win] == nil then
+                source_winhighlight[source_win] = vim.wo[source_win].winhighlight
+            end
+            set_outline_separator(source_win)
+        end
         if active then
-            source_winhighlight[source_win] = vim.wo[source_win].winhighlight
-            set_winhighlight(source_win, "SagaOutlineNormal")
+            set_winhighlight(source_win, "SagaOutlineNormal", true)
         end
     end
 
