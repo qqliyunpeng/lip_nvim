@@ -382,7 +382,14 @@ rm ~/.local/state/nvim/swap/*
 | `]]` / `[[` | n/t | 下一个/上一个引用 |
 
 
-#### snacks picker 搜索参数
+#### Snacks picker 搜索参数
+
+picker 后端统一在 `init.lua` 中选择：
+
+```lua
+-- 可选：'fzf-lua' 或 'snacks'
+vim.g.picker_backend = 'snacks'
+```
 
 `<leader>fw`、`<leader>fc` 这类 snacks grep picker 的输入框支持直接追加 ripgrep 参数：`--` 之前是搜索模式，`--` 之后原样传给 `rg`。
 
@@ -715,4 +722,3 @@ SSH 会话走 OSC 52（`vim.ui.clipboard.osc52`）时规则完全一致。
 ## Notes
 
 - README 里的快捷键只记录高频入口；完整映射以 `lua/mappings.lua` 和 `lua/plugins/` 为准。
-

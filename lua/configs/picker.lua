@@ -1,11 +1,7 @@
 local M = {}
 
--- picker 后端开关：'fzf-lua' 或 'snacks'
--- 影响的键位：<leader>p / <leader>ff 找文件，<leader>fw / <leader>fc 查找
-M.backend = 'fzf-lua'
-
 function M.is_fzf_lua()
-    return M.backend == 'fzf-lua'
+    return vim.g.picker_backend == 'fzf-lua'
 end
 
 -- 找文件

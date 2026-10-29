@@ -241,7 +241,7 @@ return {
         end,
     },
     {
-        -- fzf-lua picker；开关见 configs/picker.lua
+        -- fzf-lua picker；开关见 init.lua
         ge("nvim_lip/fzf-lua"),
         cond = function()
             return require('configs.picker').is_fzf_lua()
