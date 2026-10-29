@@ -2,6 +2,12 @@
 -- 由 configs.theme 在 ColorScheme 事件后调用（:colorscheme onedark* 时生效）
 local M = {}
 
+-- NeoComposer 等浮动窗口使用的主题基准色。
+-- 统一从主题配置读取，避免在组件配置中重复写死颜色。
+M.palette = {
+    base = "#1e1e2e",
+}
+
 function M.apply()
     -- IlluminatedWordText have problem
     vim.cmd([[

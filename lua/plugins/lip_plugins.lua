@@ -84,8 +84,13 @@ return {
             keymaps = {
                 cycle_next = "<A-n>",
                 cycle_prev = "<A-p>",
+                -- toggle_record 保持默认的 "q"：NeoComposer 内部要靠它裁剪录制内容。
+                -- 真正的 q 映射会在 configs.neo_composer.lua 里覆盖成带确认的版本。
             },
         },
+        config = function(_, opts)
+            require("configs.neo_composer").setup(opts)
+        end,
     },
     {
         ge("yunduozhai/project.nvim.git"),
