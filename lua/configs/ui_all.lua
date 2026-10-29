@@ -282,6 +282,8 @@ function M.lspsagaConfig()
     require('lspsaga').setup({
         ui = {
             use_nerd = not use_ascii_icons,
+            -- Outline 树形连接线使用细线字符，避免默认的粗线字符过于醒目。
+            lines = { '└', '├', '│', '─', '┌' },
             code_action = use_ascii_icons and " A" or '󱠀',
         },
         lightbulb = {
