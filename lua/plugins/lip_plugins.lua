@@ -147,6 +147,9 @@ return {
                 delay = 100,
                 -- disable in below
                 filetypes_denylist = {
+                    -- quickfix / location list：光标落在条目里的单词上时不要高亮引用，
+                    -- 也不要在该缓冲区发起 documentHighlight 请求。
+                    'qf',
                     'dirbuf', 'dirvish', 'fugitive', 'snacks_picker_list', 'sagaoutline',
                     'Avante', 'AvanteSelectedFiles', 'AvanteInput', 'AvantePromptInput',
                     'snacks_input', 'snacks_picker_input', 'snacks_terminal', 'snacks_dashboard',
