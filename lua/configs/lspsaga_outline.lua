@@ -88,6 +88,33 @@ local function set_outline_separator(win)
     vim.wo[win].winhighlight = table.concat(parts, ",")
 end
 
+-- Lspsaga 的树形连接线是 virt_text。默认的 virt_text 高亮模式会让
+-- line_hl_group 无法覆盖连接线所在的字符位置，导致当前符号移动后，
+-- 高亮块看起来像被连接线截断。使用 combine，让连接线保留自身前景色，
+-- 同时继承当前行的背景色。
+local function combine_outline_tree_lines(bufnr)
+    local outline_ns = vim.api.nvim_get_namespaces().SagaOutline
+    if not outline_ns or not vim.api.nvim_buf_is_valid(bufnr) then
+        return
+    end
+    for _, mark in ipairs(vim.api.nvim_buf_get_extmarks(bufnr, outline_ns, 0, -1, {
+        details = true,
+    })) do
+        local id, row, col, details = mark[1], mark[2], mark[3], mark[4]
+        if details and details.virt_text and details.virt_text[1]
+            and details.virt_text[1][2] == "SagaVirtLine" and details.hl_mode ~= "combine"
+        then
+            vim.api.nvim_buf_set_extmark(bufnr, outline_ns, row, col, {
+                id = id,
+                virt_text = details.virt_text,
+                virt_text_pos = details.virt_text_pos,
+                priority = details.priority,
+                hl_mode = "combine",
+            })
+        end
+    end
+end
+
 local function restore_source_highlights()
     for win, value in pairs(source_winhighlight) do
         if vim.api.nvim_win_is_valid(win) then
@@ -112,6 +139,8 @@ function M.setup()
         if source_win == outline.winid or api.nvim_get_current_buf() ~= outline.main_buf then
             return
         end
+
+        combine_outline_tree_lines(outline.bufnr)
 
         local cursor = api.nvim_win_get_cursor(source_win)
         local row = cursor[1] - 1
