@@ -241,6 +241,8 @@ function M.whitespaceConfig()
             'fff_list',
             'fff_preview',
             'fff_file_info',
+            'fzf',
+            'fzf-lua',
             'Avante',
             'AvanteInput',
             'AvantePromptInput',
@@ -354,6 +356,7 @@ function M.visualWhitespaceConfig()
             filetypes = {
                 "Avante", "AvanteInput", "AvantePromptInput",
                 "fff_input", "fff_list", "fff_preview", "fff_file_info",
+                "fzf", "fzf-lua",
             },
             buftypes = { "nofile", "prompt" },
         },

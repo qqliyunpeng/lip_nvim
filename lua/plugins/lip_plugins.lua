@@ -260,6 +260,17 @@ return {
         end,
     },
     {
+        -- fzf-lua picker；开关见 configs/picker.lua
+        require("lip.utils").gh("ibhagwan/fzf-lua"),
+        cond = function()
+            return require('configs.picker').is_fzf_lua()
+        end,
+        lazy = false,
+        opts = function()
+            return require('configs.fzf_lua')
+        end,
+    },
+    {
         ge("nvim_lip/gitsigns.nvim.git"), tag = 'v1.0.2',
         event = "VeryLazy",
         opts = function()

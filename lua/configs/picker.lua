@@ -1,18 +1,24 @@
 local M = {}
 
--- picker 后端开关：'fff' 或 'snacks'
+-- picker 后端开关：'fff'、'fzf-lua' 或 'snacks'
 -- 影响的键位：<leader>p / <leader>ff 找文件，<leader>fw / <leader>fc 查找
-M.backend = 'snacks'
+M.backend = 'fzf-lua'
 
 -- 当前是否使用 fff；plugins/lip_plugins.lua 也用它决定是否加载 fff.nvim
 function M.is_fff()
     return M.backend == 'fff'
 end
 
+function M.is_fzf_lua()
+    return M.backend == 'fzf-lua'
+end
+
 -- 找文件
 function M.find_files()
     if M.is_fff() then
         require('fff').find_files()
+    elseif M.is_fzf_lua() then
+        require('fzf-lua').files()
     else
         require('snacks').picker.files()
     end
@@ -22,6 +28,8 @@ end
 function M.live_grep()
     if M.is_fff() then
         require('fff').live_grep()
+    elseif M.is_fzf_lua() then
+        require('fzf-lua').live_grep()
     else
         require('snacks').picker.grep()
     end
@@ -31,6 +39,13 @@ end
 function M.grep_word()
     if M.is_fff() then
         require('fff').live_grep_under_cursor()
+    elseif M.is_fzf_lua() then
+        local fzf = require('fzf-lua')
+        if vim.fn.mode():match('[vV]') then
+            fzf.grep_visual()
+        else
+            fzf.grep_cword()
+        end
     else
         require('snacks').picker.grep_word({ live = true })
     end
@@ -40,6 +55,8 @@ end
 function M.fuzzy_grep()
     if M.is_fff() then
         require('fff').live_grep({ grep = { modes = { 'fuzzy', 'plain' } } })
+    elseif M.is_fzf_lua() then
+        require('fzf-lua').blines()
     else
         vim.cmd("Telescope current_buffer_fuzzy_find")
     end
