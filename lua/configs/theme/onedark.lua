@@ -101,8 +101,6 @@ function M.apply()
     hi TodoSignTEST guifg=#e06c75 guibg=NONE
     hi TodoSignWARN guifg=#e5c07b guibg=NONE
 
-    " FFF
-    hi FFFPicerTitle guifg=#95C077 guibg=Black
     ]])
 
     vim.api.nvim_set_hl(0, "@keyword.conditional", { fg = "#BB8AFF" })

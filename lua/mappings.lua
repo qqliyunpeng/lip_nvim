@@ -52,7 +52,7 @@ end, { desc = "Toggle Copilot" })
 -- map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>",  { desc = "telescope help page" })
 -- map("n", "<leader>ma", "<cmd>Telescope marks<CR>",      { desc = "telescope find marks" })
 -- map("n", "<leader>gt", "<cmd>Telescope git_status<CR>",  { desc = "Git status" })
--- 当前 buffer 模糊查找：后端由 configs/picker.lua 决定（fff 走 FFF fuzzy grep，否则 Telescope）
+-- 当前 buffer 模糊查找：后端由 configs/picker.lua 决定
 local Picker = require("configs.picker")
 map("n", "<leader>fz", Picker.fuzzy_grep, { desc = "Find in current buffer" })
 map("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })

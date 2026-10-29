@@ -241,27 +241,8 @@ return {
         end,
     },
     {
-        -- 极快的模糊查找（Rust 实现，自带 picker），仓库名已从 fff.nvim 改为 fff
-        require("lip.utils").gh("dmtrKovalenko/fff"),
-        build = function()
-            -- 下载预编译二进制，失败则回退 cargo build
-            require("fff.download").download_or_build_binary()
-        end,
-        -- 开关见 configs/picker.lua：选了 snacks 就完全不加载 fff.nvim
-        cond = function()
-            return require('configs.picker').is_fff()
-        end,
-        lazy = false, -- 插件内部自己懒加载
-        opts = function()
-            return require('configs.fff').opts
-        end,
-        keys = function()
-            return require('configs.fff').keys
-        end,
-    },
-    {
         -- fzf-lua picker；开关见 configs/picker.lua
-        require("lip.utils").gh("ibhagwan/fzf-lua"),
+        ge("nvim_lip/fzf-lua"),
         cond = function()
             return require('configs.picker').is_fzf_lua()
         end,
