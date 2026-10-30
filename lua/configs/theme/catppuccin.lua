@@ -103,6 +103,12 @@ function M.apply()
     end
 
     set_picker_hl("SnacksPickerInputBorder", M.palette.peach)
+
+    -- Snacks 文件列表和预览区的当前行：使用接近 Onedark #2A2B3C 的深色。
+    vim.api.nvim_set_hl(0, "SnacksPickerListCursorLine", { bg = M.palette.surface0 })
+    vim.api.nvim_set_hl(0, "SnacksPickerPreviewCursorLine", { bg = M.palette.surface0 })
+    -- 文件列表中的匹配词与预览窗口使用完全相同的前景/背景色。
+    vim.api.nvim_set_hl(0, "SnacksPickerMatch", { link = "SnacksPickerSearch" })
 end
 
 return M
