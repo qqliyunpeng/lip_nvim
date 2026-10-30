@@ -176,6 +176,41 @@ local picker_layouts = {
     }
 }
 
+-- 按 picker 窗口的视觉位置切换焦点：从左到右，同列再从上到下。
+-- 这样宽屏布局会按“输入 -> 列表 -> 预览”切换，竖屏布局会按
+-- “输入 -> 列表 -> 预览”的上到下顺序切换，而不是使用 Snacks 默认的
+-- input -> preview -> list 顺序。
+local function cycle_picker_window(picker)
+    local windows = {}
+    for _, pane in ipairs({ picker.input, picker.list, picker.preview }) do
+        local win = pane.win.win
+        if win and vim.api.nvim_win_is_valid(win) then
+            table.insert(windows, win)
+        end
+    end
+    if #windows == 0 then
+        return
+    end
+
+    table.sort(windows, function(a, b)
+        local a_row, a_col = unpack(vim.api.nvim_win_get_position(a))
+        local b_row, b_col = unpack(vim.api.nvim_win_get_position(b))
+        if a_col == b_col then
+            return a_row < b_row
+        end
+        return a_col < b_col
+    end)
+
+    local current = vim.api.nvim_get_current_win()
+    for index, win in ipairs(windows) do
+        if win == current then
+            vim.api.nvim_set_current_win(windows[index % #windows + 1])
+            return
+        end
+    end
+    vim.api.nvim_set_current_win(windows[1])
+end
+
 local picker_win = {
     input = {
         keys = {
@@ -185,6 +220,7 @@ local picker_win = {
             ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
             ["<C-j>"] = { "list_cycle_down", mode = { "i", "n" } },
             ["<C-k>"] = { "list_cycle_up", mode = { "i", "n" } },
+            ["<a-w>"] = { "cycle_picker_window", mode = { "i", "n" } },
         }
     },
     list = {
@@ -193,12 +229,14 @@ local picker_win = {
             ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
             ["<c-j>"] = "list_cycle_down",
             ["<c-k>"] = "list_cycle_up",
+            ["<a-w>"] = "cycle_picker_window",
         }
     },
     preview = {
         keys = {
             ["<C-c>"] = { "cancel", mode = { "i", "n" } },
             ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
+            ["<a-w>"] = "cycle_picker_window",
         }
     },
 }
@@ -229,6 +267,7 @@ function M.snacksConfig()
             enabled = true,
             layout  = smart_layout,
             layouts = picker_layouts,
+            actions = { cycle_picker_window = cycle_picker_window },
             prompt  = icons.prompt,
             ui_select = false,
             formatters = { file = { filename_first = true, truncate = 40 } },
