@@ -49,6 +49,11 @@ function M.apply()
         bold = true,
     })
 
+    -- Gitsigns 当前行 blame：比主题默认的 surface1 更明显，但避免过亮。
+    vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", {
+        fg = M.palette.overlay1,
+    })
+
     -- Avante、QuickFix 和 F3 Outline 共用的标题栏/分割线颜色。
     -- 使用独立组，避免改变 Catppuccin 下其他普通窗口的分割线。
     local separator = { fg = M.palette.overlay1, bg = M.palette.base }
