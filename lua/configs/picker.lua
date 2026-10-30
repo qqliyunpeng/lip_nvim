@@ -16,7 +16,14 @@ end
 -- 查找（live grep）
 function M.live_grep()
     if M.is_fzf_lua() then
-        require('fzf-lua').live_grep()
+        require('fzf-lua').live_grep({
+            -- rg 的输出格式为：文件:行:列:匹配内容；候选列表隐藏行列信息。
+            -- 原始结果仍然保留，因此回车后可以跳转到正确位置。
+            fzf_opts = {
+                ['--delimiter'] = ':',
+                ['--with-nth'] = '1,4..',
+            },
+        })
     else
         require('snacks').picker.grep()
     end
