@@ -135,6 +135,23 @@ return vim.tbl_deep_extend('force', fix_prompt(profile), {
         height = 0.8,
         row = 0.5,
         col = 0.5,
+        -- fzf-lua 的主窗口是 terminal buffer。某些情况下回车打开文件后，
+        -- Neovim 会把 terminal mode 状态带到新文件窗口；此时仅 redrawstatus
+        -- 不够，必须先退出 terminal mode。
+        on_close = function()
+            vim.schedule(function()
+                if vim.bo.buftype == 'terminal' or vim.fn.mode() ~= 't' then
+                    vim.cmd('redrawstatus')
+                    return
+                end
+                vim.api.nvim_feedkeys(
+                    vim.api.nvim_replace_termcodes('<C-\\><C-n>', true, false, true),
+                    'nx',
+                    false
+                )
+                vim.cmd('redrawstatus')
+            end)
+        end,
         -- mappings.lua 为普通 terminal 设置了全局 C-j/C-k 分屏快捷键。
         -- fzf 的主窗口也是 terminal，必须在它自己的 buffer 中覆盖这两个键，
         -- 否则按键会被 Neovim 吃掉，无法到达 fzf 的 down/up action。
