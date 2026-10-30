@@ -391,6 +391,9 @@ picker 后端统一在 `init.lua` 中选择：
 vim.g.picker_backend = 'snacks'
 ```
 
+- 在输入框中按 `<C-g>`，切换到 fuzzy grep 搜索方式。
+- 按 `<A-w>`，在 picker 的输入框、列表和预览窗口之间切换焦点。
+
 `<leader>fw`、`<leader>fc` 这类 snacks grep picker 的输入框支持直接追加 ripgrep 参数：`--` 之前是搜索模式，`--` 之后原样传给 `rg`。
 
 ```text

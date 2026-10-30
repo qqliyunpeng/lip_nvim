@@ -9,7 +9,7 @@ vim.g.maplocalleader = ","
 
 -- picker 后端开关：'fzf-lua' 或 'snacks'
 -- 影响的键位：<leader>p / <leader>ff 找文件，<leader>fw / <leader>fc 查找
-vim.g.picker_backend = 'fzf-lua'
+vim.g.picker_backend = 'snacks'
 
 -- clangd 要不要使用国内源
 local cus = os.getenv("CLANGD_USE_GITHUB") == "1"

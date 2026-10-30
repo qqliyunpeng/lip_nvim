@@ -75,6 +75,34 @@ function M.apply()
         fg = M.palette.text,
         bg = M.palette.base,
     })
+    -- Snacks Picker 仿照 Onedark 配置：整个 picker（包括边框）使用黑色背景。
+    -- 输入框底边使用橙色，标题和外边框使用主题蓝色。
+    local picker_black = "#000000"
+    local function set_picker_hl(name, fg)
+        vim.api.nvim_set_hl(0, name, { bg = picker_black, fg = fg })
+    end
+
+    for _, name in ipairs({
+        "SnacksPickerBox",
+        "SnacksTitle",
+        "SnacksPickerInput",
+        "SnacksPickerList",
+        "SnacksPickerPreview",
+        "SnacksPickerToggleRegex",
+    }) do
+        set_picker_hl(name)
+    end
+
+    for _, name in ipairs({
+        "SnacksPickerBoxBorder",
+        "SnacksPickerPreviewBorder",
+        "SnacksPickerPreviewTitle",
+        "SnacksPickerBoxTitle",
+    }) do
+        set_picker_hl(name, M.palette.blue)
+    end
+
+    set_picker_hl("SnacksPickerInputBorder", M.palette.peach)
 end
 
 return M

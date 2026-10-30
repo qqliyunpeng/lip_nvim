@@ -153,7 +153,7 @@ local picker_layouts = {
             {
                 box = "vertical",
                 border = "rounded",
-                title = "{title} {live} {flags}",
+                title = { { "{title} {live} {flags}", "SnacksPickerBoxTitle" } },
                 { win = "input", height = 1, border = "bottom" },
                 { win = "list", border = "none" },
             },
@@ -167,7 +167,7 @@ local picker_layouts = {
             height = 0.74,     -- 整体高度
             min_height = 30,
             border = "rounded",
-            title = "{title} {live} {flags}",
+            title = { { "{title} {live} {flags}", "SnacksPickerBoxTitle" } },
             title_pos = "center",
             { win = "input", height = 1, border = "bottom" },
             { win = "list", border = "none" },
