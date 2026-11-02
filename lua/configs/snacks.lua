@@ -55,7 +55,6 @@ local open_lazygit_with_refresh = function ()
                     end
                 end
             end, 100) -- 延迟 100ms 防止懵逼的界面冲突
-            vim.notify("ALL files refreshed.")
         end,
     })
 end
