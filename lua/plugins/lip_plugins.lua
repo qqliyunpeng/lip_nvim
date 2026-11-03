@@ -423,6 +423,7 @@ return {
     },
     {
         ge("nvim_lip/vim-visual-multi.git"),
+        enabled = false,
         keys = {
             { "<C-n>", mode = { "n", "x" }, desc = "Visual Multi" },
             { "<C-Up>", mode = "n", desc = "VM add cursor up" },
@@ -432,8 +433,17 @@ return {
             { "\\/", mode = { "n", "x" }, desc = "VM regex search" },
             { "\\A", mode = { "n", "x" }, desc = "VM select all" },
         },
-        config = function ()
+        config = function()
             require('configs.edit').visualMulConfig()
+        end
+    },
+    {
+        -- multicursor.nvim: 多光标编辑（替代 vim-visual-multi）
+        ge("nvim_lip/multicursor.nvim.git"),
+        branch = "1.0",
+        event = "VeryLazy",
+        config = function()
+            require("configs.multicursor").setup()
         end
     },
     {

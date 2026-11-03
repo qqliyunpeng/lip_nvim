@@ -58,7 +58,7 @@
 -  [harpoon](https://github.com/ThePrimeagen/harpoon) - quick file navigation
 -  [navimark.nvim](https://github.com/ZWindLOR/navimark.nvim) - 持久化 bookmark
 -  [mini.files](https://github.com/echasnovski/mini.files) - lightweight file manager
--  [vim-visual-multi](https://github.com/mg979/vim-visual-multi) - multi-cursor editing
+-  [multicursor.nvim](https://github.com/jake-stewart/multicursor.nvim) - multi-cursor editing
 
 </td>
 <td valign="top" width="33%">
