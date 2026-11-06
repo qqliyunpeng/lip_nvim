@@ -210,6 +210,12 @@ local function cycle_picker_window(picker)
     vim.api.nvim_set_current_win(windows[1])
 end
 
+-- Explorer 里回车统一走 configs.explorer.confirm：
+-- 过滤时直接打开文件，而不是 snacks 默认的「只把树定位到该项」。
+local function explorer_confirm(picker, item)
+    require("configs.explorer").confirm(picker, item)
+end
+
 local picker_win = {
     input = {
         keys = {
@@ -267,7 +273,7 @@ function M.snacksConfig()
             enabled = true,
             layout  = smart_layout,
             layouts = picker_layouts,
-            actions = { cycle_picker_window = cycle_picker_window },
+            actions = { cycle_picker_window = cycle_picker_window, explorer_confirm = explorer_confirm },
             prompt  = icons.prompt,
             ui_select = false,
             formatters = { file = { filename_first = true, truncate = 40 } },
@@ -310,29 +316,27 @@ function M.snacksConfig()
                                         if vim.fn.mode():sub(1, 1) == "i" then
                                             vim.cmd.stopinsert()
                                         else
-                                            -- 第二次 Esc：只隐藏搜索框，保留文件树。
-                                            local picker = require("snacks.picker").get({ source = "explorer" })[1]
-                                            if picker then
-                                                -- 隐藏前清空搜索内容，让下次显示时恢复完整文件列表。
-                                                picker.input:set("", "")
-                                                picker:refresh()
-                                                picker:toggle("input", { enable = false, focus = "list" })
-                                            end
+                                            -- 第二次 Esc：清空搜索并收起搜索框，保留文件树。
+                                            require("configs.explorer").hide_search()
                                         end
                                     end,
                                     mode = { "n", "i" },
                                 },
+                                -- 过滤时按回车直接打开选中文件（插入/普通模式）
+                                ["<CR>"] = { "explorer_confirm", mode = { "n", "i" } },
                             },
                         },
                         list = {
                             keys = {
                                 ["<esc>"] = {
                                     function()
-                                        -- 文件树中的 Esc 不关闭 Explorer。
-                                        -- 搜索框显示时，焦点应在 input 窗口，由 input 的 Esc 负责隐藏它。
+                                        -- 回到文件树后 Esc：清空搜索并收起搜索框，不关闭 Explorer。
+                                        require("configs.explorer").hide_search()
                                     end,
                                     mode = { "n", "i" },
                                 },
+                                -- 可视模式下按回车也打开文件（普通模式同样生效）
+                                ["<CR>"] = { "explorer_confirm", mode = { "n", "x" } },
                             },
                         },
                     },

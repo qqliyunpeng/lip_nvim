@@ -112,8 +112,41 @@ function M.setup()
 
 end
 
+-- Explorer 里的 <CR>：
+-- - 过滤状态下按回车直接打开文件（snacks 默认只把文件树定位到该项）
+-- - 目录 / 没在过滤时保持 snacks 原有行为（展开折叠、打开文件）
+---@param picker snacks.Picker
+---@param item? snacks.picker.explorer.Item
+function M.confirm(picker, item)
+    if not item then
+        return
+    end
+    local confirm = require("snacks.picker.source.explorer").actions.confirm
+    -- 输入框里有内容（或已经在过滤）时才算搜索；单独读 filter 会受 200ms
+    -- 节流影响，刚输入完就回车时可能还是空。
+    local searching = picker.input:get() ~= "" or not picker.input.filter:is_empty()
+    if item.dir or not searching then
+        return confirm(picker, item)
+    end
+    -- 只打开文件：过滤内容、过滤后的树、搜索框都保持原样。
+    -- jump 在插入模式会自己 stopinsert 并延后执行，所以回车后回到 Normal 模式。
+    require("snacks.picker.actions").jump(picker, item, { cmd = "edit" })
+end
+
 function M.is_open()
     return #get_explorer_pickers() > 0
+end
+
+-- 清空搜索内容并收起搜索框，让侧栏恢复完整文件树。
+-- 输入框隐藏后其缓冲区会被销毁，所以必须先 set 再 toggle。
+function M.hide_search()
+    local picker = get_explorer_pickers()[1]
+    if not picker or picker.layout:is_hidden("input") then
+        return
+    end
+    picker.input:set("", "")
+    picker:refresh()
+    picker:toggle("input", { enable = false, focus = "list" })
 end
 
 ---@param opts? { wait?: boolean }
