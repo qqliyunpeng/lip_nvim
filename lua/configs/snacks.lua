@@ -251,6 +251,7 @@ local grep_hint = "-- 后接 rg 参数：-s 区分大小写 · -w 全词"
 
 function M.snacksConfig()
     local icons = require('configs.icons').snacksIcons()
+    require("configs.explorer").setup()
     require('snacks').setup({
         indent    = { enabled = false },
         bigfile   = { enabled = true },
@@ -293,12 +294,47 @@ function M.snacksConfig()
                     hidden = true,
                     ignored = true,
                     exclude = { ".git", ".vscode", "build", ".gitignore", "*.out", "tags" },
-                    layout = { preset = "sidebar", preview = false, layout = { width = 30 } },
-                    -- Esc 不关闭 explorer（默认绑在 cancel 上会直接关掉侧栏）：
-                    -- 禁用后输入框里 Esc 回到 Normal 模式，关闭仍用 q / <C-c> / F2
+                    -- Explorer 只显示文件列表，不显示顶部搜索输入框。
+                    layout = {
+                        preset = "sidebar",
+                        preview = false,
+                        hidden = { "input" },
+                        layout = { width = 30 },
+                    },
                     win = {
-                        input = { keys = { ["<esc>"] = false } },
-                        list = { keys = { ["<esc>"] = false } },
+                        -- 插入模式第一次 Esc 只退出插入模式；Normal 模式再次 Esc 隐藏 Explorer。
+                        input = {
+                            keys = {
+                                ["<esc>"] = {
+                                    function()
+                                        if vim.fn.mode():sub(1, 1) == "i" then
+                                            vim.cmd.stopinsert()
+                                        else
+                                            -- 第二次 Esc：只隐藏搜索框，保留文件树。
+                                            local picker = require("snacks.picker").get({ source = "explorer" })[1]
+                                            if picker then
+                                                -- 隐藏前清空搜索内容，让下次显示时恢复完整文件列表。
+                                                picker.input:set("", "")
+                                                picker:refresh()
+                                                picker:toggle("input", { enable = false, focus = "list" })
+                                            end
+                                        end
+                                    end,
+                                    mode = { "n", "i" },
+                                },
+                            },
+                        },
+                        list = {
+                            keys = {
+                                ["<esc>"] = {
+                                    function()
+                                        -- 文件树中的 Esc 不关闭 Explorer。
+                                        -- 搜索框显示时，焦点应在 input 窗口，由 input 的 Esc 负责隐藏它。
+                                    end,
+                                    mode = { "n", "i" },
+                                },
+                            },
+                        },
                     },
                     on_show = function(picker)
                         require("configs.explorer").setup_highlights()

@@ -3,6 +3,12 @@
 -- 保证「explorer 是否打开、如何打开关闭」只有一个实现。
 local M = {}
 
+local function close_on_startup()
+    vim.schedule(function()
+        M.close()
+    end)
+end
+
 local function get_explorer_pickers()
     local ok, Picker = pcall(require, "snacks.picker")
     if not ok then
@@ -96,6 +102,16 @@ function M.setup_highlights()
     })
 end
 
+function M.setup()
+    local group = vim.api.nvim_create_augroup("LipExplorer", { clear = true })
+
+    vim.api.nvim_create_autocmd("VimEnter", {
+        group = group,
+        callback = close_on_startup,
+    })
+
+end
+
 function M.is_open()
     return #get_explorer_pickers() > 0
 end
@@ -129,11 +145,17 @@ function M.close(opts)
     end
 end
 
-function M.open()
+---@param opts? { focus?: boolean }
+function M.open(opts)
+    -- 已经打开时不要再调 snacks.explorer()：snacks 的同源 picker 会执行「切换」，
+    -- 即把已打开的侧栏关掉。
+    if M.is_open() then
+        return
+    end
     local ok, snacks = pcall(require, "snacks")
     if ok then
         pcall(function()
-            snacks.explorer()
+            snacks.explorer(opts)
         end)
     end
 end

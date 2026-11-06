@@ -440,6 +440,7 @@ return {
     {
         -- multicursor.nvim: 多光标编辑（替代 vim-visual-multi）
         ge("nvim_lip/multicursor.nvim.git"),
+        enabled = false, -- 暂时禁用：先不加载 multicursor
         branch = "1.0",
         event = "VeryLazy",
         config = function()
