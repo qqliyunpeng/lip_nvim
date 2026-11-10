@@ -36,12 +36,17 @@ function M.apply()
     normal.ctermbg = 0
     vim.api.nvim_set_hl(0, "Normal", normal)
 
-    for _, group in ipairs({ "Comment", "Conditional" }) do
-        local highlight = vim.api.nvim_get_hl(0, { name = group, link = false })
-        highlight.italic = false
-        highlight.cterm = nil
-        vim.api.nvim_set_hl(0, group, highlight)
-    end
+    -- 注释的颜色调整
+    local comment = vim.api.nvim_get_hl(0, { name = "Comment", link = false })
+    comment.fg = M.palette.overlay1
+    comment.italic = false
+    comment.cterm = nil
+    vim.api.nvim_set_hl(0, "Comment", comment)
+
+    local conditional = vim.api.nvim_get_hl(0, { name = "Conditional", link = false })
+    conditional.italic = false
+    conditional.cterm = nil
+    vim.api.nvim_set_hl(0, "Conditional", conditional)
 
     vim.api.nvim_set_hl(0, "MatchParen", {
         fg = M.palette.pink,
