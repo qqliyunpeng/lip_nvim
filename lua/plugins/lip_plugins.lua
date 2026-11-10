@@ -737,5 +737,23 @@ return {
         keys = function()
             return require("configs.llm").llmKeys
         end,
+    },
+    {
+        -- 数组/对象块展开与合并：<leader>mf toggle
+        ge("nvim_lip/treesj"),
+        -- 让 :TSJ* 命令也能触发懒加载；合并后超过 max_join_length(120) 会被拒绝
+        cmd = { "TSJToggle", "TSJSplit", "TSJJoin" },
+        -- 默认的 <space>m/j/s 会被 init.lua 里 `" " -> ":"` 的映射抢掉，键位自己注册
+        opts = { use_default_keymaps = false },
+        keys = {
+            {
+                "<leader>mf",
+                function()
+                    require("treesj").toggle()
+                end,
+                desc = "Treesj Toggle",
+            },
+        },
     }
 }
+
