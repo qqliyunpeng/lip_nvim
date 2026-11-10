@@ -744,13 +744,8 @@ return {
         -- 默认的 <space>m/j/s 会被 init.lua 里 `" " -> ":"` 的映射抢掉，键位自己注册
         opts = { use_default_keymaps = false },
         keys = {
-            {
-                "<leader>mf",
-                function()
-                    require("treesj").toggle()
-                end,
-                desc = "Treesj Toggle",
-            },
+            { "<leader>mf", function() require("treesj").toggle() end,
+                                                    desc = "Treesj Toggle", },
         },
     }
 }
