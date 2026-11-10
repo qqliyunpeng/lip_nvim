@@ -169,7 +169,7 @@ return {
             },
         },
         config = function ()
-            require('configs.ui_all').whichKeyConfig()
+            require('configs.which_key').setup()
         end
     },
     {
