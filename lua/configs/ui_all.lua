@@ -834,6 +834,7 @@ function M.interestingwordsConfig()
         search_count = true,
         navigation = false,
         scroll_center = false,
+        search_key = false,
         color_key = "<leader>e",
         select_mode = "loop",
     }
