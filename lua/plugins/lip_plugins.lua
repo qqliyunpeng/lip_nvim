@@ -291,7 +291,7 @@ return {
         ge('suyelu/mason.nvim'),
         cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },
         opts = function()
-            return require "configs.mason"
+            return require("configs.ui_all").masonConfig()
         end,
         -- config = function()
         --     require('mason').setup({
@@ -749,4 +749,3 @@ return {
         },
     }
 }
-

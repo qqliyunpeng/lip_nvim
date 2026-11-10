@@ -85,6 +85,20 @@ function M.modicatorConfig()
     sync_modicator()
 end
 
+function M.masonConfig()
+    return {
+        PATH = "append",
+        ui = {
+            icons = {
+                package_pending = " ",
+                package_installed = " ",
+                package_uninstalled = " ",
+            },
+        },
+        max_concurrent_installers = 10,
+    }
+end
+
 function M.componentsConfig()
     return {icons = require("configs.icons").componentsIcons() }
 end
