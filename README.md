@@ -503,7 +503,7 @@ SSH 会话走 OSC 52（`vim.ui.clipboard.osc52`）时规则完全一致。
 | v `c`（`viwc`） | 否 | 不变 |
 | v `s`（`viws`） | 是 | 选中的文本 |
 | v `d`（`viwd`） | 是 | 选中的文本 |
-| `ciq`（vim-textobj-quotes） / `cif`（treesitter textobject） | 否 | 不变 |
+| `ciq`（mini.ai） / `cif`（treesitter textobject） | 否 | 不变 |
 
 
 ### Text Objects

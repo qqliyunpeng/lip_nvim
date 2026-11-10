@@ -215,12 +215,11 @@ return {
         end,
     },
     {
-        -- vaq/viq 选中单引号或者双引号等各种引号之间的内容
-        ge("nvim_lip/vim-textobj-quotes.git"),
+        -- 其他文本对象；iq/aq 统一由 mini.ai 提供
+        ge("duyz1218/vim-textobj-user.git"),
         -- 同上：用 keys 懒加载操作符键会连带清掉 mappings.lua 的黑洞寄存器映射
         event = "VeryLazy",
         dependencies = {
-            ge("duyz1218/vim-textobj-user.git"),
             -- vaj/vij 向上查找最近的 '{[('
             ge("nvim_lip/vim-textobj-brace.git"),
             -- var/vir 相同缩进的一整个认为的段落
@@ -234,8 +233,6 @@ return {
             -- vac/vic 选中注释
             ge("nvim_lip/vim-textobj-comment.git"),
         },
-        config = function()
-        end
     },
     {
         ge('nvim_lip/telescope.nvim.git'), --tag = '0.1.8',
@@ -569,6 +566,7 @@ return {
         branch = "stable",
         event = "VeryLazy",
         config = function ()
+            -- iq/aq：选中单引号、双引号或反引号，不再混用 vim-textobj-quotes
             require("mini.ai").setup()
             require("mini.align").setup()
             -- require('configs.ui_all').miniAnimate()
