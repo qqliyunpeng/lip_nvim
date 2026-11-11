@@ -1,6 +1,6 @@
 return {
     {
-        require("lip.utils").gh("sindrets/diffview.nvim.git"),
+        require("lip.utils").ge("nvim_lip/diffview.nvim"),
         cmd = {
             "DiffviewOpen",
             "DiffviewClose",
