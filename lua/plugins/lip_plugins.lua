@@ -280,7 +280,16 @@ return {
         opts = {
             map_bs = true,
             fast_wrap = {},
-            disable_filetype = { "TelescopePrompt", "vim", "bitbake", "AvanteInput", "AvantePromptInput", "snacks_input", "snacks_picker_input" },
+            disable_filetype = {
+                "TelescopePrompt",
+                "vim",
+                "bitbake",
+                "AvanteInput",
+                "AvantePromptInput",
+                "snacks_input",
+                "snacks_picker_input",
+                "grug-far",
+            },
         },
         config = function (_, opts)
             require("configs.autopairs").setup(opts)
@@ -462,46 +471,6 @@ return {
                 },
                 persist = true,
             })
-        end,
-    },
-    {
-        ge("nvim_lip/grug-far.nvim.git"), branch = 'main',
-        cmd = "GrugFar",
-        keys = {
-            {
-                "<leader>sr",
-                function()
-                    local grug = require('grug-far')
-                    local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
-                    grug.open({
-                        transient = true,
-                        prefills = {
-                            search = vim.fn.expand("<cword>"),
-                            filesFilter = ext and ext ~= "" and "*.*\n!/cscope.out" or nil,
-                        },
-                    })
-                end,
-                mode = { "n", "v" },
-                desc = "Search and Replace",
-            },
-        },
-        config = function()
-            require('grug-far').setup({
-                headerMaxWidth = 80,
-                folding = {
-                    enabled = false,
-                },
-                keymaps = {
-                    qflist = { n = '=' },
-                    close = { n = 'q' },
-                },
-                rg = {
-                    options = {
-                        '--no-ignore',
-                    },
-                },
-            })
-            vim.api.nvim_set_hl(0, "GrugFarResultsPath", { link = "Directory" })
         end,
     },
     {
