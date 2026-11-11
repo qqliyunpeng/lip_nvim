@@ -322,7 +322,7 @@ function M.snacksConfig()
                                     end,
                                     mode = { "n", "i" },
                                 },
-                                -- 过滤时按回车直接打开选中文件（插入/普通模式）
+                                -- 按回车直接打开选中文件（插入/普通模式）
                                 ["<CR>"] = { "explorer_confirm", mode = { "n", "i" } },
                             },
                         },
