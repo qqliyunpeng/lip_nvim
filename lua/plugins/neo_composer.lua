@@ -1,3 +1,5 @@
+local ge = require("lip.utils").ge
+
 local M = {}
 
 local function confirm_recording()
@@ -20,7 +22,6 @@ local function confirm_recording()
     local winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder"
 
     if is_catppuccin or is_onedark then
-        -- 使用当前主题自己的调色板，而不是重复写死颜色值。
         local theme_config = is_catppuccin and "configs.theme.catppuccin" or "configs.theme.onedark"
         local palette = require(theme_config).palette
         vim.api.nvim_set_hl(0, "NeoComposerConfirm", {
@@ -65,8 +66,6 @@ local function confirm_recording()
     return key == "y" or key == "Y" or key == "\r" or key == "\n"
 end
 
----正常模式按 q 时先确认，避免误触直接开始录制宏。
----录制中再按 q 则直接停止，不再询问。
 function M.toggle_record_with_confirm()
     local state = require("NeoComposer.state")
     local macro = require("NeoComposer.macro")
@@ -81,15 +80,72 @@ function M.toggle_record_with_confirm()
     end
 end
 
-function M.setup(opts)
-    -- 必须让 NeoComposer 先按默认的 q 完成 setup，再覆盖 q；
-    -- 不能把 keymaps.toggle_record 设成 false，否则它内部裁剪录制内容会出错。
+local function setup_neo_composer(opts)
     require("NeoComposer").setup(opts)
+
+    local ui = require("NeoComposer.ui")
+    local toggle_macro_menu = ui.toggle_macro_menu
+
+    -- 只在 NeoComposer 菜单 buffer 中定义 <leader>c；菜单外不改变原绑定。
+    ui.toggle_macro_menu = function(...)
+        toggle_macro_menu(...)
+
+        local menu_buffer = rawget(_G, "BUFH")
+        if menu_buffer and vim.api.nvim_buf_is_valid(menu_buffer) then
+            local menu_window = rawget(_G, "WIN_ID")
+            if menu_window and vim.api.nvim_win_is_valid(menu_window) then
+                local window_config = vim.api.nvim_win_get_config(menu_window)
+                window_config.title = " NeoComposer  |  ,c 清空 "
+                window_config.title_pos = "center"
+                vim.api.nvim_win_set_config(menu_window, window_config)
+            end
+
+            vim.keymap.set("n", "<leader>c", function()
+                vim.cmd("ClearNeoComposer")
+                vim.api.nvim_buf_set_lines(menu_buffer, 0, -1, false, {})
+                vim.notify("NeoComposer macros cleared", vim.log.levels.INFO, {
+                    title = "NeoComposer",
+                })
+            end, {
+                buffer = menu_buffer,
+                desc = "Clear NeoComposer macros",
+                nowait = true,
+                silent = true,
+            })
+
+            vim.keymap.set("n", "<C-c>", function()
+                ui.toggle_macro_menu()
+            end, {
+                buffer = menu_buffer,
+                desc = "Close NeoComposer menu",
+                nowait = true,
+                silent = true,
+            })
+        end
+    end
 
     vim.keymap.set("n", "q", M.toggle_record_with_confirm, {
         desc = "Record macro (confirm first)",
     })
 end
 
-return M
+return {
+    {
+        ge("nvim_lip/neo-composer.nvim"),
+        event = "VeryLazy",
+        dependencies = {
+            ge("nvim_lip/sqlite.lua.git"),
+        },
+        opts = {
+            notify = false,
+            keymaps = {
+                cycle_next = "<A-n>",
+                cycle_prev = "<A-p>",
+            },
+        },
+        config = function(_, opts)
+            setup_neo_composer(opts)
+        end,
+    },
+}
 
