@@ -693,5 +693,22 @@ return {
             { "<leader>mf", function() require("treesj").toggle() end,
                                                     desc = "Treesj Toggle", },
         },
-    }
+    },
+    {
+        -- 按键显示浮窗：在角落实时显示当前按键，录屏/演示/结对编程时用
+        ge"nvim_lip/screenkey.nvim",
+        lazy = true,
+        version = "*",
+        opts = {
+            disable = {
+                buftypes = { "terminal" },
+            },
+            show_leader = true,
+            group_mappings = true,
+        },
+        keys = {
+            { "<leader>uk", function() require("screenkey").toggle() end,
+                                                    desc = "Toggle Screenkey" },
+        },
+    },
 }
