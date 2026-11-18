@@ -29,6 +29,7 @@
 -  [noice.nvim](https://github.com/folke/noice.nvim) - 命令行、消息、LSP 浮窗 UI
 -  [nvim-notify](https://github.com/rcarriga/nvim-notify) - notification UI
 -  [todo-comments](https://github.com/folke/todo-comments.nvim) - TODO highlighting
+-  [nvim-bqf](https://github.com/kevinhwang91/nvim-bqf) - quickfix 窗口预览、过滤和批量跳转
 -  [which-key](https://github.com/folke/which-key.nvim) - keybinding helper
 
 </td>
@@ -426,6 +427,26 @@ malloc -- -i -g *.c -g *.h
 - 常用参数也可以固化到配置里：`lua/configs/picker.lua` 的 `grep_word({ ... })`，或 `lua/configs/snacks.lua` 中 `sources.grep` / `sources.grep_word` 的 `args`、`glob`、`ft`、`hidden` 等字段。
 - 带 `--` 的输入会进入 picker 历史，可重复调用。
 
+### QuickFix（nvim-bqf）
+
+quickfix 窗口（`:copen`、Overseer 任务失败、grep 结果）由 nvim-bqf 接管：光标移到哪一条，右侧浮窗就预览哪个位置，不用来回跳窗口。
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `<leader>uq` | n | 打开/关闭 quickfix 窗口 |
+| `<CR>` | n | 跳到光标下的条目 |
+| `o` / `O` | n | 跳过去并关闭 qf / 用 `:drop` 打开并关闭 qf |
+| `t` / `T` / `<C-t>` | n | 新标签页打开 / 打开并留在 qf / 打开并关闭 qf |
+| `<C-x>` / `<C-v>` | n | 水平/垂直分屏打开条目 |
+| `<C-p>` / `<C-n>` | n | qf 里上一个/下一个文件 |
+| `<Tab>` / `<S-Tab>` | n | 给条目打点/取消打点，配合 `zn`/`zN` 生成新列表 |
+| `zf` | n | 进入 fzf 过滤模式（`ctrl-t/x/v` 打开，`ctrl-q` 打点，`ctrl-o` 全选） |
+| `p` / `P` | n | 开关单条预览 / 开关跟随光标的自动预览 |
+| `zp` | n | 预览窗在普通/最大化之间切换 |
+| `<` / `>` | n | 切换到上一个/下一个 quickfix 历史 |
+
+qf 窗口由 edgy 固定在底部（30% 行高），所以 `auto_resize_height` 关掉了，避免和 edgebar 抢高度；超过 200KB 的文件不自动预览。配置在 `lua/plugins/bqf.lua`，其中还有一个兼容层：nvim-bqf 的 treesitter 预览只认旧的 `nvim-treesitter.configs` 接口，而本配置用的是重写后的 main 分支，这层用 Neovim 自带的 `vim.treesitter` 补上了。
+
 ### LSP
 
 | Key | Mode | Action |
@@ -556,6 +577,7 @@ SSH 会话走 OSC 52（`vim.ui.clipboard.osc52`）时规则完全一致。
 | `<leader>ud` | n    | 开关 diagnostics            |
 | `<leader>ul` | n    | 开关 line number            |
 | `<leader>uh` | n    | 开关 inlay hints            |
+| `<leader>uq` | n    | 开关 quickfix 窗口          |
 
 ### Visual Multi
 
