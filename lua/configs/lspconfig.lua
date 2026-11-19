@@ -45,6 +45,12 @@ local servers = {
     },
 }
 
+local custom_servers = {
+    clangd = true,
+    pyright = true,
+    lua_ls = true,
+}
+
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 local function clangd_capabilities()
@@ -70,6 +76,10 @@ local clangd_handlers = {
 
 local handlers = {
     function(server_name)
+        -- 未启用 Mason 上游源时，只有这三个服务器使用 Gitee 安装器。
+        if not vim.g.use_mason_github and custom_servers[server_name] then
+            return
+        end
 
         require('lspconfig')[server_name].setup({
             on_attach = M.on_attach,
@@ -80,6 +90,18 @@ local handlers = {
         })
     end,
 }
+
+local function setup_custom_server(server_name, installer, cmd_builder)
+    installer.setup(function(server_path)
+        if not server_path then return end
+        require("lspconfig")[server_name].setup({
+            on_attach = M.on_attach,
+            capabilities = capabilities,
+            cmd = cmd_builder(server_path),
+            settings = servers[server_name].settings or {},
+        })
+    end)
+end
 
 -- M.capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
@@ -96,24 +118,39 @@ end
 
 function M.defaults()
     local mason_lspconfig = require 'mason-lspconfig'
-    local ensure = vim.tbl_keys(servers)
+    local ensure = {}
 
-    if vim.g.use_custom_clangd then
-        ensure = vim.tbl_filter(function(server)
-            return server ~= "clangd"
-        end, ensure)
+    if vim.g.use_mason_github then
+        ensure = vim.tbl_keys(servers)
+    else
+        -- 其他服务器继续由 Mason 管理，只从列表中移除这三个自定义安装的服务器。
+        ensure = vim.tbl_filter(function(server_name)
+            return not custom_servers[server_name]
+        end, vim.tbl_keys(servers))
+
+        local clangd_installer = require("configs.clangd_installer")
+        clangd_installer.setup(function(clangd_path)
+            if not clangd_path then return end
+            require("lspconfig").clangd.setup({
+                on_attach = M.on_attach,
+                capabilities = clangd_capabilities(),
+                cmd = { clangd_path },
+                handlers = clangd_handlers,
+                settings = servers.clangd.settings or {},
+            })
+        end)
+
+        setup_custom_server(
+            "pyright",
+            require("configs.pyright_installer"),
+            function(path) return { "node", path, "--stdio" } end
+        )
+        setup_custom_server(
+            "lua_ls",
+            require("configs.lua_ls_installer"),
+            function(path) return { path } end
+        )
     end
-
-    local clangd_installer = require("configs.clangd_installer")
-    clangd_installer.setup(function(clangd_path)
-        require("lspconfig").clangd.setup({
-            on_attach = M.on_attach,
-            capabilities = clangd_capabilities(),
-            cmd = { clangd_path },
-            handlers = clangd_handlers,
-            settings = servers.clangd.settings or {},
-        })
-    end)
 
     mason_lspconfig.setup({
         ensure_installed = ensure,

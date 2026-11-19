@@ -11,13 +11,8 @@ vim.g.maplocalleader = ","
 -- 影响的键位：<leader>p / <leader>ff 找文件，<leader>fw / <leader>fc 查找
 vim.g.picker_backend = 'snacks'
 
--- clangd 要不要使用国内源
-local cus = os.getenv("CLANGD_USE_GITHUB") == "1"
-if cus then
-    vim.g.use_custom_clangd = false
-else
-    vim.g.use_custom_clangd = true
-end
+-- LSP 是否使用 Mason 的上游下载源；未设置时使用 Gitee 镜像安装器。
+vim.g.use_mason_github = os.getenv("MASON_USE_GITHUB") == "1"
 
 -- Copilot 总开关：COPILOT_AUTO_TRIGGER=1 时才启动 Copilot（含 copilot-language-server 的 Node 进程）。
 -- 运行时可用 <leader>uc 切换；关闭会停掉 Node 进程并释放 600-800MB 内存。
