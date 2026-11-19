@@ -62,7 +62,13 @@ function M.sync_highlights()
         return highlights[name] or {}
     end
     vim.api.nvim_set_hl(0, "LipExplorerActive", resolve("Normal"))
-    vim.api.nvim_set_hl(0, "LipExplorerInactive", resolve("NormalNC"))
+    -- Explorer 失去焦点时不要切到主题的 NormalNC 背景：在右侧文件上
+    -- 移动光标后，左侧当前项会因此变得过亮。沿用编辑区的底色，保留
+    -- NormalNC 的前景色/其他属性，只压低背景亮度。
+    local inactive = resolve("NormalNC")
+    inactive.bg = resolve("Normal").bg
+    inactive.ctermbg = resolve("Normal").ctermbg
+    vim.api.nvim_set_hl(0, "LipExplorerInactive", inactive)
     for _, picker in ipairs(get_explorer_pickers()) do
         local wins = { picker.layout.root }
         for _, win in pairs(picker.layout.wins) do

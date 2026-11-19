@@ -48,8 +48,8 @@ end
 vim.api.nvim_set_current_win(editor)
 vim.wait(100)
 picker.layout:update()
-assert(background(picker.list.win.win, "NormalNC") == 0x1e1e2e,
-    "inactive explorer list must keep the theme background")
+assert(background(picker.list.win.win, "NormalNC") == 0,
+    "inactive explorer list must use the darker editor background")
 for _ = 1, 3 do
     picker:focus("list")
     vim.wait(100)
@@ -61,8 +61,8 @@ for _ = 1, 3 do
     end
     vim.api.nvim_set_current_win(editor)
     vim.wait(100)
-    assert(background(picker.list.win.win, "NormalNC") == 0x1e1e2e,
-        "leaving Explorer must restore the inactive background")
+    assert(background(picker.list.win.win, "NormalNC") == 0,
+        "leaving Explorer must restore the darker inactive background")
 end
 picker:close()
 print("explorer_highlight_spec: ok")
