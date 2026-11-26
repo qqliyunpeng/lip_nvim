@@ -480,7 +480,7 @@ qf 窗口由 edgy 固定在底部（30% 行高），所以 `auto_resize_height` 
 | Key | Mode | Action |
 |-----|------|--------|
 | `<leader>ha` | n | 当前文件加入 Harpoon |
-| `<leader>fe` | n | 打开 Harpoon 菜单 |
+| `<leader>hl` | n | 打开 Harpoon 菜单 |
 | `<A-1>` 到 `<A-5>` | n | 跳到 Harpoon 第 1 到第 5 个文件 |
 | `<C-S-P>` / `<C-S-N>` | n | Harpoon 上一个/下一个 |
 | `<leader>mc` | n | 删除 bookmark |

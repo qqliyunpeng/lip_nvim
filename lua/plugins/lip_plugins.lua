@@ -496,7 +496,7 @@ return {
             vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
             vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
 
-            vim.keymap.set("n", "<leader>fe", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+            vim.keymap.set("n", "<leader>hl", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
             vim.keymap.set("n", "<a-1>", function() harpoon:list():select(1) end)
             vim.keymap.set("n", "<a-2>", function() harpoon:list():select(2) end)
             vim.keymap.set("n", "<a-3>", function() harpoon:list():select(3) end)

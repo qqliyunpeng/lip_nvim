@@ -35,7 +35,7 @@ function M.setup()
                 {"<leader>mc", desc = "Bookmark Delete" },
                 {"<leader>fs", desc = "Search with parameter" },
                 {"<leader>fm", desc = "Mark list" },
-                {"<leader>fe", desc = "Harpoon list" },
+                {"<leader>hl", desc = "Harpoon list" },
                 {"<leader>ha" , desc = "Harpoon add current file" },
                 {"<leader>t" , desc = "Table and todo" },
                 {"<leader>tm", desc = "Table mode toggle" },
